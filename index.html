@@ -298,6 +298,11 @@ body.authing main{padding-bottom:24px;}
 .field label{display:block;font-size:13.5px;font-weight:600;color:var(--mut);margin:0 0 5px 2px;}
 .field input{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--txt);min-height:50px;font-size:16px;}
 .field input:focus{outline:none;border-color:var(--cyan-d);}
+.passwrap{position:relative;}
+.passwrap input{padding-right:54px;}
+.pass-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:44px;height:44px;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;color:var(--mut);}
+.pass-toggle svg{width:22px;height:22px;flex:none;}
+.pass-toggle:hover,.pass-toggle:focus-visible{color:var(--cyan);outline:none;}
 .autherr{color:var(--red);font-size:14px;min-height:20px;margin:8px 0 4px;text-align:left;}
 .authlink{color:var(--cyan);font-weight:600;font-size:14.5px;margin-top:8px;min-height:44px;padding:4px 8px;}
 .authmsg{margin-top:6px;}
@@ -365,7 +370,7 @@ body.authing main{padding-bottom:24px;}
         </div>
         <form id="authForm" novalidate>
           <div class="field"><label for="authEmail">E-mail</label><input id="authEmail" type="email" autocomplete="email" inputmode="email" placeholder="ton@e-mail.fr" /></div>
-          <div class="field"><label for="authPass">Mot de passe</label><input id="authPass" type="password" autocomplete="current-password" placeholder="Ton mot de passe" /></div>
+          <div class="field"><label for="authPass">Mot de passe</label><div class="passwrap"><input id="authPass" type="password" autocomplete="current-password" placeholder="Ton mot de passe" /><button type="button" id="authTogglePass" class="pass-toggle" aria-label="Afficher le mot de passe" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
           <p class="autherr" id="authErr" role="alert"></p>
           <button class="btn primary big" id="authGo" type="submit">Se connecter</button>
         </form>
@@ -3329,12 +3334,23 @@ function fbErrMsg(e){
   return M[(e && e.code) || ""] || "Quelque chose n'a pas marché. Réessaie.";
 }
 function authShowErr(msg){ var e = $("authErr"); if(e) e.textContent = msg || ""; }
+var EYE_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+var EYE_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 4l16 16"/><path d="M9.9 5.9A9.6 9.6 0 0 1 12 5.8c6 0 9.5 6.2 9.5 6.2a17.6 17.6 0 0 1-2.9 3.5M6.1 8A16.9 16.9 0 0 0 2.5 12S6 18.2 12 18.2c1.5 0 2.9-.4 4.1-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+function authSetPassVisible(visible){
+  var input = $("authPass"), btn = $("authTogglePass");
+  if(!input || !btn) return;
+  input.type = visible ? "text" : "password";
+  btn.innerHTML = visible ? EYE_OFF : EYE_ON;
+  btn.setAttribute("aria-label", visible ? "Masquer le mot de passe" : "Afficher le mot de passe");
+  btn.setAttribute("aria-pressed", visible ? "true" : "false");
+}
 function authSetMode(mode){
   authMode = mode;
   $("tabLogin").classList.toggle("on", mode==="login");
   $("tabSignup").classList.toggle("on", mode==="signup");
   $("authGo").textContent = mode==="login" ? "Se connecter" : "Créer mon compte";
   $("authPass").setAttribute("autocomplete", mode==="login" ? "current-password" : "new-password");
+  authSetPassVisible(false);
   authShowErr("");
 }
 function authBusy(b){
@@ -3373,6 +3389,11 @@ function doSignOut(){
 }
 $("tabLogin").addEventListener("click", function(){ authSetMode("login"); });
 $("tabSignup").addEventListener("click", function(){ authSetMode("signup"); });
+$("authTogglePass").addEventListener("click", function(){
+  var input = $("authPass");
+  authSetPassVisible(input.type === "password");
+  input.focus();
+});
 $("authForm").addEventListener("submit", function(ev){
   ev.preventDefault();
   var email = $("authEmail").value.trim(), pw = $("authPass").value;
