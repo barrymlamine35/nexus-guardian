@@ -8,9 +8,10 @@
 <title>Nexus Guardian</title>
 <style>
 :root{
-  --bg:#070b18; --bg2:#0a1024; --panel:#101731; --panel2:#0d142c; --line:#22305e;
-  --txt:#e8ecf8; --mut:#93a0c4; --cyan:#2dd4ee; --cyan-d:#0e7490;
-  --green:#34d399; --red:#fb5e6e; --orange:#fbbf24; --magenta:#f471b5; --blue:#5ea8fa;
+  /* Bible visuelle Tome 2 : nuit #0B1220, cyan néon #00D1FF, magenta #E5307A, menthe #12B886, orange #F08C00, violet #7048E8, rouge #E03131, bleu défense #1C7ED6, gris acier #8FA3C4 */
+  --bg:#0B1220; --bg2:#0d1526; --panel:#111c33; --panel2:#0d1628; --line:#26355c;
+  --txt:#f2f5fc; --mut:#8FA3C4; --cyan:#00D1FF; --cyan-d:#0284a8;
+  --green:#12B886; --red:#e8453c; --orange:#F08C00; --magenta:#E5307A; --blue:#4dabf7; --violet:#7048E8;
   --rad:14px;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
@@ -45,9 +46,10 @@ h2{font-size:17px;margin:20px 0 8px;}
 .city{position:relative;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#0a1230 0%,#0a0f24 55%,#0d1531 100%);padding:12px 10px 14px;margin-top:6px;}
 .city .skyline{position:absolute;left:0;right:0;bottom:0;opacity:.5;pointer-events:none;}
 .zones{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
-.zone{min-height:96px;border-radius:14px;border:1px solid var(--line);background:rgba(16,23,49,.88);padding:9px 8px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;width:100%;}
+.zone{min-height:122px;border-radius:14px;border:1px solid var(--line);background:rgba(16,23,49,.88);padding:9px 8px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;width:100%;}
 .zone svg{width:24px;height:24px;}
 .zone .zname{font-size:13px;font-weight:700;line-height:1.2;}
+.zone .zamb{font-size:10.5px;color:var(--mut);line-height:1.3;font-weight:500;}
 .zone .ztag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;letter-spacing:.02em;}
 .zone.play{border-color:var(--cyan-d);box-shadow:0 0 0 1px rgba(45,212,238,.25),0 0 18px rgba(45,212,238,.12) inset;}
 .zone.play .ztag{background:rgba(45,212,238,.16);color:var(--cyan);}
@@ -63,7 +65,7 @@ h2{font-size:17px;margin:20px 0 8px;}
 .row.between{justify-content:space-between;}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:10px 16px;font-weight:700;font-size:15px;border:1px solid var(--line);background:var(--panel2);min-height:48px;}
 .btn.primary{background:var(--cyan);border-color:var(--cyan);color:#04222b;}
-.btn.magenta{background:var(--magenta);border-color:var(--magenta);color:#2b0716;}
+.btn.magenta{background:var(--magenta);border-color:var(--magenta);color:#ffffff;}
 .btn.ghost{color:var(--cyan);}
 .btn.danger{color:var(--red);border-color:#5b2330;}
 .btn:disabled{opacity:.45;cursor:default;}
@@ -257,6 +259,22 @@ body.gaming main{padding-bottom:20px;}
 .campsteps i.done{background:var(--cyan);border-color:var(--cyan-d);}
 .wave .wi.run{background:rgba(147,160,196,.16);color:var(--mut);}
 .conseq{background:rgba(45,212,238,.07);border:1px solid var(--cyan-d);border-radius:12px;padding:12px 14px;font-size:14.5px;margin:10px 0;}
+/* mission 1 */
+.jlog{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;}
+.jlog .jl{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);color:var(--mut);}
+.jlog .jl:last-child{border-bottom:none;}
+.jlog .jl b{color:var(--cyan);font-weight:700;flex:none;font-variant-numeric:tabular-nums;}
+.jlog .jl span{color:var(--txt);}
+.jlog .jl.newrow span{color:var(--orange);}
+.m1alert{width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:8px 0;display:block;}
+.m1alert .at2{font-weight:800;font-size:15.5px;line-height:1.3;}
+.m1alert .am{color:var(--mut);font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums;}
+.phrase{width:100%;text-align:left;border:1.5px solid var(--line);background:var(--panel2);border-radius:12px;padding:12px 14px;font-weight:600;font-size:14.5px;min-height:52px;margin:6px 0;display:block;}
+.phrase.sel{border-color:var(--cyan);background:rgba(45,212,238,.10);}
+.phrase .pn{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:7px;font-size:11.5px;font-weight:800;padding:1px 7px;margin-right:8px;color:var(--cyan);}
+.eradaction{width:100%;text-align:left;border:1.5px solid var(--line);background:var(--panel2);border-radius:12px;padding:12px 14px;font-weight:700;font-size:15px;min-height:52px;margin:6px 0;display:flex;align-items:center;gap:10px;}
+.eradaction .ord{width:26px;height:26px;flex:none;border-radius:50%;background:rgba(45,212,238,.16);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;}
+.eradaction:disabled{opacity:.55;}
 /* mini-campagne */
 .trustbar{height:8px;border-radius:99px;background:var(--panel2);border:1px solid var(--line);overflow:hidden;margin-top:3px;}
 .trustbar>i{display:block;height:100%;background:var(--cyan);}
@@ -284,6 +302,42 @@ body.authing main{padding-bottom:24px;}
 .authlink{color:var(--cyan);font-weight:600;font-size:14.5px;margin-top:8px;min-height:44px;padding:4px 8px;}
 .authmsg{margin-top:6px;}
 .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+/* ---------- pack security+ ---------- */
+.packtabs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px;}
+.packtab{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:left;min-height:76px;}
+.packtab b{display:block;font-size:15.5px;margin-bottom:2px;}
+.packtab span{color:var(--mut);font-size:13px;}
+.fcardwrap{perspective:900px;margin-top:12px;}
+.fcard{position:relative;width:100%;min-height:258px;transform-style:preserve-3d;transition:transform .45s;cursor:pointer;}
+.fcard.flipped{transform:rotateY(180deg);}
+.fcard .fface{position:absolute;inset:0;overflow-y:auto;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--panel);border:1.5px solid var(--cyan-d);border-radius:16px;padding:18px;display:flex;flex-direction:column;}
+.fcard .fface.back{transform:rotateY(180deg);border-color:var(--violet);background:var(--panel2);}
+.fcard .fid{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--cyan);text-transform:uppercase;}
+.fcard .fface.back .fid{color:var(--magenta);}
+.fcard .fq{font-size:18px;font-weight:700;line-height:1.4;margin-top:10px;}
+.fcard .fa{font-size:16.5px;line-height:1.5;margin-top:10px;color:var(--txt);}
+.fcard .fhint{margin-top:auto;color:var(--mut);font-size:12.5px;}
+.chiprow{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 2px;}
+.fchip{border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;color:var(--mut);min-height:44px;}
+.fchip.on{color:var(--cyan);border-color:var(--cyan-d);background:rgba(0,209,255,.10);}
+.weekrow{margin:11px 0;}
+.weekrow .wl{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:700;}
+.weekrow .wl span{color:var(--mut);font-variant-numeric:tabular-nums;font-weight:600;flex:none;}
+.weekrow p{margin:3px 0 0;color:var(--mut);font-size:13.5px;}
+.gloss{margin:8px 0;}
+.gloss dt{font-weight:800;font-size:14.5px;color:var(--txt);margin-top:10px;}
+.gloss dt span{color:var(--cyan);font-weight:600;font-size:13px;}
+.gloss dd{margin:2px 0 0;color:var(--mut);font-size:14px;}
+.ruleitem{width:100%;text-align:left;border:1.5px solid var(--line);background:var(--panel2);border-radius:12px;padding:12px 14px;font-weight:700;font-size:14.5px;min-height:52px;margin:6px 0;display:flex;align-items:center;gap:10px;}
+.ruleitem .ord{width:26px;height:26px;flex:none;border-radius:50%;background:rgba(0,209,255,.16);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;}
+.ruleitem:disabled{opacity:.55;}
+.fnuance{margin-top:12px;background:rgba(112,72,232,.12);border:1px solid #4c2a9e;border-radius:10px;padding:9px 11px;font-size:13.5px;line-height:1.5;}
+.fnuance b{color:var(--magenta);}
+.origin{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(229,48,122,.14);color:var(--magenta);margin-top:6px;}
+.simitem{width:100%;text-align:left;border:1.5px solid var(--line);background:var(--panel2);border-radius:12px;padding:11px 13px;font-weight:600;font-size:14.5px;min-height:50px;margin:5px 0;display:flex;align-items:center;gap:9px;}
+.simitem.sel{border-color:var(--cyan);background:rgba(0,209,255,.10);}
+.simitem .given{margin-left:auto;flex:none;font-size:12.5px;font-weight:800;color:var(--cyan);}
+.savewarn{background:rgba(224,49,49,.12);border:1px solid #7a2430;border-radius:12px;padding:11px 13px;font-size:14px;margin:10px 0;}
 @media (min-width:520px){ .zones{gap:11px;} }
 </style>
 </head>
@@ -345,6 +399,8 @@ body.authing main{padding-bottom:24px;}
     <section class="view" id="view-delayed"></section>
     <!-- MINI-CAMPAGNE -->
     <section class="view" id="view-campaign"></section>
+    <!-- PACK SECURITY+ -->
+    <section class="view" id="view-pack"></section>
   </main>
   <nav id="bottomnav">
     <button data-nav="hub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>Accueil</button>
@@ -375,12 +431,17 @@ function defState(){ return {
   mastery:{tri:{clean:0,total:0}, phish:{clean:0,total:0}, defense:{clean:0,total:0}},
   seenVariants:{tri:[], phish:[], defense:[]},
   delayedDue:0, delayedDone:false, delayedScore:0,
+  m1:{ done:false, best:{A:0, B:0, C:0}, plays:{A:0, B:0, C:0} },
   campaign:{ done:{clinique:false, mairie:false, finale:false}, best:{clinique:0, mairie:0, finale:0}, plays:{clinique:0, mairie:0, finale:0},
-    trust:{atlas:50, clinique:50, mairie:50}, upgrades:[], finished:false }
+    trust:{atlas:50, clinique:50, mairie:50}, upgrades:[], finished:false },
+  pack:{ scen:{}, scenBest:{}, cards:{}, examBest:0, examPlays:0, fwBest:0, sims:{} }
 };}
 var S;
 try{ S = JSON.parse(localStorage.getItem(KEY)) || defState(); }catch(e){ S = defState(); }
-["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","examMode","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign"].forEach(function(k){ if(S[k]===undefined) S[k]=defState()[k]; });
+["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","examMode","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign","m1","pack"].forEach(function(k){ if(S[k]===undefined) S[k]=defState()[k]; });
+if(!S.pack || !S.pack.cards || !S.pack.scen) S.pack = defState().pack;
+if(!S.pack.sims) S.pack.sims = {};
+if(!S.m1 || !S.m1.best || !S.m1.plays) S.m1 = defState().m1;
 if(!S.campaign || !S.campaign.trust || !S.campaign.done) S.campaign = defState().campaign;
 if(!S.campaign.upgrades) S.campaign.upgrades = [];
 if(!S.coverage || !S.coverage.tri) S.coverage = defState().coverage;
@@ -391,7 +452,20 @@ if(S.lastDay !== todayStr()){
   S.streak = (S.lastDay === ydayStr()) ? S.streak + 1 : 1;
   S.lastDay = todayStr();
 }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} renderTop(); }
+var saveFailed = false, offlineNoticed = false;
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); if(saveFailed){ saveFailed = false; } }
+  catch(e){
+    /* Stockage plein ou indisponible : le jeu ne plante jamais sur une sauvegarde.
+       La progression reste en mémoire pour la session, et le joueur est prévenu. */
+    if(!saveFailed){ saveFailed = true; setTimeout(function(){ toast("Progression non enregistrée sur cet appareil — stockage indisponible. Elle reste en mémoire pour cette session."); }, 60); }
+  }
+  renderTop();
+}
+function saveStateText(){
+  return saveFailed ? "Progression non enregistrée sur cet appareil — stockage indisponible. Elle reste en mémoire pour cette session, mais peut se perdre si tu fermes le jeu."
+    : "Progression enregistrée sur cet appareil.";
+}
 function levelOf(xp){ return Math.min(10, Math.floor(xp/100)+1); }
 function levelPct(xp){ return xp>=1000 ? 100 : (xp%100); }
 function totalXP(){ return S.xp.soc + S.xp.reseau; }
@@ -457,6 +531,7 @@ function show(view){
   document.querySelectorAll("#bottomnav button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-nav")===view); });
   window.scrollTo(0,0);
   if(view==="hub") renderHub();
+  if(view==="pack") renderPack();
   if(view==="missions") renderMissions();
   if(view==="profil") renderProfil();
   if(view==="menu") renderMenu();
@@ -557,7 +632,14 @@ var DEXDATA = [
   { id:"segment", name:"Segmentation", txt:"Découper le réseau en zones (DMZ, VLAN…) pour qu'une attaque ne puisse pas se répandre partout." },
   { id:"backup", name:"Sauvegardes 3-2-1", txt:"3 copies des données, sur 2 supports différents, dont 1 hors site. La règle d'or contre la perte de données." },
   { id:"cloud", name:"Cloud — responsabilité partagée", txt:"Notion essentielle dès la v1 : le fournisseur cloud sécurise l'infrastructure, toi tu restes responsable de tes comptes, de tes accès et de tes données. Un compte sans MFA reste une porte ouverte, même dans le cloud." },
-  { id:"gouv", name:"Gouvernance", txt:"Notion essentielle dès la v1 : les politiques de sécurité (mots de passe, MFA, sauvegardes) protègent seulement si elles sont écrites, connues et vérifiées. La technique sans règles partagées ne tient pas longtemps." }
+  { id:"gouv", name:"Gouvernance", txt:"Notion essentielle dès la v1 : les politiques de sécurité (mots de passe, MFA, sauvegardes) protègent seulement si elles sont écrites, connues et vérifiées. La technique sans règles partagées ne tient pas longtemps." },
+  { id:"c201", name:"Carte C2-01 · Point d'entrée", txt:"Carte générée par la Mission 1 : retrouver le point d'entrée (l'e-mail, le document, le premier poste) avant de conclure. Sans lui, impossible de savoir qui d'autre est touché." },
+  { id:"c203", name:"Carte C2-03 · Vérification hors canal", txt:"Carte générée par la Mission 1 : un changement de coordonnées bancaires ou un ordre inhabituel se vérifie par un canal indépendant — rappeler sur le numéro déjà connu, jamais celui du message suspect." },
+  { id:"c401", name:"Carte C4-01 · Calendrier de maintenance", txt:"Carte générée par la Mission 1 : avant d'escalader une alerte, comparer avec ce qui est attendu — sauvegardes, scans et mises à jour planifiés figurent au calendrier de maintenance." },
+  { id:"c402", name:"Carte C4-02 · Élargir l'enquête", txt:"Carte générée par la Mission 1 : un incident a rarement un seul poste. Chercher qui d'autre a reçu le même message, ouvert le même document, avant de déclarer l'incident clos." },
+  { id:"c403", name:"Carte C4-03 · Indicateur ≠ éradication", txt:"Carte générée par la Mission 1 : bloquer un domaine ou une adresse coupe un indicateur, pas l'attaque. Éradiquer, c'est supprimer les moyens de revenir : comptes, sessions, règles, tâches planifiées." },
+  { id:"c404", name:"Carte C4-04 · Éradiquer avant de restaurer", txt:"Carte générée par la Mission 1 : on ne restaure un poste qu'après avoir supprimé la persistance. Sinon, la tâche planifiée relance l'attaque sur un système tout propre." },
+  { id:"c507", name:"Carte C5-07 · Coordonnées bancaires", txt:"Carte générée par la Mission 1 : tout changement de RIB fournisseur exige une double validation et un rappel sur un numéro connu. Un virement parti sur un faux RIB ne revient presque jamais." }
 ];
 var TRI_VARIANTS = [
   { user:"j.martin", ip:"203.0.113.45", label:"Variante 1 — Compte j.martin" },
@@ -570,7 +652,10 @@ var EXAM_NOTES = {
   defense:"À l'examen (SY0-701), ça tombe comme ça : « Une entreprise veut que son serveur Web public reste accessible, sans exposer son réseau interne en cas de compromission. Où place-t-on ce serveur ? » Réponse attendue : <b>dans une DMZ, derrière un pare-feu</b> — et un WAF devant lui pour filtrer les attaques applicatives. Le piège : confondre IDS et pare-feu. Un IDS détecte et alerte ; il ne bloque pas le trafic à lui tout seul.",
   clinique:"À l'examen (SY0-701), ça tombe comme ça : « Après un ransomware, une organisation découvre que ses sauvegardes n'ont jamais été testées et que la restauration échoue. Quelle mesure aurait évité cette situation ? » Réponse attendue : <b>tester régulièrement les restaurations, dans le cadre d'une stratégie de sauvegarde type 3-2-1</b>. Le piège : « augmenter la fréquence des sauvegardes » — sauvegarder plus souvent un système qu'on ne sait pas restaurer ne protège de rien.",
   mairie:"À l'examen (SY0-701), ça tombe comme ça : « Le site web d'une collectivité est défiguré un vendredi soir. Quelle est la séquence correcte ? » Réponse attendue : <b>contenir (basculer sur une copie saine), préserver les journaux comme preuves, puis communiquer des faits vérifiés</b>. Le piège : « ne rien dire tant que l'enquête n'est pas terminée » — à l'examen comme dans la vraie vie, le silence laisse la rumeur décider à ta place.",
-  finale:"À l'examen (SY0-701), ça tombe comme ça : « Pendant un incident, un scan massif monopolise l'équipe, tandis qu'un journal montre une unique connexion réussie anormale. Que prioriser ? » Réponse attendue : <b>la connexion réussie</b> — le scan peut être une diversion, et la réponse à incident commence par identifier le vecteur d'entrée réel. Le piège : traiter le signal le plus bruyant en premier. En sécurité des opérations, le signal faible est souvent le vrai incident."
+  finale:"À l'examen (SY0-701), ça tombe comme ça : « Pendant un incident, un scan massif monopolise l'équipe, tandis qu'un journal montre une unique connexion réussie anormale. Que prioriser ? » Réponse attendue : <b>la connexion réussie</b> — le scan peut être une diversion, et la réponse à incident commence par identifier le vecteur d'entrée réel. Le piège : traiter le signal le plus bruyant en premier. En sécurité des opérations, le signal faible est souvent le vrai incident.",
+  mission1:"À l'examen (SY0-701), ça tombe comme ça : « À 03h09, un poste lance powershell.exe -enc avec WINWORD.EXE comme processus parent, quelques heures après la réception d'un document de paie par e-mail. Quelle est la première action ? » Réponse attendue : <b>isoler l'hôte et élargir l'enquête aux autres destinataires du document</b>. Le piège : « restaurer le poste depuis une image propre » — restaurer avant d'avoir supprimé la persistance (compte de service, tâche planifiée) laisse l'attaquant revenir. À l'examen comme à Atlas : contenir, éradiquer, puis seulement restaurer.",
+  m1b:"À l'examen (SY0-701), ça tombe comme ça : « Un compte de messagerie compromis a servi à créer une règle de transfert automatique vers l'extérieur. L'administrateur réinitialise le mot de passe. Que reste-t-il à faire ? » Réponse attendue : <b>révoquer les sessions ouvertes et supprimer la règle de transfert</b> — elle survit au changement de mot de passe. Le piège : croire qu'un nouveau mot de passe ferme toutes les portes. Une session déjà ouverte et une règle déjà créée ne demandent plus le mot de passe.",
+  m1c:"À l'examen (SY0-701), ça tombe comme ça : « Un employé branche une clé USB trouvée sur un parking et lance un fichier nommé Salaires_2026.pdf.exe. Son poste tente ensuite des connexions SMB vers douze postes de son segment. Quelle réponse est proportionnée ? » Réponse attendue : <b>isoler le segment concerné</b> et traiter les autres postes avant de conclure. Le piège double : isoler le seul poste (la propagation est déjà partie) ou tout le site (on arrête l'activité pour rien). Et blâmer l'employé qui a signalé détruit la culture du signalement — l'examen le compte faux."
 };
 function examBoxHtml(key){
   if(!EXAM_NOTES[key]) return "";
@@ -698,7 +783,7 @@ var UPGRADES = [
   { id:"mfa", name:"MFA partout", cost:40, txt:"La double authentification sur tous les comptes des trois organisations. Pendant la finale, la force brute d'ÉCLIPSE bute sur le second facteur." },
   { id:"sauvegardes", name:"Sauvegardes 3-2-1 testées", cost:40, txt:"3 copies, 2 supports, 1 hors site — et une restauration testée. Pendant la finale, la Clinique peut repartir d'un point sain." }
 ];
-function atlasDone(){ return S.best.tri>0; }
+function atlasDone(){ return S.best.tri>0 || (S.m1 && S.m1.done); }
 function campChaptersDone(){ var n=0; if(atlasDone()) n++; if(S.campaign.done.clinique) n++; if(S.campaign.done.mairie) n++; if(S.campaign.done.finale) n++; return n; }
 function finaleUnlocked(){ return atlasDone() && S.campaign.done.clinique && S.campaign.done.mairie; }
 var CAMP_SCENARIOS = {
@@ -883,15 +968,15 @@ function finaleWeaknessLines(){
 }
 /* ================= HUB ================= */
 var ZONES = [
-  { id:"qg", name:"QG Aegis", game:"phish", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#f471b5" stroke-width="1.8"><path d="M12 3 5 5.8v5.4c0 4.6 3 7.7 7 9.3 4-1.6 7-4.7 7-9.3V5.8z"/><path d="m9.3 12 2 2 3.6-3.8"/></svg>' },
-  { id:"soc", name:"Le SOC", game:"tri", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#2dd4ee" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="m7 9.5 2.5 2.5L7 14.5M12.5 14.5H17M9 20.5h6"/></svg>' },
-  { id:"reseau", name:"Quartier Réseau", game:"defense", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#2dd4ee" stroke-width="1.8"><circle cx="12" cy="5.5" r="2.3"/><circle cx="5" cy="18" r="2.3"/><circle cx="19" cy="18" r="2.3"/><path d="M10.8 7.3 6.2 16M13.2 7.3 17.8 16M7.3 18h9.4"/></svg>' },
-  { id:"forensics", name:"Labo Forensics", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#93a0c4" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5.5 5.5"/></svg>' },
-  { id:"banque", name:"La Banque", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#93a0c4" stroke-width="1.8"><path d="M3.5 9.5 12 4l8.5 5.5M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3.5 20.5h17"/></svg>' },
-  { id:"rouge", name:"Tour Rouge", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#93a0c4" stroke-width="1.8"><path d="M7 21.5v-17L12 2.5l5 2v17"/><path d="M4 21.5h16M10 8h4M10 12h4M10 16h4"/></svg>' },
-  { id:"dev", name:"Quartier Dev", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#93a0c4" stroke-width="1.8"><path d="m8 8-4.5 4L8 16M16 8l4.5 4L16 16M13.5 5l-3 14"/></svg>' },
-  { id:"conseil", name:"Tour du Conseil", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#93a0c4" stroke-width="1.8"><path d="M5 21.5V8l7-4.5L19 8v13.5"/><path d="M2.5 21.5h19M9.5 21.5v-5h5v5"/></svg>' },
-  { id:"cloud", name:"Ciel Cloud", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#93a0c4" stroke-width="1.8"><path d="M7 18.5h9.5a4.3 4.3 0 0 0 .8-8.5A6 6 0 0 0 5.6 11 3.8 3.8 0 0 0 7 18.5z"/></svg>' }
+  { id:"qg", name:"QG Aegis", game:"phish", amb:"Bureaux feutrés, écrans partout, café toujours chaud.", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#E5307A" stroke-width="1.8"><path d="M12 3 5 5.8v5.4c0 4.6 3 7.7 7 9.3 4-1.6 7-4.7 7-9.3V5.8z"/><path d="m9.3 12 2 2 3.6-3.8"/></svg>' },
+  { id:"soc", name:"Le SOC", game:"tri", amb:"Lumière basse, consoles allumées jour et nuit.", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#00D1FF" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="m7 9.5 2.5 2.5L7 14.5M12.5 14.5H17M9 20.5h6"/></svg>' },
+  { id:"reseau", name:"Quartier Réseau", game:"defense", amb:"Câbles, voyants et plans affichés au mur.", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#00D1FF" stroke-width="1.8"><circle cx="12" cy="5.5" r="2.3"/><circle cx="5" cy="18" r="2.3"/><circle cx="19" cy="18" r="2.3"/><path d="M10.8 7.3 6.2 16M13.2 7.3 17.8 16M7.3 18h9.4"/></svg>' },
+  { id:"forensics", name:"Labo Forensics", amb:"Silence, gants, et des preuves sous scellés.", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#8FA3C4" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5.5 5.5"/></svg>' },
+  { id:"banque", name:"La Banque", amb:"Marbre, chiffres, et des coffres bien gardés.", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#8FA3C4" stroke-width="1.8"><path d="M3.5 9.5 12 4l8.5 5.5M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3.5 20.5h17"/></svg>' },
+  { id:"rouge", name:"Tour Rouge", amb:"Personne n'y entre. Personne ne sait qui en sort.", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#8FA3C4" stroke-width="1.8"><path d="M7 21.5v-17L12 2.5l5 2v17"/><path d="M4 21.5h16M10 8h4M10 12h4M10 16h4"/></svg>' },
+  { id:"dev", name:"Quartier Dev", amb:"Tableaux pleins de post-it et de code en cours.", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#8FA3C4" stroke-width="1.8"><path d="m8 8-4.5 4L8 16M16 8l4.5 4L16 16M13.5 5l-3 14"/></svg>' },
+  { id:"conseil", name:"Tour du Conseil", amb:"Vue sur toute la ville, décisions à huis clos.", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#8FA3C4" stroke-width="1.8"><path d="M5 21.5V8l7-4.5L19 8v13.5"/><path d="M2.5 21.5h19M9.5 21.5v-5h5v5"/></svg>' },
+  { id:"cloud", name:"Ciel Cloud", amb:"Là-haut, des serveurs que personne ne touche.", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#8FA3C4" stroke-width="1.8"><path d="M7 18.5h9.5a4.3 4.3 0 0 0 .8-8.5A6 6 0 0 0 5.6 11 3.8 3.8 0 0 0 7 18.5z"/></svg>' }
 ];
 function renderHub(){
   var dg = dailyGame(), d = GAMES[dg];
@@ -930,13 +1015,17 @@ function renderHub(){
   html += '<div class="city"><svg class="skyline" width="100%" height="70" preserveAspectRatio="none" viewBox="0 0 360 70"><path d="M0 70V38h28V22h22v16h18V10h26v28h20V26h24v12h22V18h26v20h20V30h24v8h22V14h28v24h20V70z" fill="#131f47"/></svg><div class="zones">';
   ZONES.forEach(function(z){
     if(z.game){
-      html += '<button class="zone '+(z.id==="qg"?"hubz":"play")+'" data-act="play" data-game="'+z.game+'">'+z.icon+'<span class="zname">'+z.name+'</span><span class="ztag">'+GAMES[z.game].name+'</span></button>';
+      html += '<button class="zone '+(z.id==="qg"?"hubz":"play")+'" data-act="play" data-game="'+z.game+'">'+z.icon+'<span class="zname">'+z.name+'</span><span class="zamb">'+z.amb+'</span><span class="ztag">'+GAMES[z.game].name+'</span></button>';
     } else {
-      html += '<div class="zone lock">'+z.icon+'<span class="zname">'+z.name+'</span><span class="ztag">Bientôt</span></div>';
+      html += '<div class="zone lock">'+z.icon+'<span class="zname">'+z.name+'</span><span class="zamb">'+z.amb+'</span><span class="ztag">Bientôt</span></div>';
     }
   });
   html += '</div></div>';
-  html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta — Mentore</div><div class="txt">« Trois secteurs actifs pour l\'instant : le SOC, le QG et le Quartier Réseau. Le reste de la ville ouvrira plus tard. Au travail, '+esc(S.alias)+'. »</div></div></div></div>';
+  var pkScen = Object.keys(S.pack.scen).length, pkCards = Object.keys(S.pack.cards).filter(function(k){ return S.pack.cards[k].n>0; }).length;
+  html += '<div class="card"><div class="row between"><div><span class="tag reseau">Pack Security+ · Révise pour l\'examen</span><h3 style="margin-top:6px">Réviser comme on joue</h3><p>Scénarios éclair : '+pkScen+' / 18 · Cartes revues : '+pkCards+' / 40'+(S.pack.examPlays ? ' · Mini-examen : meilleur '+S.pack.examBest+' %' : '')+'</p></div></div><button class="btn primary big" data-act="gopack">Ouvrir le Pack Security+</button></div>';
+  html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta — Mentore</div><div class="txt">« Trois secteurs actifs pour l\'instant : le SOC, le QG et le Quartier Réseau. Le reste de la ville ouvrira plus tard. Au travail, '+esc(S.alias)+'. »</div></div></div>'
+    + '<div class="mentor" style="margin-top:12px"><div class="ava" style="background:linear-gradient(135deg,#7048E8,#4c2a9e)">DV</div><div><div class="who" style="color:var(--blue)">Directrice Valence — Direction d\'Aegis</div><div class="txt">« Montrez-moi l\'impact. »</div></div></div>'
+    + '<div class="mentor" style="margin-top:12px"><div class="ava" style="background:linear-gradient(135deg,#8FA3C4,#5b6b8c)">LC</div><div><div class="who" style="color:var(--blue)">Le Cartographe — il connaît Nexus City par cœur</div><div class="txt">« Je connais chaque chemin. »</div></div></div></div>';
   html += '<p class="sub" style="margin-top:12px">Léo « Zéro » rôde près de la Tour Rouge. ÉCLIPSE aussi, paraît-il.</p>';
   $("view-hub").innerHTML = html;
   bindActions($("view-hub"));
@@ -947,6 +1036,7 @@ function bindActions(root){
       var act = el.getAttribute("data-act");
       if(act==="play") startBriefing(el.getAttribute("data-game"));
       if(act==="gomissions") show("missions");
+      if(act==="gopack"){ packTab="home"; show("pack"); }
       if(act==="gocampaign") openCampaign();
       if(act==="resume" && S.inProgress) resumeGame();
       if(act==="delayed") startDelayed();
@@ -991,9 +1081,15 @@ function renderMissions(){
       + '<button class="btn primary big" data-act="play" data-game="'+id+'">'+(S.plays[id]>0?'Rejouer':'Commencer')+'</button></div>';
   });
   if(campDone>=3) html += '<div class="card"><h3>Campagne SOC terminée</h3><p>L\'incident d\'Atlas Logistics est bouclé : tri, phishing, défense. La maîtrise, elle, se confirmera à l\'épreuve différée. Les autres types de missions et les actes suivants restent la vision à long terme — pas le périmètre de ce prototype.</p></div>';
+  html += '<h2>Mission 1 — Alerte à 03h12</h2><p class="sub"><span class="tag soc">Joue une vraie mission</span></p><p class="sub">L\'incident complet d\'Atlas Logistics, en sept temps : tri, corrélation, décision, enquête, éradication, message à la direction, debrief noté sur cinq axes. Trois variantes, trois points d\'entrée différents.</p>';
+  [["A","Variante A · Le chef d'équipe","Le faux e-mail de paie et le document piégé de Joël Mbaye. Décision clé : le quai 4."],
+   ["B","Variante B · Le faux fournisseur","Nadia Perrin, la comptabilité, et un virement de 48 000 € programmé à 8 h."],
+   ["C","Variante C · La clé du parking","Kevin, une clé USB étiquetée « Salaires 2026 », et douze postes du segment Bureaux."]].forEach(function(v){
+    html += '<div class="card"><div class="row between"><span class="tag soc">Mission 1 · SOC</span>'+(S.m1.best[v[0]]>0?'<span class="tag done">Meilleur : '+S.m1.best[v[0]]+' / 100</span>':'')+'</div><h3 style="margin-top:8px">'+v[1]+'</h3><p>'+v[2]+(S.m1.plays[v[0]]>0?' · Jouée '+S.m1.plays[v[0]]+' fois':'')+'</p><button class="btn primary big" data-m1="'+v[0]+'">'+(S.m1.plays[v[0]]>0?'Rejouer la variante':'Jouer la variante')+'</button></div>';
+  });
   html += '<h2>Mini-campagne — La nuit d\'ÉCLIPSE</h2><p class="sub">Mêmes réflexes, trois organisations, des contraintes différentes — et une finale qui se souvient de tes choix.</p>';
   html += '<div class="campsteps"><i class="'+(atlasDone()?"done":"")+'"></i><i class="'+(S.campaign.done.clinique?"done":"")+'"></i><i class="'+(S.campaign.done.mairie?"done":"")+'"></i><i class="'+(S.campaign.done.finale?"done":"")+'"></i></div>';
-  html += '<div class="card"><div class="row between"><span class="tag soc">Chapitre 1 · SOC</span>'+(atlasDone()?'<span class="tag done">Terminé · meilleur '+S.best.tri+' / 100</span>':'')+'</div><h3 style="margin-top:8px">Atlas Logistics — l\'entrepôt</h3><p>La nuit de j.martin : le tri d\'alertes du SOC. 45 minutes de temps de jeu (accéléré) avant la relève de 04h00.</p><button class="btn primary big" data-act="play" data-game="tri">'+(atlasDone()?'Rejouer le chapitre':'Jouer le chapitre')+'</button></div>';
+  html += '<div class="card"><div class="row between"><span class="tag soc">Chapitre 1 · SOC</span>'+(atlasDone()?'<span class="tag done">Terminé · meilleur '+S.best.tri+' / 100</span>':'')+'</div><h3 style="margin-top:8px">Atlas Logistics — l\'entrepôt</h3><p>La Mission 1 « Alerte à 03h12 », variante A : l\'incident complet, du premier tri à l\'éradication. 45 minutes de temps de jeu (accéléré) avant la relève de 04h00.</p><button class="btn primary big" data-m1="A">'+(atlasDone()?'Rejouer le chapitre':'Jouer le chapitre')+'</button></div>';
   ["clinique","mairie"].forEach(function(cid, n){
     var sc = CAMP_SCENARIOS[cid];
     html += '<div class="card"><div class="row between"><span class="tag soc">Chapitre '+(n+2)+' · SOC</span>'+(S.campaign.done[cid]?'<span class="tag done">Terminé · meilleur '+S.campaign.best[cid]+' / 100</span>':'')+'</div><h3 style="margin-top:8px">'+sc.title.split("— ")[1]+'</h3><p>'+(cid==="clinique" ? "Protéger sans jamais arrêter les soins. 5 situations." : "Informer les habitants, avec un petit budget. 5 situations.")+(S.campaign.plays[cid]>0?' · Jouée '+S.campaign.plays[cid]+' fois':'')+'</p><button class="btn primary big" data-camp="'+cid+'">'+(S.campaign.done[cid]?'Rejouer le chapitre':'Jouer le chapitre')+'</button></div>';
@@ -1006,6 +1102,8 @@ function renderMissions(){
     html += '<div class="card" style="opacity:.6"><div class="row between"><span class="tag reseau">Finale · SOC</span><span class="tag lock">Verrouillée</span></div><h3 style="margin-top:8px">La nuit d\'ÉCLIPSE — finale</h3><p>Les trois organisations attaquées la même nuit. Termine les épisodes 1 à 3 pour l\'ouvrir.</p><button class="btn magenta big" disabled>Épisodes 1 à 3 requis</button></div>';
   }
   html += upgradesSectionHtml();
+  html += '<h2>Pack Security+</h2><p class="sub"><span class="tag reseau">Révise pour l\'examen</span></p><p class="sub">L\'entraînement hors mission : scénarios éclair, cartes de révision, mini-examen blanc, simulations PBQ et parcours de 12 semaines.</p>';
+  html += '<div class="card"><div class="row between"><div><h3>Pack Security+</h3><p>Scénarios : '+Object.keys(S.pack.scen).length+' / 18 · Cartes revues : '+Object.keys(S.pack.cards).filter(function(k){ return S.pack.cards[k].n>0; }).length+' / 40</p></div></div><button class="btn primary big" data-act="gopack">Ouvrir le Pack Security+</button></div>';
   html += '<h2>Secteurs fermés</h2>';
   [["Labo Forensics","Analyse de preuves"],["La Banque","Fraude et transactions"],["Tour Rouge","Territoire d'ÉCLIPSE"],["Quartier Dev","Code et applications"],["Tour du Conseil","Stratégie et gouvernance"],["Ciel Cloud","Infrastructure cloud"]].forEach(function(l){
     html += '<div class="card" style="opacity:.55"><div class="row between"><div><h3>'+l[0]+'</h3><p>'+l[1]+'</p></div><span class="tag lock">Bientôt</span></div></div>';
@@ -1014,6 +1112,9 @@ function renderMissions(){
   bindActions($("view-missions"));
   $("view-missions").querySelectorAll("[data-camp]").forEach(function(b){
     b.addEventListener("click", function(){ sndTap(); startCampChapter(b.getAttribute("data-camp")); });
+  });
+  $("view-missions").querySelectorAll("[data-m1]").forEach(function(b){
+    b.addEventListener("click", function(){ sndTap(); startM1(b.getAttribute("data-m1")); });
   });
   bindUpgrades($("view-missions"));
 }
@@ -1350,7 +1451,8 @@ function renderMail(){
   if(m.link){
     html += '<button class="linkchip" id="mLink">'+ICONS.link+'<span>'+esc(m.link.label)+'<br><small style="color:var(--mut);font-weight:500">'+esc(m.link.shown)+'</small></span></button>';
     html += '<div class="destbar'+(ph.linkSeen[i]?' on':'')+(m.legit?' ok':'')+'" id="mDest"><span class="dl">Destination réelle</span>'+esc(m.link.real)+'</div>';
-    html += '<div style="font-size:12px;color:var(--mut);margin-top:5px">Appui long sur le lien : voir sa destination. Toucher : l\'ouvrir.</div>';
+    html += '<button class="detbtn" id="mShowLink" style="margin-top:2px">Voir le lien — afficher sa destination réelle</button>';
+    html += '<div style="font-size:12px;color:var(--mut);margin-top:2px">Le bouton « Voir le lien » et l\'appui long font la même chose. Toucher le lien lui-même : l\'ouvrir.</div>';
   }
   if(m.attach){
     html += '<button class="attachchip" id="mAttach">'+ICONS.clip+esc(m.attach)+'</button>';
@@ -1382,6 +1484,11 @@ function renderMail(){
     $("mHdrs").classList.add("on"); this.textContent = "En-têtes d'authentification ▴";
   });
   var rb = $("mRetour"); if(rb) rb.addEventListener("click", renderInbox);
+  var sl = $("mShowLink");
+  if(sl) sl.addEventListener("click", function(){
+    ph.linkSeen[i] = true; phSave();
+    var db = $("mDest"); if(db) db.classList.add("on"); sndTap();
+  });
   var lk = $("mLink");
   if(lk){
     var pressT = null, longDone = false, lastHandled = 0;
@@ -1495,7 +1602,7 @@ function finishPhish(){
   finishMission._evalHtml =
     '<p style="margin:4px 0"><b>Décisions :</b> '+Math.round(reflexPts*10)/10+' / '+mails.length+' e-mails traités au mieux.</p>'
     + '<p style="margin:4px 0"><b>Preuves utilisées :</b> '+jGood+' / '+jKeys.length+' justifications décisives sur les e-mails piégés.</p>'
-    +     + '<p style="margin:4px 0"><b>Vérifications :</b> destination réelle ou en-têtes examinés sur '+idxSeen+' / '+mails.length+' e-mails.</p>'
+    + '<p style="margin:4px 0"><b>Vérifications :</b> destination réelle ou en-têtes examinés sur '+idxSeen+' / '+mails.length+' e-mails.</p>'
     + '<p style="margin:4px 0"><b>Conséquences métier :</b> '+legitKept+' / 3 e-mails légitimes laissés passer — bloquer un vrai e-mail de paie ou du service IT casse le travail des collègues.</p>';
   finishMission("phish", score, [
     { label:"Bons réflexes", got:reflex, max:50 },
@@ -1795,7 +1902,7 @@ function renderCampaignScreen(){
   html += '<div class="stepct">Progression : '+n+' / 4 chapitres'+(S.campaign.finished ? ' · Campagne terminée — rejouable à volonté' : '')+'</div>';
   html += '<div class="campsteps"><i class="'+(atlasDone()?"done":"")+'"></i><i class="'+(S.campaign.done.clinique?"done":"")+'"></i><i class="'+(S.campaign.done.mairie?"done":"")+'"></i><i class="'+(S.campaign.done.finale?"done":"")+'"></i></div>';
   html += '<div class="progressline"><i style="width:'+Math.round(100*n/4)+'%"></i></div>';
-  html += '<div class="card"><div class="row between"><span class="tag soc">Épisode 1 · SOC</span>'+(atlasDone()?'<span class="tag done">Terminé · meilleur '+S.best.tri+' / 100</span>':'<span class="tag">Disponible</span>')+'</div><h3 style="margin-top:8px">Atlas Logistics — Alerte à 03h12</h3><p>La nuit de j.martin : force brute, compte compromis, règle de transfert. Le tri d\'alertes du SOC. Tu as 45 minutes de temps de jeu (accéléré) avant la relève de 04h00.</p><button class="btn primary big" id="csEp1">'+(atlasDone()?'Rejouer l\'épisode':'Jouer l\'épisode')+'</button></div>';
+  html += '<div class="card"><div class="row between"><span class="tag soc">Épisode 1 · SOC</span>'+(atlasDone()?'<span class="tag done">Terminé · meilleur '+S.best.tri+' / 100</span>':'<span class="tag">Disponible</span>')+'</div><h3 style="margin-top:8px">Atlas Logistics — Alerte à 03h12</h3><p>La Mission 1 complète, variante A « Le chef d\'équipe » : tri, corrélation, décision sous pression, enquête, éradication, message à la direction. Tu as 45 minutes de temps de jeu (accéléré) avant la relève de 04h00.</p><button class="btn primary big" id="csEp1">'+(atlasDone()?'Rejouer l\'épisode':'Jouer l\'épisode')+'</button></div>';
   ["clinique","mairie"].forEach(function(cid, i){
     var sc = CAMP_SCENARIOS[cid];
     html += '<div class="card"><div class="row between"><span class="tag soc">Épisode '+(i+2)+' · SOC</span>'+(S.campaign.done[cid]?'<span class="tag done">Terminé · meilleur '+S.campaign.best[cid]+' / 100</span>':'<span class="tag">Disponible</span>')+'</div><h3 style="margin-top:8px">'+sc.title.split("— ")[1]+'</h3><p>'+(cid==="clinique" ? "Protéger les dossiers et les appareils sans jamais arrêter les soins. 5 situations." : "Des services aux habitants frappés, un journaliste au téléphone, et un compteur de confiance qui bouge à chaque décision. 5 situations.")+'</p><button class="btn primary big" data-cs="'+cid+'">'+(S.campaign.done[cid]?'Rejouer l\'épisode':'Jouer l\'épisode')+'</button></div>';
@@ -1811,7 +1918,7 @@ function renderCampaignScreen(){
   html += upgradesSectionHtml();
   $("view-campaign").innerHTML = html;
   $("campBack").addEventListener("click", function(){ show("hub"); });
-  $("csEp1").addEventListener("click", function(){ sndTap(); startBriefing("tri"); });
+  $("csEp1").addEventListener("click", function(){ sndTap(); startM1("A"); });
   document.querySelectorAll("#view-campaign [data-cs]").forEach(function(b){
     b.addEventListener("click", function(){ sndTap(); startCampChapter(b.getAttribute("data-cs")); });
   });
@@ -1830,6 +1937,7 @@ function renderProfil(){
       + (FBUser.emailVerified ? '' : '<button class="btn" id="pResend">Renvoyer l\'e-mail de vérification</button>')
       + '<button class="btn danger" id="pLogout">Se déconnecter</button></div></div>';
   }
+  html += '<div class="card"><h3>Sauvegarde</h3><p style="margin:0" id="saveStateLine">'+(saveFailed ? "Progression non enregistrée sur cet appareil — stockage indisponible. Elle reste en mémoire pour cette session." : "Progression enregistrée sur cet appareil.")+'</p></div>';
   html += '<div class="card"><h3>Mode Examen</h3><div class="switchrow"><div class="swtxt"><p style="margin:0">Chrono réel affiché pendant les missions, et aucun indice — ni le gratuit, ni les payants. Les scores et les récompenses ne changent pas.</p><p style="margin:6px 0 0"><b style="color:var(--txt)">'+(S.examMode ? 'Activé' : 'Désactivé')+'</b></p></div><button class="switch" id="examToggle" role="switch" aria-checked="'+(S.examMode?'true':'false')+'" aria-label="Mode Examen"><i></i></button></div></div>';
   html += '<div class="card"><h3>XP par domaine</h3><p>L\'XP récompense la participation et fait avancer l\'histoire. Il ne prouve pas, à lui seul, une compétence.</p>'
     + '<div class="xpbar"><div class="xl">SOC — Niveau '+levelOf(S.xp.soc)+'<span>'+S.xp.soc+' XP</span></div><div class="xptrack"><i style="width:'+levelPct(S.xp.soc)+'%"></i></div></div>'
@@ -1893,12 +2001,14 @@ function renderMenu(){
       + (FBUser.emailVerified ? '<p>E-mail vérifié.</p>' : '<p>E-mail pas encore vérifié — tu peux jouer quand même.</p>')
       + '<button class="btn danger" id="mLogout">Se déconnecter</button></div>';
   }
+  html += '<button class="menuitem" id="mPack">'+ICONS.medal+'Pack Security+<span class="chev">›</span></button>';
   html += '<button class="menuitem" id="mHelp">'+ICONS.shield+'Fonctionnement du jeu<span class="chev">›</span></button>';
   html += '<button class="menuitem" id="mSound">'+(S.sound?ICONS.sndOn:ICONS.sndOff)+'Son : '+(S.sound?'activé':'coupé')+'<span class="chev">›</span></button>';
   html += '<button class="menuitem" id="mReset" style="color:var(--red)">'+ICONS.trash+'Réinitialiser la progression<span class="chev">›</span></button>';
-  html += '<div class="card"><h3>Nexus Guardian — Phase 0</h3><p>Prototype local. Progression sauvegardée sur cet appareil uniquement.</p><p>Personnages : Cdt. Amara Keïta (mentore) · Léo « Zéro » (hacker éthique) · Kevin de la Compta · ÉCLIPSE (collectif ennemi).</p></div>';
+  html += '<div class="card"><h3>Nexus Guardian — Phase 0</h3><p>Prototype local. Progression sauvegardée sur cet appareil uniquement.</p><p id="saveStateLine">'+(saveFailed ? "Progression non enregistrée sur cet appareil — stockage indisponible. Elle reste en mémoire pour cette session." : "Progression enregistrée sur cet appareil.")+'</p><p>Personnages : Cdt. Amara Keïta (mentore) · Directrice Valence — « Montrez-moi l\'impact. » · Le Cartographe — « Je connais chaque chemin. » · Léo « Zéro » (hacker éthique) · Kevin de la Compta · ÉCLIPSE (collectif ennemi).</p></div>';
   $("view-menu").innerHTML = html;
   var ml = $("mLogout"); if(ml) ml.addEventListener("click", function(){ doSignOut(); });
+  $("mPack").addEventListener("click", function(){ packTab="home"; show("pack"); });
   $("mHelp").addEventListener("click", function(){ renderHelp(); show("help"); });
   $("mSound").addEventListener("click", function(){ S.sound=!S.sound; save(); renderMenu(); if(S.sound) sndTap(); });
   $("mReset").addEventListener("click", function(){
@@ -1912,12 +2022,12 @@ function renderMenu(){
 }
 function renderHelp(){
   var html = '<div class="ghead"><button class="quit" id="hBack" aria-label="Retour">‹</button><div class="ttl">Fonctionnement du jeu</div></div><div class="helptext">';
-  html += '<h3>Le principe</h3><p>Nexus Guardian se joue en missions courtes, une par écran. Tu décides, le jeu te montre le résultat, puis le <b>debrief</b> explique le pourquoi de chaque réponse. C\'est ce debrief qui fait progresser : les notions reviennent d\'une mission à l\'autre, comme dans une vraie révision espacée.</p><p>La toute première partie est le <b>cold open « Alerte à 03h12 »</b> : un incident de trois minutes, en mode guidé, avant même de découvrir la ville. Ensuite s\'ouvre la <b>campagne SOC</b> de l\'Acte 1 : tri d\'alertes, chasse au phishing, défense réseau — trois missions qui racontent le même incident chez Atlas Logistics. Les 14 types de missions, les cinq actes, les autres certifications et le multijoueur du document de concept restent la vision à long terme : ce prototype ne construit que cette petite campagne, avec un début et une fin.</p>';
+  html += '<h3>Le principe</h3><p>Nexus Guardian se joue en missions courtes, une par écran. Tu décides, le jeu te montre le résultat, puis le <b>debrief</b> explique le pourquoi de chaque réponse. C\'est ce debrief qui fait progresser : les notions reviennent d\'une mission à l\'autre, comme dans une vraie révision espacée.</p><p>La toute première partie est la <b>Mission 1 « Alerte à 03h12 »</b> : l\'incident complet d\'Atlas Logistics, en mode guidé la première fois, avant même de découvrir la ville — c\'est elle qui sert de prologue, il n\'y a pas d\'autre ouverture. Ensuite s\'ouvre la <b>campagne SOC</b> de l\'Acte 1 : tri d\'alertes, chasse au phishing, défense réseau — trois missions qui racontent le même incident chez Atlas Logistics, sous d\'autres angles. Les 14 types de missions, les cinq actes, les autres certifications et le multijoueur du document de concept restent la vision à long terme : ce prototype ne construit que cette petite campagne, avec un début et une fin.</p>';
   html += '<h3>Événement, alerte, incident</h3><p>Le vocabulaire compte, le jeu l\'emploie au sens strict :</p><ul><li><b>Événement</b> : un fait brut enregistré (une connexion, un échec 4625).</li><li><b>Alerte</b> : un événement que le système juge digne d\'être regardé. Une alerte n\'est pas encore une attaque.</li><li><b>Incident</b> : une attaque confirmée, souvent faite de plusieurs alertes liées — chez Atlas, la rafale d\'échecs, la connexion réussie et la règle de transfert forment <b>un seul incident</b>.</li></ul>';
-  html += '<h3>Des couleurs qui ne donnent pas la réponse</h3><p>Pendant les missions, l\'interface est <b>neutre</b> : aucun bouton, aucun paquet, aucune destination de lien n\'est teinté en vert « légitime » ou rouge « malveillant » — sinon le jeu répondrait à ta place. Le rouge et le vert n\'apparaissent qu\'en <b>mode guidé</b> (le cold open) et au <b>debrief</b>, quand la réponse est révélée et expliquée. En mode normal, seuls les faits parlent : adresses, en-têtes, horaires, volumes.</p>';
+  html += '<h3>Des couleurs qui ne donnent pas la réponse</h3><p>Pendant les missions, l\'interface est <b>neutre</b> : aucun bouton, aucun paquet, aucune destination de lien n\'est teinté en vert « légitime » ou rouge « malveillant » — sinon le jeu répondrait à ta place. Le rouge et le vert n\'apparaissent qu\'en <b>mode guidé</b> (la Mission 1, la première fois) et au <b>debrief</b>, quand la réponse est révélée et expliquée. En mode normal, seuls les faits parlent : adresses, en-têtes, horaires, volumes.</p>';
   html += '<h3>Le raisonnement est noté</h3><p>Après certaines décisions importantes, le jeu demande : <b>« Quel indice justifie ton choix ? »</b> — ou « Quelle information pourrait te faire changer d\'avis ? ». Le debrief distingue alors quatre choses : la <b>décision</b> prise, les <b>preuves</b> utilisées, les <b>vérifications</b> oubliées et les <b>conséquences métier</b>. Une bonne réponse donnée au hasard ne vaut pas une analyse construite : c\'est le raisonnement qui rapporte les points de Raisonnement.</p>';
   html += '<h3>Tri d\'alertes (Le SOC)</h3><p>Huit alertes arrivent une par une, avec un chrono de 3 minutes. Pour chacune, trois choix :</p><ul><li><b>Faux positif</b> : l\'alerte a une explication normale (sauvegarde planifiée, mise à jour, scan de notre propre équipe…).</li><li><b>Vrai positif</b> : c\'est une vraie activité malveillante, il faut agir.</li><li><b>Escalader</b> : le cas est ambigu et mérite un avis ou une vérification avant de trancher — par exemple une connexion depuis deux pays en 20 minutes.</li></ul><p>Le bouton <b>Détails de l\'alerte</b> affiche les informations techniques (événements 4624/4625, adresses IP). Certaines alertes se lisent en chaîne : des échecs de connexion (4625), puis une réussite (4624) depuis la même IP, puis une règle de transfert d\'e-mails — c\'est une seule et même attaque. Identifier les trois volets rapporte les points <b>Attaque identifiée</b>. Après les alertes décisives, une question de <b>justification</b> demande la preuve qui fonde ton choix : ce sont les points de <b>Raisonnement</b>. La mission existe en <b>trois variantes</b> (le compte visé et l\'adresse IP changent) : rejouer ne sert pas à réciter, mais à reconnaître le schéma. Barème : Précision 40 % · Attaque identifiée 30 % · Rapidité 20 % · Raisonnement 10 %. Si le chrono tombe à zéro pendant qu\'une alerte critique de la chaîne reste sans réponse, la note est plafonnée.</p>';
-  html += '<h3>Chasse au phishing (QG Aegis)</h3><p>Six e-mails, trois légitimes et trois piégés. Ouvre chaque e-mail, lis l\'adresse complète de l\'expéditeur, déplie les <b>en-têtes d\'authentification</b> (SPF, DKIM, DMARC : ce sont des contrôles qui vérifient que l\'e-mail vient bien du domaine affiché) et fais un <b>appui long sur les liens</b> pour voir leur vraie destination avant de cliquer. Un simple toucher ouvre le lien — sur un e-mail piégé, le compte est compromis et les points de l\'e-mail sont perdus. Quatre actions :</p><ul><li><b>Légitime</b> : l\'e-mail est propre, il poursuit sa route.</li><li><b>Signaler</b> : e-mail malveillant — il est remonté à l\'équipe sécurité pour protéger tout le monde.</li><li><b>Supprimer</b> : il disparaît, mais personne n\'est prévenu — mieux que rien, moins bien que signaler.</li><li><b>Quarantaine</b> : il est isolé en attendant analyse — adapté aux pièces jointes suspectes.</li></ul><p>Bloquer un e-mail légitime compte comme un faux positif et coûte des points. Barème : Bons réflexes 50 % · Indices repérés 30 % · Faux positifs évités 20 %.</p><p>Les indices qui ne trompent pas : domaine presque identique mais pas tout à fait (un zéro à la place d\'un o), urgence fabriquée, demande d\'argent ou de secret, pièce jointe .docm ou .zip inattendue, SPF/DMARC en échec.</p>';
+  html += '<h3>Chasse au phishing (QG Aegis)</h3><p>Six e-mails, trois légitimes et trois piégés. Ouvre chaque e-mail, lis l\'adresse complète de l\'expéditeur, déplie les <b>en-têtes d\'authentification</b> (SPF, DKIM, DMARC : ce sont des contrôles qui vérifient que l\'e-mail vient bien du domaine affiché) et révèle la vraie destination des liens avant de cliquer — <b>appui long sur le lien</b> ou bouton <b>« Voir le lien »</b>, les deux font exactement la même chose : chaque geste a son équivalent bouton. Un simple toucher ouvre le lien — sur un e-mail piégé, le compte est compromis et les points de l\'e-mail sont perdus. Quatre actions :</p><ul><li><b>Légitime</b> : l\'e-mail est propre, il poursuit sa route.</li><li><b>Signaler</b> : e-mail malveillant — il est remonté à l\'équipe sécurité pour protéger tout le monde.</li><li><b>Supprimer</b> : il disparaît, mais personne n\'est prévenu — mieux que rien, moins bien que signaler.</li><li><b>Quarantaine</b> : il est isolé en attendant analyse — adapté aux pièces jointes suspectes.</li></ul><p>Bloquer un e-mail légitime compte comme un faux positif et coûte des points. Barème : Bons réflexes 50 % · Indices repérés 30 % · Faux positifs évités 20 %.</p><p>Les indices qui ne trompent pas : domaine presque identique mais pas tout à fait (un zéro à la place d\'un o), urgence fabriquée, demande d\'argent ou de secret, pièce jointe .docm ou .zip inattendue, SPF/DMARC en échec.</p>';
   html += '<h3>Défense réseau (Quartier Réseau)</h3><p>Le réseau d\'Atlas Logistics vu de dessus : Internet en haut, la <b>DMZ</b> au milieu (zone tampon qui expose les serveurs publics, Web et Mail, sans ouvrir le réseau interne), le réseau interne en bas. Tu disposes de <b>12 000 €</b> et de quatre équipements : <b>Pare-feu</b> (filtre le trafic aux frontières), <b>IDS</b> (détecte et alerte, mais ne bloque pas seul), <b>WAF</b> (filtre les attaques Web), <b>VLAN</b> (segmente le réseau interne en zones étanches). Touche un équipement, puis un emplacement pour le poser ; touche un équipement posé pour le retirer et récupérer son prix.</p><p>Ensuite, huit vagues de trafic traversent ton réseau, affichées de façon neutre : du trafic légitime et des attaques, dont un scan massif qui sert de diversion. Le debrief révèle, vague par vague, ce qui était malveillant et pourquoi. Un équipement ne protège que la zone où il est placé. Trop strict, le trafic légitime est bloqué et l\'indicateur <b>Service</b> chute ; trop laxiste, les attaques passent. Barème : Attaques bloquées 40 % · Trafic légitime préservé 30 % · Budget respecté 20 % · Simplicité des règles 10 %.</p>';
   html += '<h3>XP, couverture, maîtrise : trois mesures distinctes</h3><ul><li><b>XP</b> : récompense la participation et fait avancer l\'histoire, par domaine (SOC, Réseau), niveaux N1 à N10. Ton grade actuel : Stagiaire, Acte 1.</li><li><b>Couverture</b> : les objectifs que tu as rencontrés au moins une fois. Rencontrer n\'est pas maîtriser.</li><li><b>Maîtrise</b> : ce que tu réussis seul — au plus la première aide essentielle, gratuite — avec un score d\'au moins 70, dans des situations nouvelles, et confirmé après un délai par l\'épreuve différée. Une réussite avec plusieurs indices fait avancer l\'histoire sans valider la compétence, et les bonus de première réussite ne sont pas des preuves de maîtrise.</li></ul><p>Dans le Profil, la <b>préparation estimée</b> pour Security+ combine couverture et maîtrise observées, et liste ce qui n\'a pas encore été assez évalué. C\'est une estimation, jamais une garantie de réussite à l\'examen.</p>';
   html += '<h3>L\'épreuve différée</h3><p>Sept jours après ta première mission terminée, une épreuve courte te replace devant les mêmes notions dans un <b>autre contexte</b> — la Clinique Saint-Roch — sans indice ni aide. Elle ne rapporte pas d\'XP : elle répond à la vraie question, « as-tu appris à reconnaître une situation, ou seulement mémorisé un scénario ? ». C\'est elle qui confirme la maîtrise.</p>';
@@ -1930,103 +2040,691 @@ function renderHelp(){
   html += '<h3>Sauvegarde et série de jours</h3><p>La progression est enregistrée automatiquement sur cet appareil, y compris une partie en cours : quitte une mission, tu la retrouveras sur l\'accueil avec le bouton <b>Reprendre</b>. Jouer plusieurs jours de suite fait grandir ta série. Le bouton <b>Réinitialiser la progression</b>, ci-dessous dans le Menu, efface tout.</p>';
   html += '<h3>Kevin, au fait</h3><p>Kevin de la Compta n\'est pas « celui qui clique sur tout ». Son premier piège imitait sa responsable, et le portail interne d\'Atlas est assez confus pour que tout le monde vérifie sa paie par e-mail : l\'erreur était aussi celle du système. Depuis, Kevin a appris à signaler un message suspect — et un jour, une de ses remarques de terrain devient l\'indice décisif. L\'humour vise les situations, pas les gens.</p>';
   html += '<h3>Notions cloud et gouvernance, dès maintenant</h3><p>Même si le Ciel Cloud et la Tour du Conseil ouvrent plus tard, leurs notions essentielles sont présentes dès cette version dans le Cyberdex : la <b>responsabilité partagée</b> dans le cloud, et la <b>gouvernance</b> (des règles écrites, connues et vérifiées). Elles seront approfondies ensuite, pas découvertes ensuite.</p><p>Petite honnêteté de conception : quand le jeu parle d\'un « parcours d\'attaque » en plusieurs portes, c\'est une <b>simplification ludique</b> — un vrai attaquant ne passe pas obligatoirement par toutes les portes, ni dans cet ordre.</p>';
-  html += '<h3>Mini-campagne — La nuit d\'ÉCLIPSE</h3><p>Depuis l\'accueil, le bouton <b>Ouvrir la campagne</b> mène à l\'écran de campagne : quatre chapitres, une barre de progression, et l\'état de chacun — terminé, disponible ou verrouillé.</p><ul><li><b>Épisode 1 — Atlas Logistics</b> : le tri d\'alertes « Alerte à 03h12 », le même que dans la campagne SOC. Dans l\'histoire, tu as <b>45 minutes de temps de jeu (accéléré)</b> avant la relève de <b>04h00</b> — en vrai, la mission dure environ <b>12 minutes</b>. L\'horloge est celle du récit, pas un minuteur de plus : le chrono de jeu reste celui affiché en mission.</li><li><b>Épisode 2 — Clinique Saint-Roch</b> : mêmes réflexes, autre contrainte — les urgences et les dossiers patients ne peuvent pas s\'arrêter. Chaque décision de confinement affiche son <b>impact métier</b> avant de choisir : protéger ne veut jamais dire tout bloquer. Le debrief parle continuité des soins, sauvegardes testées et confidentialité des données de santé. Attention : l\'épreuve différée se déroule aussi à Saint-Roch, mais c\'est un autre scénario, court — un retest des notions, pas une redite de l\'épisode.</li><li><b>Épisode 3 — Mairie de Nexus City</b> : les services aux habitants sont frappés et informer les habitants est obligatoire. Le compteur <b>Confiance des habitants</b> reste visible pendant tout l\'épisode et bouge à chaque décision : chaque heure de retard et chaque message maladroit coûtent, la transparence mesurée rapporte. En cours d\'épisode, un journaliste demande un point de situation : à toi de choisir quoi répondre, avec les seuls faits vérifiés. Le debrief parle communication de crise, notification des autorités et continuité des services publics.</li><li><b>Finale — Le retour d\'ÉCLIPSE</b> : verrouillée tant que les épisodes 1 à 3 ne sont pas terminés. La même nuit, les trois organisations sont frappées ensemble : diversion, force brute, chiffrement, revendication publique. Tu y réutilises tout — tri, phishing, confinement, communication. Le debrief final est un <b>debrief de campagne complet</b> : la mémoire de la ville, le bilan des quatre chapitres, les décisions qui ont compté et la préparation estimée mise à jour.</li></ul><p>Chaque épisode rapporte XP et crédits comme une mission, bonus de première fois compris. Un épisode terminé peut toujours être rejoué — la campagne entière aussi, une fois la finale bouclée.</p>';
+  html += '<h3>Mission 1 — « Alerte à 03h12 » (prologue)</h3><p>La Mission 1 est l\'ouverture du jeu : elle remplace l\'ancien cold open et constitue aussi l\'<b>épisode 1 Atlas</b> de la mini-campagne — un seul contenu, pas de doublon. Le mini-jeu de tri d\'alertes reste, lui, l\'outil d\'entraînement au tri. Dans l\'histoire, tu as <b>45 minutes de temps de jeu (accéléré)</b> avant la relève de <b>04h00</b> ; en vrai, la mission dure environ <b>12 minutes</b>. Modes : <b>guidé</b> la première fois, <b>normal</b> ensuite — en normal, aucune couleur de verdict avant le debrief.</p><p>Elle se déroule en <b>sept phases</b> :</p><ul><li><b>1 · Briefing et tri</b> : trois alertes au format neutre (sauvegarde nocturne, PowerShell encodé, scan de ports). Tu les classes — faux positif, à surveiller, escalader — et tu choisis laquelle ouvrir en premier.</li><li><b>2 · Corrélation</b> : le détail de l\'alerte PowerShell montre son processus parent (WINWORD.EXE) ; le journal de la nuit et la boîte mail permettent de relier l\'e-mail de paie de 22:41 à l\'alerte de 03:09, en citant l\'indice qui le prouve.</li><li><b>3 · Décision n°1</b> : 60 secondes pour choisir — isoler CE-07, observer dix minutes, ou bloquer seulement le domaine. Chaque choix a sa conséquence, racontée tout de suite, puis tu cites l\'indice qui défend ta décision et ce qui te ferait changer d\'avis.</li><li><b>4 · Enquête</b> : le journal élargi révèle le transfert du document et un second poste, CE-03. Élargir ou non change la suite.</li><li><b>5 · Éradication</b> : tu ordonnes toi-même les actions — réinitialiser le compte de service, bloquer le domaine, supprimer la tâche planifiée « MajService », et restaurer seulement à la fin.</li><li><b>6 · Communication</b> : Inès demande cinq lignes à la direction. Tu composes le message en choisissant cinq phrases parmi huit ; elles sont jugées sur le fond — faits vérifiés, impact métier, transparence, demande claire — jamais sur le style. La spéculation, le blâme et les promesses non fondées coûtent des points.</li><li><b>7 · Debrief</b> : score sur <b>cinq axes</b> (voir ci-dessous), retour personnalisé selon ce que tu as réellement fait, et <b>cartes de révision générées</b> ajoutées au Cyberdex (C2-01, C2-03, C4-01, C4-02, C4-03, C4-04, C5-07) quand une erreur précise appelle une fiche précise.</li></ul><p><b>Le score sur 100 — cinq axes :</b> Détection 25 (classer les trois alertes, ouvrir la bonne en premier, retrouver l\'e-mail d\'origine) · Réaction 25 (décision n°1 défendable, enquête élargie jusqu\'à CE-03, éradication avant restauration) · Raisonnement 20 (indice cité, ce qui te ferait changer d\'avis, vérifications avant de conclure) · Communication 15 (message de cinq lignes pertinent, ton factuel) · Précision 15 (aucune action inutile, aucun faux positif escaladé, budget d\'actions respecté). <b>Paliers :</b> 85 et plus, excellent · 70 à 84, solide · 50 à 69, à consolider · moins de 50, à retenter. Une réussite avec plusieurs aides fait avancer l\'histoire mais ne compte pas comme preuve de maîtrise, et les aides utilisées sont affichées au debrief. L\'aide essentielle d\'Amara reste gratuite ; en Mode Examen, aucun indice, comme partout.</p><p><b>Les trois variantes</b> rejouent la même nuit avec d\'autres points d\'entrée : <b>A · Le chef d\'équipe</b> (le faux e-mail de paie, objectifs Security+ 2.2, 2.4, 4.4, 4.8, 4.9) ; <b>B · Le faux fournisseur</b> (Nadia Perrin à la comptabilité, une fausse page de connexion, une règle de transfert et un virement de 48 000 € programmé à 8 h — décision clé : révoquer sessions et règle, pas seulement le mot de passe, puis suspendre le virement et vérifier hors canal ; objectifs 2.2, 2.4, 4.4, 4.6, 4.8) ; <b>C · La clé du parking</b> (Kevin et la clé USB « Salaires 2026 » — double extension, tentatives SMB vers douze postes, décision d\'isolation proportionnée et culture du signalement ; objectifs 2.2, 2.4, 3.2, 4.8). Rejouer n\'importe quelle variante rapporte <b>plein pot</b> : pas de récompense dégressive, ce sont les situations qui changent.</p>';
+  html += '<h3>Mini-campagne — La nuit d\'ÉCLIPSE</h3><p>Depuis l\'accueil, le bouton <b>Ouvrir la campagne</b> mène à l\'écran de campagne : quatre chapitres, une barre de progression, et l\'état de chacun — terminé, disponible ou verrouillé.</p><ul><li><b>Épisode 1 — Atlas Logistics</b> : la Mission 1 « Alerte à 03h12 », variante A, dans son déroulé complet (voir la section Mission 1 ci-dessus). Dans l\'histoire, tu as <b>45 minutes de temps de jeu (accéléré)</b> avant la relève de <b>04h00</b> — en vrai, la mission dure environ <b>12 minutes</b>. L\'horloge est celle du récit, pas un minuteur de plus : le chrono de jeu reste celui affiché en mission.</li><li><b>Épisode 2 — Clinique Saint-Roch</b> : mêmes réflexes, autre contrainte — les urgences et les dossiers patients ne peuvent pas s\'arrêter. Chaque décision de confinement affiche son <b>impact métier</b> avant de choisir : protéger ne veut jamais dire tout bloquer. Le debrief parle continuité des soins, sauvegardes testées et confidentialité des données de santé. Attention : l\'épreuve différée se déroule aussi à Saint-Roch, mais c\'est un autre scénario, court — un retest des notions, pas une redite de l\'épisode.</li><li><b>Épisode 3 — Mairie de Nexus City</b> : les services aux habitants sont frappés et informer les habitants est obligatoire. Le compteur <b>Confiance des habitants</b> reste visible pendant tout l\'épisode et bouge à chaque décision : chaque heure de retard et chaque message maladroit coûtent, la transparence mesurée rapporte. En cours d\'épisode, un journaliste demande un point de situation : à toi de choisir quoi répondre, avec les seuls faits vérifiés. Le debrief parle communication de crise, notification des autorités et continuité des services publics.</li><li><b>Finale — Le retour d\'ÉCLIPSE</b> : verrouillée tant que les épisodes 1 à 3 ne sont pas terminés. La même nuit, les trois organisations sont frappées ensemble : diversion, force brute, chiffrement, revendication publique. Tu y réutilises tout — tri, phishing, confinement, communication. Le debrief final est un <b>debrief de campagne complet</b> : la mémoire de la ville, le bilan des quatre chapitres, les décisions qui ont compté et la préparation estimée mise à jour.</li></ul><p>Chaque épisode rapporte XP et crédits comme une mission, bonus de première fois compris. Un épisode terminé peut toujours être rejoué — la campagne entière aussi, une fois la finale bouclée.</p>';
   html += '<h3>La ville se souvient : améliorations, confiance, faiblesses</h3><p>La mini-campagne a une mémoire, affichée sur l\'écran de campagne :</p><ul><li><b>Améliorations durables</b> (40 crédits chacune, installables depuis l\'écran de campagne, l\'écran Missions ou le debrief d\'un épisode) : <b>Journalisation renforcée</b> — un indice supplémentaire apparaît dans un épisode ultérieur et en finale ; <b>MFA généralisée</b> — la force brute bute sur le second facteur, un compte compromis de moins à gérer ; <b>Sauvegardes 3-2-1 vérifiées</b> — la restauration devient une procédure testée, plus rapide, avec moins de dégâts. Quand un effet s\'applique pendant un épisode, le jeu le dit explicitement, au moment où il sert.</li><li><b>Confiance par organisation</b> (Atlas, Clinique, Mairie) : elle monte ou baisse selon tes décisions et reste affichée sur l\'écran de campagne. En finale, une confiance haute fait partager les journaux volontiers — un indice de plus ; une confiance basse ajoute une étape de persuasion.</li><li><b>Faiblesses connues</b> : la finale lit ce qui n\'a <b>pas</b> été installé et construit le chemin d\'attaque d\'ÉCLIPSE à partir de ces manques — pas de journalisation, il revient par les angles morts ; pas de MFA, par un mot de passe ; pas de sauvegardes testées, la restauration devient une découverte en pleine nuit. L\'écran d\'introduction de la finale te montre ce chemin avant de commencer.</li></ul><p><b>Le garde-fou, absolu :</b> aucune ancienne décision ne peut rendre la campagne impossible. Sans aucune amélioration et avec une confiance basse, chaque épisode et la finale restent terminables par un autre chemin — plus lent, plus pénible, jamais bloqué. Les conséquences créent des histoires différentes, elles ne condamnent pas le joueur. En finale, les améliorations installées ajoutent jusqu\'à 12 points de « mémoire de la ville » au barème : un bonus, jamais une condition.</p>';
-  html += '<h3>Et la suite ?</h3><p>Ce prototype couvre la Phase 0 resserrée : le cold open, la campagne SOC en trois missions, l\'épreuve différée et la mini-campagne complète — trois organisations, une mémoire persistante et la finale d\'ÉCLIPSE. Le Labo Forensics, la Banque, la Tour Rouge, le Quartier Dev, la Tour du Conseil et le Ciel Cloud sont visibles dans la ville mais fermés pour l\'instant.</p>';
+  html += '<h3>Pack Security+</h3><p>Le Pack Security+ est l\'espace d\'entraînement hors mission, accessible depuis l\'accueil, l\'écran Missions ou le Menu. Cinq sections :</p><ul><li><b>Scénarios éclair</b> : 18 situations courtes (3 à 5 minutes), une décision à prendre, puis un debrief avec le « pourquoi » et la carte de révision liée. Ils couvrent les cinq domaines Security+ et renvoient aux notions des missions (l\'objectif, par exemple 2.2 ou 4.8, est affiché sur chaque scénario). Une bonne décision rapporte 20 XP dans le domaine concerné et 10 crédits ; une erreur fait revenir la carte liée tout de suite dans la file de révision. Rejouer rapporte plein pot, comme partout : aucune récompense dégressive.</li><li><b>Cartes de révision</b> : les 40 cartes C1-01 à C5-08, question d\'un côté, réponse de l\'autre — touche la carte pour la retourner, puis dis honnêtement « Je sais » ou « À revoir ». Les cartes reviennent à <b>intervalles espacés : 1, 3, 7, 14 puis 30 jours</b> quand tu les sais, et dès le lendemain quand tu hésites. C\'est la répétition espacée : revoir juste avant d\'oublier ancre bien mieux que tout relire la veille. Les 7 cartes générées par la Mission 1 (C2-01, C2-03, C4-01, C4-02, C4-03, C4-04, C5-07) font partie de ce même jeu de 40 — pas de doublon : une erreur en mission rend la carte correspondante due ici, et les scénarios renvoient vers leur carte liée. Le filtre « À revoir » ne montre que les cartes dues ; « Toutes » permet de réviser en avance, par domaine si tu veux.</li><li><b>Mini-examen blanc</b> : 10 questions à choix unique, une par thème, suivies d\'une <b>simulation pare-feu</b> (une PBQ : placer quatre règles dans le bon ordre — web vers la DMZ autorisé, RDP depuis Internet refusé, navigation des employés autorisée, refus par défaut en dernier). Aucune correction pendant l\'épreuve : tout arrive à la fin, question par question, avec un bouton vers la carte à revoir. Barème : 10 points de questions + 5 points de simulation (1 par règle bien placée, 1 pour la règle par défaut en dernier). <b>Seuil d\'entraînement : plus de 80 %</b> — en dessous, continue les examens blancs avant de passer aux examens complets du jeu. Chaque tentative rapporte 30 XP SOC et 15 crédits, quel que soit le score.</li><li><b>Simulations PBQ</b> : trois mini-simulations en plus de la simulation pare-feu du mini-examen — remettre les <b>étapes d\'une réponse à incident</b> dans l\'ordre (préparation, détection, analyse, confinement, éradication, récupération, retour d\'expérience), <b>classer des contrôles</b> par type (préventif, détectif, correctif, directif), et <b>associer des menaces à leur nom</b> (phishing, spear phishing, whaling, vishing, smishing, password spraying, credential stuffing). Même présentation que le mini-examen : score en pourcentage, <b>seuil d\'entraînement de 80 %</b>, corrections une par une et bouton vers la carte à revoir (C4-03 et C4-04, C1-02, ou C2-01, C2-02 et C2-04 selon la simulation). Chaque simulation rapporte 15 XP SOC et 10 crédits.</li><li><b>Parcours 12 semaines</b> : le plan de préparation complet — fondations (semaines 1–2), menaces (3–4), architecture (5–6), opérations (7–8), gouvernance (9), points faibles (10), examens blancs (11), dernière ligne droite (12). La progression de chaque bloc se remplit toute seule à mesure que tu termines ses scénarios et revois ses cartes. Rythme conseillé : 5 cartes par jour en session éclair, 2 à 3 scénarios par semaine, une mission du jeu le week-end.</li></ul><p>Précision honnête : les questions du mini-examen et des scénarios sont des <b>exemples d\'entraînement écrits pour ce jeu</b>, dans l\'esprit de l\'examen Security+ — ce ne sont pas des questions officielles CompTIA.</p>';
+  html += '<h3>Glossaire</h3><p>Les termes officiels en anglais sont affichés à côté des termes français. Un toucher sur un terme ne mène nulle part — c\'est une page à lire, pas un piège.</p><dl class="gloss">'
+    + '<dt>SOC <span>· Security Operations Center</span></dt><dd>Centre d\'opérations de sécurité : l\'équipe qui surveille, trie les alertes et répond aux incidents.</dd>'
+    + '<dt>SIEM <span>· Security Information and Event Management</span></dt><dd>Outil qui collecte et corrèle les journaux de plusieurs sources pour alerter et enquêter.</dd>'
+    + '<dt>IoC <span>· Indicator of Compromise</span></dt><dd>Indicateur de compromission : adresse IP, domaine ou empreinte de fichier lié à une attaque.</dd>'
+    + '<dt>MITRE ATT&CK</dt><dd>Catalogue public des tactiques et techniques réellement utilisées par les attaquants.</dd>'
+    + '<dt>Phishing <span>· hameçonnage</span></dt><dd>Message frauduleux qui imite un expéditeur de confiance pour voler des identifiants ou faire ouvrir une pièce jointe piégée.</dd>'
+    + '<dt>Ransomware <span>· rançongiciel</span></dt><dd>Logiciel qui chiffre les fichiers et exige une rançon.</dd>'
+    + '<dt>MFA <span>· Multi-Factor Authentication</span></dt><dd>Authentification multifacteur : un mot de passe plus un second facteur (appareil, clé, biométrie).</dd>'
+    + '<dt>Moindre privilège <span>· least privilege</span></dt><dd>Ne donner à chaque compte que les droits strictement nécessaires à son travail.</dd>'
+    + '<dt>Pare-feu <span>· firewall</span></dt><dd>Équipement qui filtre le trafic réseau selon des règles « autoriser / refuser ».</dd>'
+    + '<dt>DMZ <span>· demilitarized zone</span></dt><dd>Zone tampon qui expose des services publics (Web, Mail) sans ouvrir le réseau interne.</dd>'
+    + '<dt>VPN <span>· Virtual Private Network</span></dt><dd>Tunnel chiffré pour accéder à un réseau à distance.</dd>'
+    + '<dt>IDS / IPS <span>· Intrusion Detection / Prevention System</span></dt><dd>L\'IDS détecte et alerte ; l\'IPS, placé en ligne, peut aussi bloquer.</dd>'
+    + '<dt>CVE / CVSS</dt><dd>Le CVE identifie une vulnérabilité ; le CVSS note sa gravité de 0 à 10.</dd>'
+    + '<dt>Pentest <span>· test d\'intrusion</span></dt><dd>Attaque autorisée et encadrée, menée comme une vraie, pour trouver les failles avant les autres.</dd>'
+    + '<dt>Red team / Blue team</dt><dd>En exercice : l\'équipe rouge attaque, l\'équipe bleue défend.</dd>'
+    + '<dt>Bac à sable <span>· sandbox</span></dt><dd>Environnement isolé où ouvrir un fichier ou un lien suspect sans risque pour le vrai système.</dd>'
+    + '<dt>Zero trust</dt><dd>Ne jamais faire confiance par défaut : vérifier explicitement chaque accès, au moindre privilège.</dd>'
+    + '<dt>PKI <span>· Public Key Infrastructure</span></dt><dd>Infrastructure à clés publiques : certificats, autorités de certification — ce qui rend TLS possible.</dd>'
+    + '<dt>RGPD <span>· GDPR</span></dt><dd>Règlement européen de protection des données ; une violation exposant des personnes se notifie à l\'autorité en principe sous 72 heures.</dd>'
+    + '<dt>RTO / RPO</dt><dd>RTO : durée maximale d\'indisponibilité acceptée. RPO : perte de données maximale acceptée, en temps.</dd>'
+    + '<dt>Menace interne <span>· insider threat</span></dt><dd>Risque venant d\'une personne ayant un accès légitime, malveillante ou négligente.</dd>'
+    + '<dt>Supply chain <span>· chaîne d\'approvisionnement</span></dt><dd>Les fournisseurs et logiciels tiers dont une organisation dépend — et dont elle hérite des faiblesses.</dd>'
+    + '<dt>Forensics <span>· investigation numérique</span></dt><dd>Analyse technique des preuves numériques après un incident, en préservant leur intégrité.</dd>'
+    + '<dt>PBQ <span>· Performance-Based Question</span></dt><dd>Question pratique d\'examen, en simulation : configurer, ordonner ou analyser plutôt que choisir une réponse.</dd>'
+    + '</dl>';
+  html += '<h3>Mission 1 et Pack Security+ : deux portes, mêmes notions</h3><p>La <b>Mission 1</b> porte l\'étiquette <b>« Joue une vraie mission »</b> et le <b>Pack Security+</b> l\'étiquette <b>« Révise pour l\'examen »</b> : ce ne sont pas deux jeux séparés, ce sont les deux moitiés du même apprentissage — jouer la situation, puis réviser la notion. Le lien marche dans les deux sens :</p><ul><li><b>Après une variante de la Mission 1</b>, le debrief affiche un bloc <b>« Suite conseillée »</b> : les scénarios et les cartes du Pack qui prolongent exactement ce que tu viens de jouer. Variante A (le chef d\'équipe) → scénarios S4-4 et S4-5, cartes C4-03 et C4-04. Variante B (le faux fournisseur) → scénario S2-1, carte C2-03. Variante C (la clé du parking) → scénario S2-2, carte C3-02. Un toucher sur un bouton t\'y emmène directement.</li><li><b>Dans le Pack</b>, les scénarios et cartes liés à la Mission 1 portent la mention <b>« Vu dans la Mission 1 — variante A, B ou C »</b> : tu sais d\'où vient la notion avant de la réviser.</li></ul>';
+  html += '<h3>Les cartes enrichies</h3><p>Sur les sujets où l\'examen piège volontiers, le verso de la carte ajoute une ligne <b>mini-exemple, piège ou nuance</b>, juste sous la réponse — la question et la réponse, elles, ne changent pas. Dix cartes sont enrichies : C1-02 (la caméra qui enregistre est d\'abord un contrôle détectif), C2-03 (le faux fournisseur se vérifie hors canal), C2-04 (peu d\'essais sur beaucoup de comptes = spraying), C3-05 (le stockage public est la faute du client), C3-06 (on teste les restaurations, pas seulement les sauvegardes), C3-07 (15 minutes de perte acceptée = RPO de 15 minutes), C4-03 (restaurer avant d\'éradiquer relance l\'attaque — la tâche MajService de la Mission 1), C4-04 (le même exemple, vu depuis la restauration), C4-05 (un CVSS plus faible mais exposé à Internet passe d\'abord) et C5-01 (l\'exemple chiffré : 200 000 € × 25 % = SLE 50 000 €, × ARO 0,5 = ALE 25 000 €).</p>';
+  html += '<h3>Progression : locale uniquement, pas de cloud</h3><p>Ta progression est stockée <b>uniquement sur cet appareil</b> (dans ce navigateur) — elle n\'est <b>pas synchronisée dans le cloud</b>. La connexion par e-mail sert seulement à t\'identifier ; elle ne transporte pas ta partie. Conséquences pratiques :</p><ul><li>Pour garder ta progression, reste sur <b>le même appareil et le même navigateur</b>. Changer de téléphone ou vider les données du navigateur repart de zéro.</li><li><b>Se connecter demande internet.</b> Hors-ligne, l\'écran de connexion le dit clairement : ta progression est conservée sur l\'appareil, reconnecte-toi pour entrer dans le jeu.</li><li>Si la connexion tombe <b>pendant</b> une partie, un message discret te prévient — et rien ne s\'arrête : la progression continue de s\'enregistrer localement.</li><li>Si le stockage de l\'appareil est plein ou indisponible, le jeu ne plante pas : la progression reste en mémoire pour la session en cours, et un message clair s\'affiche (« Progression non enregistrée sur cet appareil — stockage indisponible »). L\'état de la sauvegarde est toujours visible dans le <b>Profil</b> et dans le <b>Menu</b> : « Progression enregistrée sur cet appareil » quand tout va bien.</li></ul>';
+  html += '<h3>Et la suite ?</h3><p>Ce prototype couvre la Phase 0 resserrée : la Mission 1 et ses trois variantes, la campagne SOC en trois missions, l\'épreuve différée et la mini-campagne complète — trois organisations, une mémoire persistante et la finale d\'ÉCLIPSE. Le Labo Forensics, la Banque, la Tour Rouge, le Quartier Dev, la Tour du Conseil et le Ciel Cloud sont visibles dans la ville mais fermés pour l\'instant.</p>';
   html += '</div>';
   $("view-help").innerHTML = html;
   $("hBack").addEventListener("click", function(){ show("menu"); });
 }
-/* ================= COLD OPEN — ALERTE A 03H12 ================= */
-var cold = null;
-var COLD_ALERTS = [0, 4, 5];
-function startCold(){
-  cold = { step:0, idx:0, answers:[], link:null, decision:null };
+/* ================= MISSION 1 — ALERTE A 03H12 (Tome 2) =================
+   La Mission 1 est le prologue du jeu : elle remplace l'ancien cold open
+   (une seule ouverture, pas de doublon). L'épisode 1 Atlas de la campagne
+   renvoie vers sa variante A. Le mini-jeu de tri reste l'outil de tri. */
+var M1A_ALERTS = [
+  { id:"sauv", t:"Volume sortant élevé", host:"SRV-SAUVEGARDE", time:"03:00",
+    det:"Sauvegarde nocturne : le volume copié cette nuit est plus élevé que d'habitude, vers le stockage interne d'Atlas.",
+    ans:"fp", why:"Sauvegarde nocturne planifiée, inscrite au calendrier de maintenance : faux positif. Le volume s'explique par la clôture mensuelle." },
+  { id:"ps", t:"PowerShell encodé lancé depuis Office", host:"CE-07", time:"03:09",
+    det:"Événement 4688 : powershell.exe avec l'argument -enc (tronqué). Processus parent : WINWORD.EXE. Utilisateur : j.mbaye.",
+    ans:"esc", why:"C'est le début de l'attaque : un document piégé, ouvert par le chef d'équipe, vient de lancer PowerShell." },
+  { id:"scan", t:"Scan de ports interne", host:"SCANNER-VULN", time:"02:30",
+    det:"Balayage de ports sur les plages internes, lancé depuis l'outil officiel de l'équipe informatique.",
+    ans:"fp", why:"Scan de vulnérabilités planifié par l'équipe informatique, depuis son outil habituel : faux positif." }
+];
+var M1_JOURNAL = [
+  { time:"22:41:07", src:"PASSERELLE-MAIL", txt:"LIVRÉ — de paie@atlas-l0gistics.example à j.mbaye@atlas-logistics.example · objet « URGENT : confirmez votre paie » · pièce jointe Paie_nov.docm" },
+  { time:"03:05:44", src:"CE-07", txt:"4688 — Processus WINWORD.EXE · Parent explorer.exe · Utilisateur j.mbaye" },
+  { time:"03:06:30", src:"PASSERELLE-MAIL", txt:"TRANSFÉRÉ — de j.mbaye à k.diallo@atlas-logistics.example · pièce jointe Paie_nov.docm", late:true },
+  { time:"03:09:12", src:"CE-07", txt:"4688 — Processus powershell.exe · Parent WINWORD.EXE · Arguments -enc (tronqué)" },
+  { time:"03:09:40", src:"PARE-FEU", txt:"AUTORISÉ — src CE-07 · dst 203.0.113.45:443 · domaine maj-service-paie.example (âge : 2 jours)" },
+  { time:"03:10:21", src:"CE-03", txt:"4688 — Processus powershell.exe · Parent WINWORD.EXE · Utilisateur k.diallo", late:true },
+  { time:"03:12:20", src:"SIEM", txt:"ALERTE — règle PowerShell_encodé_depuis_Office · hôte CE-07 · priorité haute" }
+];
+var M1_PHRASES = [
+  { txt:"Un poste du quai 4 a ouvert un document piégé reçu par e-mail ; il est isolé depuis 03h18.", good:true },
+  { txt:"Le quai 4 est ralenti ; les expéditions de 4 h ne sont pas menacées à ce stade.", good:true },
+  { txt:"Un second poste est concerné ; nous le traitons.", good:true },
+  { txt:"Nous avons besoin de votre accord pour changer un mot de passe de service dans la matinée.", good:true },
+  { txt:"À ce stade, nous n'avons pas de preuve de sortie de données ; la vérification continue.", good:true },
+  { txt:"Nous avons été piratés par ÉCLIPSE.", good:false },
+  { txt:"C'est la faute de Joël, il a ouvert la pièce jointe.", good:false },
+  { txt:"Tout est sous contrôle, il n'y a aucun risque.", good:false }
+];
+var M1_ERAD = [
+  { id:"compte", txt:"Réinitialiser le mot de passe du compte de service exposé" },
+  { id:"domaine", txt:"Bloquer le domaine maj-service-paie.example" },
+  { id:"tache", txt:"Supprimer la tâche planifiée « MajService »" },
+  { id:"restaurer", txt:"Restaurer le poste CE-07" }
+];
+var M1V = {
+  B:{ title:"Variante B · Le faux fournisseur", org:"Atlas Logistics — Service comptabilité",
+    intro:"Changement de décor, même nuit. À la comptabilité, Nadia Perrin gère les paiements fournisseurs. Un virement de 48 000 € vers « Transports Delmas » est programmé à 8 h. Et trois alertes viennent de tomber sur son périmètre.",
+    charName:"Nadia Perrin — Comptabilité", charQuote:"Je n'ai rien cliqué de grave… enfin, juste une page de connexion qui m'a demandé mon mot de passe.",
+    alerts:[
+      { t:"Connexion depuis un pays inhabituel", host:"Compte a.perrin", time:"03:12",
+        det:"Connexion réussie depuis l'extérieur, d'un pays où Nadia Perrin ne s'est jamais connectée. Compte sans MFA.",
+        ans:"esc", why:"Une connexion réussie depuis un pays inhabituel, sur un compte sans MFA : c'est le point d'entrée probable." },
+      { t:"Règle de transfert automatique créée", host:"Messagerie — a.perrin", time:"03:14",
+        det:"Nouvelle règle : tout message contenant « facture », « virement » ou « RIB » est copié vers une adresse externe inconnue.",
+        ans:"esc", why:"Deux minutes après la connexion : l'attaquant s'installe. Cette règle cherche précisément les informations de paiement." },
+      { t:"Mise à jour planifiée du serveur comptable", host:"SRV-COMPTA", time:"02:00",
+        det:"Correctifs signés, fenêtre de maintenance habituelle du serveur comptable.",
+        ans:"fp", why:"Mise à jour planifiée, dans sa fenêtre habituelle : faux positif." }
+    ],
+    firstIdx:0,
+    entryTitle:"Ce que l'enquête montre déjà",
+    entryBody:"À 02:41 cette nuit, un e-mail « Mettez à jour vos accès » arrive chez Nadia, avec un lien vers une page de connexion qui imite celle d'Atlas. À 02:50, une connexion réussit depuis l'extérieur. Le compte de Nadia n'a pas de MFA : le mot de passe seul a suffi. Et les coordonnées bancaires de « Transports Delmas » ont été modifiées dans la nuit.",
+    dec1q:"Le compte de Nadia est compromis. Tu fais quoi, tout de suite ?",
+    dec1:[
+      { txt:"Réinitialiser le mot de passe seulement", pts:8, pen:0, conseq:"Le mot de passe change — mais la session déjà ouverte par l'attaquant reste valable, et la règle de transfert continue de copier les factures vers l'extérieur. Il faudra y revenir en urgence." },
+      { txt:"Réinitialiser le mot de passe, révoquer toutes les sessions et supprimer la règle de transfert", pts:25, pen:0, conseq:"Mot de passe réinitialisé, sessions révoquées, règle supprimée : l'attaquant perd ses trois moyens de rester. C'est l'éradication complète, pas un pansement." },
+      { txt:"Laisser agir encore un peu, pour identifier tous les destinataires", pts:0, pen:5, conseq:"À 03:20, pendant que tu observes, un message part au fournisseur pour lui demander de valider un changement de compte bancaire. Observer un compte de paiement compromis, ça se paie comptant." }
+    ],
+    justq:"Quel indice justifie de tout révoquer, et pas seulement le mot de passe ?",
+    justopts:["La règle de transfert survit à un changement de mot de passe, et une session déjà ouverte reste ouverte", "L'alerte est arrivée à 03:14, en pleine nuit", "Nadia travaille à la comptabilité depuis longtemps"],
+    justok:0,
+    dec2q:"Le virement de 48 000 € vers « Transports Delmas » part à 8 h. Ses coordonnées bancaires ont été modifiées cette nuit. Tu fais quoi ?",
+    dec2:[
+      { txt:"Suspendre le virement et rappeler le fournisseur sur le numéro déjà connu, pour vérifier hors canal", pts:15, conseq:"Virement suspendu, fournisseur rappelé sur son numéro habituel : le « nouveau RIB » n'était pas le sien. Les 48 000 € restent chez Atlas, et la procédure de double validation des changements de coordonnées devient la règle." },
+      { txt:"Laisser partir : le virement était programmé avant l'incident", pts:0, conseq:"À 8 h, le virement part — vers le compte de l'attaquant. 48 000 € perdus, révélés au grand jour dans ce debrief : un RIB modifié la nuit d'une compromission ne se laisse jamais passer sans vérification hors canal." },
+      { txt:"Demander à Nadia de confirmer par e-mail que tout est normal", pts:4, conseq:"Nadia confirme… depuis la boîte que l'attaquant lisait encore il y a une heure. Le virement finit suspendu de justesse par la banque, après une matinée d'appels. Vérifier par le canal compromis, ce n'est pas vérifier." }
+    ],
+    examKey:"m1b"
+  },
+  C:{ title:"Variante C · La clé du parking", org:"Atlas Logistics — Bureaux, clôture mensuelle",
+    intro:"Kevin Martin termine la clôture mensuelle de nuit, aux bureaux. Sur le parking, il a trouvé une clé USB étiquetée « Salaires 2026 ». Il l'a branchée. Trois alertes viennent de tomber.",
+    charName:"Kevin Martin — Comptabilité", charQuote:"Euh, j'ai un message d'erreur bizarre sur mon PC… Je l'ai signalé, c'est bien, non ?",
+    charReply:"C'est très bien, Kevin. C'est même exactement ce qu'il fallait faire.",
+    alerts:[
+      { t:"Exécutable lancé depuis un support amovible", host:"CE-12", time:"03:09",
+        det:"« Salaires_2026.pdf.exe » lancé depuis une clé USB branchée quelques minutes plus tôt.",
+        ans:"esc", why:"Un exécutable déguisé en PDF (double extension), lancé depuis une clé trouvée sur un parking : c'est le point d'entrée." },
+      { t:"Nouvelle tâche planifiée", host:"CE-12", time:"03:10",
+        det:"Une tâche planifiée vient d'être créée sur CE-12, une minute après le lancement de l'exécutable.",
+        ans:"esc", why:"Une minute après l'exécution : la persistance s'installe. Cette tâche relancera le programme même après un redémarrage." },
+      { t:"Mise à jour antivirus planifiée", host:"CE-12", time:"03:00",
+        det:"Mise à jour des signatures antivirus, planifiée chaque nuit à 03:00.",
+        ans:"fp", why:"Mise à jour antivirus planifiée, à son heure habituelle : faux positif." }
+    ],
+    firstIdx:0,
+    entryTitle:"Ce que l'enquête montre déjà",
+    entryBody:"Le fichier s'appelle « Salaires_2026.pdf.exe » : la double extension est le déguisement — Windows masque le .exe, l'icône imite un PDF. Depuis CE-12, les journaux montrent des tentatives de connexion SMB vers douze postes du segment Bureaux. Kevin, lui, a fait ce qu'il fallait : il a vu le message d'erreur et il a signalé, tout de suite.",
+    dec1q:"CE-12 est compromis et il a déjà essayé de toucher douze postes. Tu isoles quoi ?",
+    dec1:[
+      { txt:"Isoler CE-12 seulement", pts:10, pen:0, conseq:"CE-12 est isolé — mais deux autres postes du segment avaient déjà répondu aux tentatives SMB. Il faut les retrouver un par un, pendant que la paie attend." },
+      { txt:"Isoler le segment Bureaux entier", pts:25, pen:0, conseq:"Le segment Bureaux est isolé : la propagation s'arrête net. Les bureaux restent hors ligne une trentaine de minutes et la clôture de la paie prend du retard — un coût réel, mais borné." },
+      { txt:"Isoler tout le site d'Atlas", pts:8, pen:5, conseq:"Tout le site est isolé, expéditions comprises — alors que le segment Entrepôt n'avait aucun signe de compromission. Les camions restent à quai pour rien : contenir large rassure, contenir juste protège." }
+    ],
+    justq:"Quel indice justifie d'isoler plus large que le seul poste de Kevin ?",
+    justopts:["Les tentatives de connexion SMB de CE-12 vers douze postes de son segment", "La clé USB était étiquetée « Salaires 2026 »", "Kevin a déjà cliqué sur un e-mail piégé par le passé"],
+    justok:0,
+    dec2q:"Kevin est au téléphone, un peu honteux. Tu lui réponds quoi ?",
+    dec2:[
+      { txt:"« C'est très bien, Kevin. C'est même exactement ce qu'il fallait faire : signaler vite nous a fait gagner la nuit. »", pts:15, conseq:"Kevin raccroche soulagé — et la prochaine fois, il signalera encore plus tôt. C'est comme ça qu'une culture du signalement se construit : jamais en punissant celui qui prévient." },
+      { txt:"« La prochaine fois, ne branche plus rien, c'est tout. »", pts:7, conseq:"C'est vrai, mais incomplet : Kevin retient la règle, pas la confiance. Le prochain message d'erreur bizarre, il hésitera peut-être avant d'appeler." },
+      { txt:"« Tu te rends compte des dégâts, j'espère ? »", pts:0, conseq:"Kevin raccroche en s'excusant — et décide, au fond de lui, que la prochaine erreur bizarre restera sur son écran, sans appel. Le blâme vient de coûter au SOC ses prochains signalements." }
+    ],
+    examKey:"m1c"
+  }
+};
+var m1 = null, m1Timer = null;
+function m1Grade(score){
+  if(score>=85) return "Excellent";
+  if(score>=70) return "Solide";
+  if(score>=50) return "À consolider";
+  return "À retenter";
+}
+function startM1(variant){
+  clearInterval(m1Timer);
+  m1 = { variant:variant, step:"intro", start:Date.now(),
+    tri:{ classified:{}, firstOpened:-1, view:-1 },
+    emailFound:false, journalSeen:false, mailSeen:false,
+    d1:null, d1Timeout:false, d1Just:-1, d1Mind:-1,
+    widened:false, foundCE03:false, restoredEarly:false,
+    eradOrder:[], msgSel:[], hintsUsed:0,
+    vent:false, vdec1:-1, vjust:-1, vdec2:-1 };
   show("cold");
-  renderCold();
+  renderM1();
 }
-function renderCold(){
+function m1Head(title){
+  return '<div class="ghead"><button class="quit" id="m1Quit" aria-label="Quitter">✕</button><div class="ttl">'+title+'</div>'+(S.examMode?'<div class="timer" data-exam-clock title="Chrono réel — Mode Examen">0:00</div>':'')+'</div>';
+}
+function m1Alerts(){ return m1.variant==="A" ? M1A_ALERTS : M1V[m1.variant].alerts; }
+function m1BindQuit(dest){
+  var q = $("m1Quit"); if(q) q.addEventListener("click", function(){ clearInterval(m1Timer); show(dest||"missions"); });
+}
+function renderM1(){
+  examStartClock(function(){ return m1 ? m1.start : null; });
+  if(m1.variant==="A") renderM1A();
+  else renderM1V();
+}
+/* ---------- tri partagé (A, B, C) ---------- */
+function renderM1Tri(title, sub, nextLabel){
+  var alerts = m1Alerts();
   var html = "";
-  if(cold.step===0){
-    html += '<div class="ghead"><div class="ttl">Atlas Logistics — entrepôt B</div></div>';
-    html += '<div class="clock">03:12</div><p class="sub" style="text-align:center">Ton téléphone vibre. Tu as 45 minutes de temps de jeu (accéléré) avant la relève de 04h00.</p>';
-    html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta — de garde</div><div class="txt">« Trois alertes viennent de tomber sur la console. Pas de panique : on regarde, on relie, on décide. Je te guide pour cette première fois. »</div></div></div></div>';
-    html += '<button class="btn primary big" id="coldGo">Voir les trois alertes</button>';
+  if(m1.tri.view >= 0){
+    var a = alerts[m1.tri.view];
+    html += m1Head(title);
+    html += '<div class="stepct">'+sub+'</div><div class="progressline"><i style="width:'+Math.round(100*Object.keys(m1.tri.classified).length/3)+'%"></i></div>';
+    html += '<div class="alertcard"><span class="tag">Alerte SIEM</span><div class="at">'+a.t+'</div>'
+      + '<div class="meta"><span>Source : <b>'+a.host+'</b></span><span>Heure : <b>'+a.time+'</b></span></div>'
+      + '<div class="details on">'+a.det+'</div></div>';
+    html += '<div class="trio"><button data-mc="fp">'+ICONS.check+'Faux positif</button><button data-mc="surv">'+ICONS.warn+'À surveiller</button><button data-mc="esc">'+ICONS.up+'Escalader</button></div>';
+    html += '<button class="btn big" id="m1BackList" style="margin-top:10px">Retour aux alertes</button>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    $("m1BackList").addEventListener("click", function(){ m1.tri.view = -1; sndTap(); renderM1(); });
+    document.querySelectorAll("#view-cold [data-mc]").forEach(function(b){
+      b.addEventListener("click", function(){
+        m1.tri.classified[m1.tri.view] = b.getAttribute("data-mc");
+        m1.tri.view = -1; sndTap(); renderM1();
+      });
+    });
+    return;
   }
-  else if(cold.step===1){
-    var a = ALERTS[COLD_ALERTS[cold.idx]];
-    html += '<div class="ghead"><div class="ttl">Alerte à 03h12</div></div>';
-    html += '<div class="stepct">Alerte '+(cold.idx+1)+' / 3 · mode guidé : les indices sont surlignés</div><div class="progressline"><i style="width:'+Math.round(100*cold.idx/3)+'%"></i></div>';
-    html += '<div class="alertcard"><span class="tag">Alerte SIEM</span><div class="at">'+a.t+'</div><div class="meta"><span>Source : <b>'+a.host+'</b></span><span>Heure : <b>'+a.time+'</b></span></div>'
-      + '<div class="details on">'+a.det+'</div>'
-      + '<div class="hintbox on">Indice d\'Amara : « '+a.hint+' »</div></div>';
-    html += '<div class="trio"><button data-cc="fp">'+ICONS.check+'Faux positif</button><button data-cc="vp">'+ICONS.warn+'Vrai positif</button><button data-cc="esc">'+ICONS.up+'Escalader</button></div>';
-  }
-  else if(cold.step===2){
-    var good = cold.answers[cold.idx-1] !== undefined ? null : null;
-    var a2 = ALERTS[COLD_ALERTS[cold.idx-1]];
-    var mine = cold.answers[cold.idx-1];
-    var okc = mine === a2.ans;
-    html += '<div class="ghead"><div class="ttl">Alerte à 03h12</div></div>';
-    html += '<div class="card"><div class="whyitem"><div class="wi2 '+(okc?'ok':'ko')+'">'+(okc?'✓':'✗')+'</div><div><b>'+a2.t+'</b><span>'+a2.why+'</span></div></div></div>';
-    html += '<button class="btn primary big" id="coldNext">'+(cold.idx>=3 ? "Relier à l'e-mail suspect" : "Alerte suivante")+'</button>';
-  }
-  else if(cold.step===3){
-    html += '<div class="ghead"><div class="ttl">Alerte à 03h12</div></div>';
-    html += '<div class="card mailview"><div class="from">De : <b>Service Paie</b><br>paie@atlas-l0gistics.example · 03:16</div><div class="subj">URGENT – confirmez votre paie</div><div class="body">Quatre minutes après la connexion réussie sur le compte j.martin, cet e-mail part vers tout l\'entrepôt.</div></div>';
-    html += '<div class="jq">Quel est le lien avec les alertes ?</div><div class="jopts">'
-      + '<button data-link="0">Aucun rapport : la paie écrit souvent la nuit</button>'
-      + '<button data-link="1">Un compte compromis sert à diffuser le piège de l\'intérieur — les gens font confiance à un e-mail « interne »</button>'
-      + '<button data-link="2">C\'est l\'e-mail qui a déclenché la sauvegarde de 03:00</button></div>';
-  }
-  else if(cold.step===4){
-    html += '<div class="ghead"><div class="ttl">Alerte à 03h12</div></div>';
-    html += '<div class="card"><p style="margin:0">'+(cold.link===1 ? "Exact. " : "Pas tout à fait : ") + 'Un compte compromis devient une rampe de lancement interne. Il faut décider, maintenant — la relève est à 04h00, l\'attaquant, lui, n\'attend pas.</p></div>';
-    html += '<div class="jq">Le compte j.martin semble compromis. Tu fais quoi ?</div><div class="jopts">'
-      + '<button data-dec="iso">Isoler le compte et forcer la réinitialisation du mot de passe</button>'
-      + '<button data-dec="wait">Laisser passer et noter pour la relève de 04h00</button>'
-      + '<button data-dec="del">Supprimer les alertes pour garder la console propre</button></div>';
-  }
-  else if(cold.step===5){
-    var cons = {
-      iso:'<b>Entrepôt B, 03:20.</b> Le compte est isolé en pleine tentative : la règle de transfert n\'aura pas le temps de naître, les e-mails clients restent chez Atlas. j.martin râle cinq minutes au téléphone, change son mot de passe, et les camions partent à l\'heure. Voilà l\'impact d\'une décision prise à temps.',
-      wait:'<b>Entrepôt B, 04:00.</b> La relève découvre l\'exfiltration déjà bien lancée : les e-mails du compte ont été copiés vers l\'extérieur et le piège « paie » a touché tout l\'entrepôt. Kevin a failli cliquer. Une alerte traitée à 03:12 aurait coûté cinq minutes ; à 04:00, elle coûte un incident.',
-      del:'<b>Entrepôt B, 04:00.</b> Console propre, attaquant toujours là. Sans les alertes, la relève part de zéro pendant que l\'attaquant, lui, a gardé toutes ses notes. Supprimer une alerte ne supprime jamais l\'attaque.'
-    };
-    html += '<div class="ghead"><div class="ttl">Alerte à 03h12</div></div>';
-    html += '<div class="conseq">'+cons[cold.decision]+'</div>';
-    html += '<button class="btn primary big" id="coldEnd">Et maintenant ?</button>';
-  }
-  else if(cold.step===6){
-    html += '<div class="ghead"><div class="ttl">Bienvenue chez Aegis</div></div>';
-    html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta — Mentore</div><div class="txt">« Tu viens de traiter ton premier incident : trois alertes, un e-mail, une décision, un effet réel dans l\'entrepôt. C\'est ça, le métier. Moi, c\'est Amara. Tu es '+esc(S.alias)+', stagiaire chez Aegis, à Nexus City. Ton XP, ta couverture et ta maîtrise te suivront dans le Profil — trois choses différentes, tu verras. »</div></div></div></div>';
-    html += '<div class="reward"><div class="rw"><div class="rv" style="color:var(--cyan)">+30 XP</div><div class="rl">SOC</div></div><div class="rw"><div class="rv" style="color:var(--orange)">+10</div><div class="rl">Crédits</div></div></div>';
-    html += '<button class="btn primary big" id="coldHub">Découvrir Nexus City</button>';
-  }
+  html += m1Head(title);
+  html += '<div class="stepct">'+sub+'</div><div class="progressline"><i style="width:'+Math.round(100*Object.keys(m1.tri.classified).length/3)+'%"></i></div>';
+  alerts.forEach(function(a, i){
+    var c = m1.tri.classified[i];
+    html += '<button class="m1alert" data-ma="'+i+'"><div class="at2">'+a.t+'</div><div class="am">'+a.host+' · '+a.time+'</div>'
+      + (c ? '<div style="margin-top:6px"><span class="tag">'+(c==="fp"?"Classée : faux positif":c==="surv"?"Classée : à surveiller":"Classée : escaladée")+'</span></div>' : '<div style="margin-top:6px"><span class="tag">À classer</span></div>')
+      + '</button>';
+  });
+  var doneCount = Object.keys(m1.tri.classified).length;
+  html += '<button class="btn primary big" id="m1TriNext" '+(doneCount>=3?'':'disabled')+'>'+nextLabel+'</button>';
   $("view-cold").innerHTML = html;
-  var go = $("coldGo"); if(go) go.addEventListener("click", function(){ cold.step=1; sndTap(); renderCold(); });
-  var nx = $("coldNext"); if(nx) nx.addEventListener("click", function(){ sndTap(); if(cold.idx>=3){ cold.step=3; } else { cold.step=1; } renderCold(); });
-  var en = $("coldEnd"); if(en) en.addEventListener("click", function(){ cold.step=6; sndTap(); renderCold(); });
-  var hb2 = $("coldHub"); if(hb2) hb2.addEventListener("click", function(){
-    S.coldDone = true; S.xp.soc += 30; S.credits += 10; save(); sndOk(); show("hub");
-  });
-  document.querySelectorAll("#view-cold [data-cc]").forEach(function(b){
+  m1BindQuit();
+  document.querySelectorAll("#view-cold [data-ma]").forEach(function(b){
     b.addEventListener("click", function(){
-      cold.answers[cold.idx] = b.getAttribute("data-cc");
-      cold.idx++; cold.step = 2; sndTap(); renderCold();
+      var i = +b.getAttribute("data-ma");
+      if(m1.tri.firstOpened < 0) m1.tri.firstOpened = i;
+      m1.tri.view = i; sndTap(); renderM1();
     });
   });
-  document.querySelectorAll("#view-cold [data-link]").forEach(function(b){
-    b.addEventListener("click", function(){ cold.link = +b.getAttribute("data-link"); cold.step = 4; sndTap(); renderCold(); });
-  });
-  document.querySelectorAll("#view-cold [data-dec]").forEach(function(b){
-    b.addEventListener("click", function(){
-      cold.decision = b.getAttribute("data-dec"); cold.step = 5;
-      if(cold.decision==="iso") sndOk(); else sndBad();
-      renderCold();
-    });
+  var nx = $("m1TriNext");
+  if(nx) nx.addEventListener("click", function(){
+    sndTap();
+    if(m1.variant==="A") m1.step = "corr"; else m1.step = "entry";
+    renderM1();
   });
 }
+function m1TriScore(){
+  var alerts = m1Alerts(), correct = 0, fpEsc = 0;
+  alerts.forEach(function(a, i){
+    if(m1.tri.classified[i] === a.ans) correct++;
+    if(a.ans==="fp" && m1.tri.classified[i]==="esc") fpEsc++;
+  });
+  var firstIdx = m1.variant==="A" ? 1 : M1V[m1.variant].firstIdx;
+  return { correct:correct, fpEsc:fpEsc, firstOk:(m1.tri.firstOpened===firstIdx) };
+}
+/* ---------- variante A : déroulé complet en 7 phases ---------- */
+function renderM1A(){
+  var html = "";
+  if(m1.step==="intro"){
+    html += '<div class="ghead"><div class="ttl">Atlas Logistics — entrepôt de nuit</div></div>';
+    html += '<div class="clock">03:12</div><p class="sub" style="text-align:center">Écran noir, bruit d\'entrepôt au loin. Ton téléphone vibre. Tu as 45 minutes de temps de jeu (accéléré) avant la relève de 04h00.</p>';
+    html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta — appel entrant</div><div class="txt">« Recrue ? Désolée pour l\'heure. Atlas Logistics, entrepôt de nuit. Trois alertes viennent de tomber. Dis-moi par laquelle tu commencerais. »</div></div></div></div>';
+    html += '<button class="btn primary big" id="m1Go">Décrocher — voir les trois alertes</button>';
+    $("view-cold").innerHTML = html;
+    $("m1Go").addEventListener("click", function(){ m1.step="tri"; sndTap(); renderM1(); });
+    return;
+  }
+  if(m1.step==="tri"){
+    renderM1Tri("Mission 1 — Alerte à 03h12", "Phase 1 · Briefing et tri — touche une alerte pour l'ouvrir, puis classe-la. En mode normal, aucun verdict n'est coloré avant le debrief.", "Passer à la corrélation");
+    return;
+  }
+  if(m1.step==="corr"){
+    html += m1Head("Mission 1 — Alerte à 03h12");
+    html += '<div class="stepct">Phase 2 · Corrélation — d\'où vient ce PowerShell ?</div>';
+    if(m1.tri.classified[0] !== "fp"){
+      html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta</div><div class="txt">« Regarde le calendrier de maintenance. Cette sauvegarde est prévue. Cherche ce qui n\'est écrit nulle part. »</div></div></div></div>';
+    }
+    html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta</div><div class="txt">« PowerShell lancé par Word, à 3 h du matin. Qui a ouvert quoi, et d\'où ça vient ? »</div></div></div></div>';
+    html += '<div class="alertcard"><span class="tag">Alerte SIEM — détail</span><div class="at">PowerShell encodé lancé depuis Office</div><div class="meta"><span>Source : <b>CE-07</b></span><span>Heure : <b>03:09</b></span></div><div class="details on">Processus parent de powershell.exe : <b style="color:var(--txt)">WINWORD.EXE</b>. Un document Word a lancé PowerShell. Reste à trouver le document — et comment il est arrivé.</div></div>';
+    html += '<h2 style="margin-bottom:2px">Journal de la nuit</h2><div class="jlog">';
+    M1_JOURNAL.filter(function(j){ return !j.late; }).forEach(function(j){
+      html += '<div class="jl"><b>'+j.time+'</b><span>'+j.src+' — '+j.txt+'</span></div>';
+    });
+    html += '</div>';
+    html += '<h2 style="margin-bottom:2px">Boîte mail de j.mbaye</h2>';
+    html += '<div class="card mailview"><div class="from">De : <b>Service Paie</b><br>paie@atlas-l0gistics.example · 22:41</div><div class="subj">URGENT : confirmez votre paie</div><div class="body">Un document de paie, reçu à 22:41 — quelques heures avant que Word ne lance PowerShell sur CE-07. Le domaine expéditeur s\'écrit « l0gistics », avec un zéro.</div></div>';
+    html += '<div class="jopts">'
+      + '<button data-corr="link">Relier cet e-mail à l\'alerte : c\'est le point d\'entrée probable</button>'
+      + '<button data-corr="skip">Aucun lien évident — passer à la décision</button></div>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    m1.journalSeen = true; m1.mailSeen = true;
+    document.querySelectorAll("#view-cold [data-corr]").forEach(function(b){
+      b.addEventListener("click", function(){
+        if(b.getAttribute("data-corr")==="link"){ m1.emailFound = true; m1.step = "corrq"; }
+        else { m1.step = "d1"; startM1D1Timer(); }
+        sndTap(); renderM1();
+      });
+    });
+    return;
+  }
+  if(m1.step==="corrq"){
+    html += m1Head("Mission 1 — Alerte à 03h12");
+    html += '<div class="stepct">Phase 2 · Corrélation</div>';
+    html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta</div><div class="txt">« Pourquoi celle-là ? Un seul indice suffit. »</div></div></div></div>';
+    html += '<div class="jq">Quel indice relie l\'e-mail de 22:41 à l\'alerte de 03:09 ?</div><div class="jopts">'
+      + '<button data-cq2="0">Le processus parent de PowerShell est WINWORD.EXE, et le document joint à cet e-mail a été ouvert sur CE-07</button>'
+      + '<button data-cq2="1">L\'alerte PowerShell est la plus récente des trois</button>'
+      + '<button data-cq2="2">L\'objet de l\'e-mail contient le mot URGENT, comme beaucoup d\'alertes</button></div>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    document.querySelectorAll("#view-cold [data-cq2]").forEach(function(b){
+      b.addEventListener("click", function(){
+        m1.emailFound = (+b.getAttribute("data-cq2") === 0);
+        m1.step = "d1"; sndTap(); startM1D1Timer(); renderM1();
+      });
+    });
+    return;
+  }
+  if(m1.step==="d1"){
+    html += m1Head("Mission 1 — Alerte à 03h12");
+    html += '<div class="stepct">Phase 3 · Décision n°1 — le chrono tourne</div>';
+    html += '<div class="card"><div class="mentor"><div class="ava">IR</div><div><div class="who">Inès Roussel — Exploitation, au téléphone</div><div class="txt">« Si vous coupez le quai 4, j\'ai six cents colis qui attendent. Vous êtes sûrs ? »</div></div></div></div>';
+    html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta</div><div class="txt">« Tu as soixante secondes. Il n\'y a pas de réponse parfaite : il y en a une que tu sais défendre. »</div></div></div></div>';
+    html += '<div class="timer" id="m1D1Timer" style="text-align:center;font-size:20px">1:00</div>';
+    html += '<div class="jq">CE-07 exécute du code inconnu et parle à un domaine créé il y a deux jours. Tu fais quoi ?</div><div class="jopts">'
+      + '<button data-d1="iso">Isoler CE-07 du réseau, maintenant</button>'
+      + '<button data-d1="obs">Observer dix minutes pour en apprendre plus</button>'
+      + '<button data-d1="dom">Bloquer seulement le domaine maj-service-paie.example</button></div>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    document.querySelectorAll("#view-cold [data-d1]").forEach(function(b){
+      b.addEventListener("click", function(){
+        clearInterval(m1Timer);
+        m1.d1 = b.getAttribute("data-d1"); m1.step = "d1q"; sndTap(); renderM1();
+      });
+    });
+    return;
+  }
+  if(m1.step==="d1q"){
+    var consA = {
+      iso:"CE-07 est isolé : le quai 4 ralentit, les colis attendent un peu — mais rien ne se propage. Contenir tôt a un coût métier, et il est acceptable.",
+      obs:"Dix minutes d'observation : pendant ce temps, une connexion part de CE-07 vers le serveur de fichiers. Observer aide à comprendre, mais ça a un prix — et ce prix-là n'a pas été choisi, il a été subi.",
+      dom:"Le domaine est bloqué : la connexion se coupe… six minutes. Puis CE-07 parle à un second domaine, inconnu lui aussi. Bloquer un indicateur n'est pas éradiquer."
+    };
+    html += m1Head("Mission 1 — Alerte à 03h12");
+    html += '<div class="stepct">Phase 3 · Décision n°1 — conséquence</div>';
+    html += '<div class="conseq">'+(m1.d1Timeout ? "Le chrono est tombé à zéro : sans décision, l'observation s'est imposée d'elle-même. " : "")+consA[m1.d1]+'</div>';
+    if(m1.d1Just < 0){
+      html += '<div class="jq">Quel indice défend ton choix ?</div><div class="jopts">'
+        + '<button data-dj="0">Le processus parent : WINWORD.EXE a lancé PowerShell — un document Office ne fait pas ça tout seul</button>'
+        + '<button data-dj="1">L\'heure : 03h09, tout l\'entrepôt dort</button>'
+        + '<button data-dj="2">Le volume inhabituel de la sauvegarde de 03:00</button></div>';
+    } else if(m1.d1Mind < 0){
+      html += '<div class="jq">Qu\'est-ce qui te ferait changer d\'avis ?</div><div class="jopts">'
+        + '<button data-dm="0">Si un second poste montre le même processus parent, j\'élargis le confinement</button>'
+        + '<button data-dm="1">Rien : une décision prise ne se discute plus</button>'
+        + '<button data-dm="2">Si Inès insiste assez fort au téléphone</button></div>';
+    } else {
+      html += '<button class="btn primary big" id="m1ToEnq">Passer à l\'enquête</button>';
+    }
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    document.querySelectorAll("#view-cold [data-dj]").forEach(function(b){
+      b.addEventListener("click", function(){ m1.d1Just = +b.getAttribute("data-dj"); sndTap(); renderM1(); });
+    });
+    document.querySelectorAll("#view-cold [data-dm]").forEach(function(b){
+      b.addEventListener("click", function(){ m1.d1Mind = +b.getAttribute("data-dm"); sndTap(); renderM1(); });
+    });
+    var te = $("m1ToEnq"); if(te) te.addEventListener("click", function(){ m1.step="enq"; sndTap(); renderM1(); });
+    return;
+  }
+  if(m1.step==="enq"){
+    html += m1Head("Mission 1 — Alerte à 03h12");
+    html += '<div class="stepct">Phase 4 · Enquête — qui d\'autre est touché ?</div>';
+    html += '<div class="card"><div class="mentor"><div class="ava">JM</div><div><div class="who">Joël Mbaye — quai 4, au téléphone</div><div class="txt">« Allô ? C\'est Joël, quai 4. Mon terminal rame depuis tout à l\'heure. Oui, j\'ai ouvert un document de paie… Il y a un problème ? »</div></div></div></div>';
+    html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta</div><div class="txt">« Bien. Maintenant : qui d\'autre a reçu ce message ? »</div></div></div></div>';
+    html += '<h2 style="margin-bottom:2px">Journal de la nuit — vue élargie</h2><div class="jlog">';
+    M1_JOURNAL.forEach(function(j){
+      html += '<div class="jl'+(j.late?' newrow':'')+'"><b>'+j.time+'</b><span>'+j.src+' — '+j.txt+'</span></div>';
+    });
+    html += '</div>';
+    html += '<div class="card"><div class="mentor"><div class="ava">LZ</div><div><div class="who">Léo « Zéro » — hacker éthique</div><div class="txt">« Si j\'étais l\'attaquant, je laisserais une tâche planifiée. Je dis ça, je dis rien. »</div></div></div></div>';
+    html += '<div class="jq">Le journal élargi montre que Joël a transféré le document à k.diallo — et que CE-03 a lancé le même PowerShell à 03:10. Tu fais quoi ?</div><div class="jopts">'
+      + '<button data-enq="widen">Élargir l\'enquête : isoler aussi CE-03 et lister tous les destinataires du document</button>'
+      + '<button data-enq="focus">Rester sur CE-07 : c\'est le poste d\'origine, ça suffit</button>'
+      + '<button data-enq="restore">Restaurer CE-07 tout de suite pour relancer le quai 4</button></div>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    document.querySelectorAll("#view-cold [data-enq]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var c = b.getAttribute("data-enq");
+        if(c==="widen"){ m1.widened = true; m1.foundCE03 = true; }
+        if(c==="restore"){ m1.restoredEarly = true; }
+        m1.step = "erad"; sndTap(); renderM1();
+      });
+    });
+    return;
+  }
+  if(m1.step==="erad"){
+    html += m1Head("Mission 1 — Alerte à 03h12");
+    html += '<div class="stepct">Phase 5 · Éradication — dans quel ordre ?</div>';
+    html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta</div><div class="txt">« On ne restaure pas tant qu\'on n\'a pas compris comment il compte revenir. »</div></div></div></div>';
+    html += '<p class="sub">L\'enquête a trouvé la persistance : un compte de service exposé et une tâche planifiée « MajService » qui relancerait l\'attaque. Touche les actions dans l\'ordre où tu les ferais.</p>';
+    M1_ERAD.forEach(function(a){
+      var pos = m1.eradOrder.indexOf(a.id);
+      html += '<button class="eradaction" data-erad="'+a.id+'" '+(pos>=0?'disabled':'')+'>'+(pos>=0?'<span class="ord">'+(pos+1)+'</span>':'')+a.txt+'</button>';
+    });
+    html += '<div class="row" style="gap:9px;margin-top:10px"><button class="btn" style="flex:1" id="m1EradReset">Recommencer l\'ordre</button><button class="btn primary" style="flex:1" id="m1EradGo" '+(m1.eradOrder.length>=4?'':'disabled')+'>Valider l\'ordre</button></div>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    document.querySelectorAll("#view-cold [data-erad]").forEach(function(b){
+      b.addEventListener("click", function(){ m1.eradOrder.push(b.getAttribute("data-erad")); sndTap(); renderM1(); });
+    });
+    var rs = $("m1EradReset"); if(rs) rs.addEventListener("click", function(){ m1.eradOrder = []; renderM1(); });
+    var go2 = $("m1EradGo"); if(go2) go2.addEventListener("click", function(){ m1.step="msg"; sndTap(); renderM1(); });
+    return;
+  }
+  if(m1.step==="msg"){
+    html += m1Head("Mission 1 — Alerte à 03h12");
+    html += '<div class="stepct">Phase 6 · Communication — le message à la direction</div>';
+    html += '<div class="card"><div class="mentor"><div class="ava">IR</div><div><div class="who">Inès Roussel — Exploitation</div><div class="txt">« Donnez-moi cinq lignes : ce qui s\'est passé, ce que ça change pour moi, ce que vous faites, ce dont vous avez besoin. »</div></div></div></div>';
+    html += '<p class="sub">Touche les phrases pour composer le message — exactement cinq lignes. Chaque phrase est jugée sur le fond, pas sur le style. Lignes choisies : <b style="color:var(--txt)">'+m1.msgSel.length+' / 5</b></p>';
+    M1_PHRASES.forEach(function(p, i){
+      var pos = m1.msgSel.indexOf(i);
+      html += '<button class="phrase'+(pos>=0?' sel':'')+'" data-ph="'+i+'">'+(pos>=0?'<span class="pn">Ligne '+(pos+1)+'</span>':'')+esc(p.txt)+'</button>';
+    });
+    html += '<button class="btn primary big" id="m1MsgGo" style="margin-top:10px" '+(m1.msgSel.length===5?'':'disabled')+'>Envoyer le message — passer au debrief</button>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    document.querySelectorAll("#view-cold [data-ph]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var i = +b.getAttribute("data-ph"), pos = m1.msgSel.indexOf(i);
+        if(pos>=0) m1.msgSel.splice(pos,1);
+        else if(m1.msgSel.length<5) m1.msgSel.push(i);
+        else { toast("Cinq lignes, pas une de plus : retire une phrase d'abord."); return; }
+        sndTap(); renderM1();
+      });
+    });
+    var mg = $("m1MsgGo"); if(mg) mg.addEventListener("click", function(){ finishM1A(); });
+    return;
+  }
+}
+function startM1D1Timer(){
+  clearInterval(m1Timer);
+  var deadline = Date.now() + 60000;
+  m1Timer = setInterval(function(){
+    var el = $("m1D1Timer");
+    if(!el || !m1 || m1.step!=="d1"){ clearInterval(m1Timer); return; }
+    var left = Math.max(0, Math.round((deadline - Date.now())/1000));
+    el.textContent = Math.floor(left/60)+":"+String(left%60).padStart(2,"0");
+    el.classList.toggle("low", left<=15);
+    if(left<=0){
+      clearInterval(m1Timer);
+      m1.d1 = "obs"; m1.d1Timeout = true; m1.step = "d1q"; renderM1();
+    }
+  }, 500);
+}
+function finishM1A(){
+  var ts = m1TriScore();
+  var detection = Math.round(10 * ts.correct / 3) + (ts.firstOk ? 5 : 0) + (m1.emailFound ? 10 : 0);
+  var d1pts = m1.d1==="iso" ? 10 : m1.d1==="dom" ? 5 : 3;
+  var reaction = d1pts + (m1.foundCE03 ? 8 : 0) + (m1.eradOrder[m1.eradOrder.length-1]==="restaurer" && !m1.restoredEarly ? 7 : m1.eradOrder[m1.eradOrder.length-1]==="restaurer" ? 3 : 0);
+  var raisonnement = (m1.d1Just===0 ? 8 : 0) + (m1.d1Mind===0 ? 6 : 0) + ((m1.journalSeen && m1.mailSeen) ? 6 : 0);
+  var goodSel = m1.msgSel.filter(function(i){ return M1_PHRASES[i].good; }).length;
+  var badSel = m1.msgSel.length - goodSel;
+  var communication = Math.round(10 * goodSel / 5) + (badSel===0 ? 5 : Math.max(0, 5 - 3*badSel));
+  var precision = 15 - (ts.fpEsc>0 ? 5 : 0) - (m1.restoredEarly ? 5 : 0) - (m1.d1Timeout ? 5 : 0);
+  if(precision < 0) precision = 0;
+  var score = detection + reaction + raisonnement + communication + precision;
+  var fb = [], cards = [];
+  function addCard(id){ if(cards.indexOf(id)<0) cards.push(id); }
+  M1A_ALERTS.forEach(function(a, i){
+    fb.push({ ok:m1.tri.classified[i]===a.ans, cls:m1.tri.classified[i]===a.ans?"ok":"ko", title:"Alerte "+(i+1)+" — "+a.t, txt:a.why });
+  });
+  if(M1A_ALERTS.some(function(a, i){ return a.ans==="fp" && m1.tri.classified[i]==="vp"; })){
+    fb.push({ ok:false, cls:"mid", title:"Faux positifs", txt:"Cette alerte correspondait à une tâche prévue au calendrier. Compare toujours avec ce qui est attendu." });
+    addCard("c401");
+  }
+  if(m1.d1==="iso" && !m1.emailFound){
+    fb.push({ ok:false, cls:"mid", title:"Point d'entrée manqué", txt:"Tu as isolé vite, bien. Mais sans le point d'entrée, tu ne sais pas qui d'autre a reçu le message." });
+    addCard("c201"); addCard("c203");
+  }
+  if(!m1.foundCE03){
+    fb.push({ ok:false, cls:"ko", title:"Enquête pas élargie", txt:"Un second poste avait ouvert le même document : CE-03 lançait le même PowerShell à 03:10. Sans élargir, il serait resté dans la nature." });
+    addCard("c402");
+  } else {
+    fb.push({ ok:true, cls:"ok", title:"Enquête élargie", txt:"CE-03 a été retrouvé et traité : l'incident avait deux postes, pas un." });
+  }
+  if(m1.restoredEarly || m1.eradOrder[m1.eradOrder.length-1]!=="restaurer"){
+    fb.push({ ok:false, cls:"ko", title:"Restauration trop tôt", txt:"La tâche planifiée « MajService » a relancé l'attaque sur le poste restauré. On éradique d'abord, on restaure ensuite." });
+    addCard("c404");
+  }
+  if(m1.d1==="dom"){
+    fb.push({ ok:false, cls:"mid", title:"Décision n°1", txt:"Bloquer un indicateur n'est pas éradiquer : l'attaquant est revenu par un second domaine." });
+    addCard("c403");
+  }
+  if(m1.d1==="obs"){
+    fb.push({ ok:false, cls:"mid", title:"Décision n°1", txt:"L'attaquant a atteint le serveur de fichiers. Observer aide à comprendre, mais a un coût — il faut le décider, pas le subir." });
+    addCard("c403");
+  }
+  if(m1.d1Just===0){
+    fb.push({ ok:true, cls:"ok", title:"Raisonnement", txt:"Ton raisonnement est solide : un processus Office qui lance PowerShell est un indicateur classique." });
+  }
+  if(badSel>0){
+    fb.push({ ok:false, cls:"mid", title:"Message à la direction", txt:"Reste sur les faits : ce qui est vérifié, ce que ça change, ce que tu fais, ce dont tu as besoin. Ni spéculation, ni blâme, ni promesse non fondée." });
+    addCard("c403");
+  } else {
+    fb.push({ ok:true, cls:"ok", title:"Message à la direction", txt:"Cinq lignes factuelles : le fait vérifié, l'impact métier, l'étendue, la demande, et ce qu'on ne sait pas encore. C'est exactement le format qu'attend une direction à 4 h du matin." });
+  }
+  fb.push({ ok:true, cls:"ok", title:"Cdt. Amara Keïta", txt:"« Tu as compris quelque chose et tu as agi : c'est ça, le métier. Bienvenue chez Aegis. »" });
+  finishM1("A", "Mission 1 — Alerte à 03h12 · Variante A", score, [
+    { label:"Détection", got:detection, max:25 },
+    { label:"Réaction", got:reaction, max:25 },
+    { label:"Raisonnement", got:raisonnement, max:20 },
+    { label:"Communication", got:communication, max:15 },
+    { label:"Précision", got:precision, max:15 }
+  ], fb, cards, "mission1");
+}
+/* ---------- variantes B et C : moteur commun ---------- */
+function renderM1V(){
+  var d = M1V[m1.variant];
+  var html = "";
+  if(m1.step==="intro"){
+    html += '<div class="ghead"><div class="ttl">Mission 1 — Alerte à 03h12</div></div>';
+    html += '<div class="clock">03:12</div><p class="sub" style="text-align:center">'+d.org+'. Tu as 45 minutes de temps de jeu (accéléré) avant la relève de 04h00.</p>';
+    html += '<div class="card"><span class="tag soc">Mission 1</span><h3 style="margin-top:8px;font-size:19px">'+d.title+'</h3><p style="color:var(--txt)">'+d.intro+'</p></div>';
+    html += '<div class="card"><div class="mentor"><div class="ava">'+(m1.variant==="B"?"NP":"KM")+'</div><div><div class="who">'+d.charName+'</div><div class="txt">« '+d.charQuote+' »</div></div></div>'
+      + (d.charReply ? '<div class="mentor" style="margin-top:10px"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta</div><div class="txt">« '+d.charReply+' »</div></div></div>' : '')
+      + '</div>';
+    html += '<button class="btn primary big" id="m1Go">Voir les trois alertes</button>';
+    $("view-cold").innerHTML = html;
+    $("m1Go").addEventListener("click", function(){ m1.step="tri"; sndTap(); renderM1(); });
+    return;
+  }
+  if(m1.step==="tri"){
+    renderM1Tri("Mission 1 — "+d.title, "Phase 1 · Tri — touche une alerte pour l'ouvrir, puis classe-la.", "Passer à l'enquête");
+    return;
+  }
+  if(m1.step==="entry"){
+    html += m1Head("Mission 1 — "+d.title);
+    html += '<div class="stepct">Phase 2 · Enquête — le point d\'entrée</div>';
+    html += '<div class="alertcard"><span class="tag">'+d.entryTitle+'</span><div class="body" style="font-size:15px;margin-top:6px">'+d.entryBody+'</div></div>';
+    html += '<button class="btn primary big" id="m1ToDec1" style="margin-top:12px">Passer à la décision</button>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    m1.vent = true;
+    $("m1ToDec1").addEventListener("click", function(){ m1.step="dec1"; sndTap(); renderM1(); });
+    return;
+  }
+  if(m1.step==="dec1"){
+    html += m1Head("Mission 1 — "+d.title);
+    html += '<div class="stepct">Phase 3 · Décision n°1</div>';
+    html += '<div class="jq">'+d.dec1q+'</div><div class="jopts">';
+    d.dec1.forEach(function(o, oi){ html += '<button data-vd1="'+oi+'">'+esc(o.txt)+'</button>'; });
+    html += '</div>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    document.querySelectorAll("#view-cold [data-vd1]").forEach(function(b){
+      b.addEventListener("click", function(){ m1.vdec1 = +b.getAttribute("data-vd1"); m1.step="dec1c"; sndTap(); renderM1(); });
+    });
+    return;
+  }
+  if(m1.step==="dec1c"){
+    html += m1Head("Mission 1 — "+d.title);
+    html += '<div class="stepct">Phase 3 · Décision n°1 — conséquence</div>';
+    html += '<div class="conseq">'+d.dec1[m1.vdec1].conseq+'</div>';
+    html += '<div class="jq">'+d.justq+'</div><div class="jopts">';
+    d.justopts.forEach(function(o, oi){ html += '<button data-vj="'+oi+'">'+esc(o)+'</button>'; });
+    html += '</div>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    document.querySelectorAll("#view-cold [data-vj]").forEach(function(b){
+      b.addEventListener("click", function(){ m1.vjust = +b.getAttribute("data-vj"); m1.step="dec2"; sndTap(); renderM1(); });
+    });
+    return;
+  }
+  if(m1.step==="dec2"){
+    html += m1Head("Mission 1 — "+d.title);
+    html += '<div class="stepct">Phase 4 · '+(m1.variant==="B" ? "Le paiement de 8 h" : "La réponse à Kevin")+'</div>';
+    html += '<div class="jq">'+d.dec2q+'</div><div class="jopts">';
+    d.dec2.forEach(function(o, oi){ html += '<button data-vd2="'+oi+'">'+esc(o.txt)+'</button>'; });
+    html += '</div>';
+    $("view-cold").innerHTML = html;
+    m1BindQuit();
+    document.querySelectorAll("#view-cold [data-vd2]").forEach(function(b){
+      b.addEventListener("click", function(){ m1.vdec2 = +b.getAttribute("data-vd2"); sndTap(); finishM1V(); });
+    });
+    return;
+  }
+}
+function finishM1V(){
+  var d = M1V[m1.variant];
+  var ts = m1TriScore();
+  var detection = Math.round(15 * ts.correct / 3) + (ts.firstOk ? 10 : 0);
+  var reaction = d.dec1[m1.vdec1].pts;
+  var raisonnement = (m1.vjust===d.justok ? 12 : 0) + (m1.vent ? 8 : 0);
+  var communication = d.dec2[m1.vdec2].pts;
+  var precision = 15 - (ts.fpEsc>0 ? 5 : 0) - (d.dec1[m1.vdec1].pen || 0);
+  if(precision < 0) precision = 0;
+  var score = detection + reaction + raisonnement + communication + precision;
+  var fb = [], cards = [];
+  function addCard(id){ if(cards.indexOf(id)<0) cards.push(id); }
+  d.alerts.forEach(function(a, i){
+    fb.push({ ok:m1.tri.classified[i]===a.ans, cls:m1.tri.classified[i]===a.ans?"ok":"ko", title:"Alerte "+(i+1)+" — "+a.t, txt:a.why });
+  });
+  if(d.alerts.some(function(a, i){ return a.ans==="fp" && m1.tri.classified[i]==="esc"; })){
+    fb.push({ ok:false, cls:"mid", title:"Faux positif escaladé", txt:"Cette alerte correspondait à une tâche prévue. Compare toujours avec le calendrier de maintenance avant d'escalader." });
+    addCard("c401");
+  }
+  fb.push({ ok:d.dec1[m1.vdec1].pts>=20, cls:d.dec1[m1.vdec1].pts>=20?"ok":d.dec1[m1.vdec1].pts>0?"mid":"ko", title:"Décision n°1", txt:d.dec1[m1.vdec1].conseq });
+  fb.push({ ok:d.dec2[m1.vdec2].pts>=12, cls:d.dec2[m1.vdec2].pts>=12?"ok":d.dec2[m1.vdec2].pts>0?"mid":"ko", title:m1.variant==="B" ? "Le paiement de 8 h" : "La réponse à Kevin", txt:d.dec2[m1.vdec2].conseq });
+  if(m1.variant==="B"){
+    if(m1.vdec1===0) addCard("c403");
+    if(m1.vdec2!==0){ addCard("c203"); addCard("c507"); }
+    if(m1.vdec2===1) fb.push({ ok:false, cls:"ko", title:"Le virement est parti", txt:"Le virement est parti : il fallait rappeler le fournisseur sur un numéro connu. 48 000 €, c'est le prix d'une vérification hors canal oubliée." });
+  }
+  if(m1.variant==="C"){
+    if(m1.vdec1===0) fb.push({ ok:false, cls:"mid", title:"Propagation", txt:"Deux autres postes étaient déjà touchés : la segmentation du segment Bureaux aurait borné l'incident dès le départ." });
+    if(m1.vdec2===2) fb.push({ ok:false, cls:"mid", title:"Culture du signalement", txt:"Kevin avait bien fait de prévenir. Le blâme apprend aux gens à se taire — et un SOC sans signalements est un SOC aveugle." });
+  }
+  fb.push({ ok:true, cls:"ok", title:"Cdt. Amara Keïta", txt:"« Tu as compris quelque chose et tu as agi : c'est ça, le métier. Bienvenue chez Aegis. »" });
+  finishM1(m1.variant, "Mission 1 — "+d.title, score, [
+    { label:"Détection", got:detection, max:25 },
+    { label:"Réaction", got:reaction, max:25 },
+    { label:"Raisonnement", got:raisonnement, max:20 },
+    { label:"Communication", got:communication, max:15 },
+    { label:"Précision", got:precision, max:15 }
+  ], fb, cards, d.examKey);
+}
+/* ---------- articulation Mission 1 / Pack Security+ ---------- */
+var M1_LINKS = {
+  A:{ scen:["S4-4","S4-5"], cards:["C4-03","C4-04"] },
+  B:{ scen:["S2-1"], cards:["C2-03"] },
+  C:{ scen:["S2-2"], cards:["C3-02"] }
+};
+var SCEN_ORIGIN = { "S4-4":"A", "S4-5":"A", "S2-1":"B", "S2-2":"C" };
+var CARD_ORIGIN = { "C4-03":"A", "C4-04":"A", "C2-03":"B", "C3-02":"C" };
+function m1SuiteHtml(variant){
+  var L = M1_LINKS[variant]; if(!L) return "";
+  var html = '<div class="card"><h3>Suite conseillée — dans le Pack Security+</h3><p>Ce que tu viens de jouer se révise là-bas, tout de suite :</p>';
+  L.scen.forEach(function(sid){
+    var sc = SCENARIOS.filter(function(x){ return x.id===sid; })[0];
+    if(sc) html += '<button class="btn big" style="width:100%;margin:6px 0;text-align:left;justify-content:flex-start" data-suite-scen="'+sid+'">Scénario '+sid+' · '+esc(sc.t)+'</button>';
+  });
+  L.cards.forEach(function(cid){
+    html += '<button class="btn big" style="width:100%;margin:6px 0;text-align:left;justify-content:flex-start" data-suite-card="'+cid+'">Carte '+cid+' — la revoir maintenant</button>';
+  });
+  html += '</div>';
+  return html;
+}
+/* ---------- debrief commun Mission 1 ---------- */
+function finishM1(variant, title, score, axes, fb, cards, examKey){
+  clearInterval(m1Timer);
+  var first = S.m1.plays[variant]===0;
+  var mult = first ? 1.5 : 1; /* rejouer rapporte plein pot : ce sont les paramètres et les variantes qui changent */
+  var xp = Math.round(150 * (score/100) * mult);
+  var credits = Math.round((20 + 40*(score/100)) * mult);
+  S.m1.plays[variant]++;
+  if(score > S.m1.best[variant]) S.m1.best[variant] = score;
+  if(variant==="A"){
+    S.m1.done = true; S.coldDone = true;
+    S.campaign.trust.atlas = Math.max(10, Math.min(100, S.campaign.trust.atlas + (score>=70 ? 15 : score>=40 ? 5 : -5)));
+  }
+  S.xp.soc += xp; S.credits += credits;
+  if(!S.delayedDue && !S.delayedDone) S.delayedDue = Date.now() + 7*24*3600*1000;
+  var newCards = [];
+  cards.forEach(function(id){ if(unlockDex(id)) newCards.push(id); });
+  save();
+  var html = '<div class="ghead"><div class="ttl">Debrief — '+title+'</div></div>';
+  html += '<div class="scorebig">'+score+'<small> / 100</small></div><div class="gradelbl">'+m1Grade(score)+'</div>';
+  html += '<div class="card"><h3>Score — cinq axes</h3>';
+  axes.forEach(function(b){
+    html += '<div class="breakrow"><div class="bl"><span>'+b.label+'</span><span>'+b.got+' / '+b.max+'</span></div><div class="breakbar"><i style="width:'+Math.round(100*b.got/b.max)+'%"></i></div></div>';
+  });
+  html += '<p style="margin:8px 0 0">Paliers : 85 et plus, excellent · 70 à 84, solide · 50 à 69, à consolider · moins de 50, à retenter. Une réussite avec plusieurs aides fait avancer l\'histoire, mais ne compte pas comme preuve de maîtrise — les aides utilisées sont affichées ici : <b style="color:var(--txt)">'+(S.examMode ? "aucune (Mode Examen)" : "aide essentielle d\'Amara intégrée au guidage")+'</b>.</p></div>';
+  html += '<div class="reward"><div class="rw"><div class="rv" style="color:var(--cyan)">+'+xp+' XP</div><div class="rl">SOC'+(first?' · 1re fois ×1,5':'')+'</div></div><div class="rw"><div class="rv" style="color:var(--orange)">+'+credits+'</div><div class="rl">Crédits</div></div></div>';
+  newCards.forEach(function(id){
+    var cd = DEXDATA.filter(function(x){ return x.id===id; })[0];
+    if(cd) html += '<div class="unlock">Carte de révision générée et ajoutée au Cyberdex : <b>'+cd.name+'</b></div>';
+  });
+  html += '<div class="card"><h3>Retour personnalisé — ce que tu as fait, ce que ça a produit</h3>';
+  fb.forEach(function(f){ html += whyRow(f.ok, f.cls, f.title, f.txt); });
+  html += '</div>';
+  html += examBoxHtml(examKey);
+  html += m1SuiteHtml(variant);
+  html += '<p class="sub">Lien Security+ : '+(variant==="B" ? "objectifs 2.2, 2.4, 4.4, 4.6, 4.8 — compromission de compte, règles de messagerie, vérification hors canal." : variant==="C" ? "objectifs 2.2, 2.4, 3.2, 4.8 — supports amovibles, segmentation, culture du signalement." : "objectifs 2.2, 2.4, 4.4, 4.8, 4.9 — corrélation, confinement, éradication, communication d'incident.")+'</p>';
+  html += '<div class="row" style="gap:9px"><button class="btn" style="flex:1" id="m1Home">Missions</button><button class="btn primary" style="flex:1" id="m1Replay">Rejouer</button></div>';
+  $("view-cold").innerHTML = html;
+  window.scrollTo(0,0);
+  $("m1Home").addEventListener("click", function(){ show("missions"); });
+  $("m1Replay").addEventListener("click", function(){ startM1(variant); });
+  $("view-cold").querySelectorAll("[data-suite-scen]").forEach(function(b){
+    b.addEventListener("click", function(){ sndTap(); openScenInPack(b.getAttribute("data-suite-scen")); });
+  });
+  $("view-cold").querySelectorAll("[data-suite-card]").forEach(function(b){
+    b.addEventListener("click", function(){ sndTap(); openCardInPack(b.getAttribute("data-suite-card")); });
+  });
+  if(score>=60) sndOk(); else sndBad();
+}
+
 /* ================= EPREUVE DIFFEREE — CLINIQUE SAINT-ROCH ================= */
 var DELAYED_Q = [
   { q:"Clinique Saint-Roch, 03h47. Le compte d'une infirmière enchaîne 280 échecs de connexion, puis une réussite depuis une adresse inconnue. Pas de MFA sur ce compte.",
@@ -2077,6 +2775,531 @@ function renderDelayed(){
   });
   var dh = $("dHome"); if(dh) dh.addEventListener("click", function(){ show("hub"); });
 }
+/* ================= PACK SECURITY+ (Tome 2) ================= */
+var PACK_DOMS = { 1:"Domaine 1 · Concepts généraux", 2:"Domaine 2 · Menaces et vulnérabilités", 3:"Domaine 3 · Architecture et réseau", 4:"Domaine 4 · Opérations de sécurité", 5:"Domaine 5 · Gouvernance et risque" };
+var SCENARIOS = [
+  { id:"S1-1", t:"Le badge du stagiaire", obj:"1.1", dom:1, card:"C1-08", sit:"Un stagiaire arrive lundi. Son badge, configuré « au cas où », ouvre toutes les portes — y compris la salle serveurs, où il n’a rien à faire.", opts:["Laisser le badge tel quel : il ne restera que trois mois","Réduire ses droits au strict nécessaire et restreindre l’accès à la salle serveurs","Lui demander de promettre de ne pas entrer dans la salle serveurs"], ok:1, why:"Moindre privilège : chacun n’a que les accès de son poste. On complète par un contrôle préventif (accès restreint à la salle) et un contrôle détectif (le journal des accès). Une promesse n’est pas un contrôle." },
+  { id:"S1-2", t:"Trois verrous", obj:"1.2", dom:1, card:"C1-07", sit:"Un dossier RH a été consulté, modifié puis supprimé. Impossible de dire qui a fait quoi : les comptes sont partagés et rien n’est journalisé.", opts:["C’est un problème de disponibilité : restaurer le dossier suffit","L’intégrité et la confidentialité sont touchées, et il manque la traçabilité : comptes individuels, autorisations par rôle, journalisation (AAA)","Changer le mot de passe du dossier"], ok:1, why:"Modifier sans laisser de trace touche l’intégrité ; consulter sans droit, la confidentialité. Le cadre AAA — authentification, autorisation, traçabilité — répond aux trois : qui es-tu, qu’as-tu le droit de faire, qu’as-tu fait." },
+  { id:"S1-3", t:"Le certificat expiré", obj:"1.4", dom:1, card:"C1-04", sit:"Le site de paie affiche « certificat expiré ». Plusieurs employés cliquent sur « continuer quand même » pour voir leur bulletin.", opts:["Leur dire de continuer : le site est connu","Renouveler le certificat, et rappeler que l’alerte signifie que TLS ne peut plus prouver l’identité du site","Bloquer définitivement le site de paie"], ok:1, why:"Le certificat prouve l’identité du serveur et établit le chiffrement TLS. Expiré, le navigateur ne peut plus garantir à qui l’on parle : ignorer l’alerte habitue à ignorer un vrai signal d’attaque." },
+  { id:"S2-1", t:"Le faux fournisseur", obj:"2.2", dom:2, card:"C2-03", sit:"Un e-mail du « fournisseur habituel » demande de changer l’IBAN avant le gros paiement de vendredi. L’adresse a l’air normale, le ton aussi.", opts:["Changer l’IBAN : le fournisseur a l’air pressé","Ne rien changer et vérifier hors canal : appeler le fournisseur au numéro déjà connu","Répondre à l’e-mail pour demander une confirmation"], ok:1, why:"Schéma classique de compromission de messagerie (BEC) : un RIB se change après vérification par un canal indépendant, jamais sur la foi du message qui le demande. Répondre, c’est demander à l’attaquant de se confirmer lui-même." },
+  { id:"S2-2", t:"La clé du parking", obj:"2.2", dom:2, card:"C2-08", sit:"Devant l’entrée, une clé USB étiquetée « Salaires » traîne sur le trottoir. Un collègue la ramasse et te la tend : « On regarde ce qu’il y a dessus ? »", opts:["La brancher sur ton poste : l’antivirus protégera","La brancher sur un vieux PC hors réseau, pour voir","Ne la brancher nulle part : la remettre à la sécurité, c’est un support amovible inconnu"], ok:2, why:"Une clé trouvée est un vecteur d’attaque connu (appâtage par support amovible). Même un PC « hors réseau » peut servir de tête de pont ensuite. On ne branche pas, on remet à la sécurité." },
+  { id:"S2-3", t:"Les mots de passe qui tournent", obj:"2.4", dom:2, card:"C2-04", sit:"Les journaux montrent des centaines de comptes recevant chacun deux ou trois essais, toujours avec le même mot de passe courant (« Hiver2026! »).", opts:["Une force brute classique sur un compte","Du password spraying : peu de mots de passe courants, beaucoup de comptes","Du credential stuffing : des identifiants volés ailleurs"], ok:1, why:"Peu d’essais par compte, un mot de passe courant, des centaines de comptes : c’est du password spraying, conçu pour passer sous les seuils de verrouillage. Réponse : MFA, mots de passe courants bloqués, surveillance des échecs répartis." },
+  { id:"S2-4", t:"La faille oubliée", obj:"2.3", dom:2, card:"C2-05", sit:"Sur un formulaire web, taper une simple apostrophe dans le champ « nom » renvoie une erreur de base de données — et, avec un peu d’insistance, des données qui ne devraient pas sortir.", opts:["Un bug d’affichage sans gravité","Une injection SQL : les entrées ne sont pas filtrées","Un problème de certificat"], ok:1, why:"L’apostrophe qui fait parler la base, c’est la signature d’une injection SQL. Parade : requêtes paramétrées et validation des entrées — jamais de concaténation directe de ce que tape l’utilisateur." },
+  { id:"S3-1", t:"La caisse sur le même réseau", obj:"3.2", dom:3, card:"C3-02", sit:"La caisse du magasin est sur le même réseau plat que les postes bureautiques et le Wi-Fi invités. Tout le monde se voit.", opts:["C’est pratique : ne rien changer","Segmenter : caisse dans sa propre zone, pare-feu entre les zones, accès au strict nécessaire","Éteindre le Wi-Fi invités le week-end"], ok:1, why:"Un poste bureautique compromis ne doit jamais pouvoir parler directement à la caisse. La segmentation (zones, VLAN, pare-feu) borne la propagation et limite chaque zone au strict nécessaire." },
+  { id:"S3-2", t:"Cloud : qui garde quoi ?", obj:"3.1", dom:3, card:"C3-05", sit:"Un stockage cloud laissé public expose des fichiers clients. Le fournisseur répond : « L’infrastructure n’a pas été attaquée. » Qui a failli ?", opts:["Le fournisseur : c’est son cloud","Le client : la configuration et les accès relèvent de sa part de la responsabilité partagée","Personne : les fichiers n’étaient pas sensibles"], ok:1, why:"Responsabilité partagée : le fournisseur sécurise l’infrastructure, le client sécurise ses données, ses accès et ses configurations. Un stockage public, c’est une erreur de configuration côté client." },
+  { id:"S3-3", t:"La sauvegarde jamais testée", obj:"3.4", dom:3, card:"C3-06", sit:"Après un incident, la restauration échoue : la dernière copie est corrompue, et c’était la seule. Les sauvegardes tournaient pourtant chaque nuit.", opts:["Sauvegarder deux fois par nuit, ça suffira","Appliquer la règle 3-2-1 et tester les restaurations : c’est le test qui prouve la copie","Acheter un disque plus gros"], ok:1, why:"3 copies, 2 supports, 1 hors site — et des restaurations testées. Une sauvegarde jamais testée est une hypothèse. RTO et RPO fixent ensuite le niveau d’exigence : en combien de temps repartir, et combien de données peut-on perdre." },
+  { id:"S4-1", t:"La file de 3 h", obj:"4.4", dom:4, card:"C4-01", sit:"Trois heures de file d’alertes : soixante alertes, presque toutes bénignes. Au milieu, une connexion réussie après une rafale d’échecs. Par où commencer ?", opts:["Par la plus ancienne : premier arrivé, premier servi","Par la connexion réussie après échecs : corréler et prioriser, le reste est surtout du faux positif","Tout escalader au niveau supérieur"], ok:1, why:"Prioriser, c’est corréler : les faux positifs font du volume, le signal faible fait l’incident. La rafale suivie d’une réussite est le seul enchaînement qui raconte une compromission possible." },
+  { id:"S4-2", t:"Le compte fantôme", obj:"4.6", dom:4, card:"C4-06", sit:"Le compte d’un prestataire parti il y a quatre mois est encore actif — et il vient de se connecter, à 2 h du matin.", opts:["Le laisser : il reviendra peut-être en dépannage","Désactiver le compte, auditer ce qu’il a touché, et instaurer une revue régulière des comptes","Changer son mot de passe et ne rien dire"], ok:1, why:"Un compte orphelin est une porte sans gardien. On désactive, on audite les accès, et on met en place une revue régulière : les départs doivent fermer les comptes le jour même." },
+  { id:"S4-3", t:"Patch Tuesday", obj:"4.3", dom:4, card:"C4-05", sit:"Deux vulnérabilités : l’une affiche un score CVSS de 9,8 sur un serveur interne isolé ; l’autre, 7,5, est exposée à Internet avec un exploit public qui circule.", opts:["Corriger d’abord le 9,8 : le score décide","Corriger d’abord celle exposée à Internet avec exploit public : l’exposition et l’exploit priment","Corriger par ordre alphabétique"], ok:1, why:"Le CVSS mesure une gravité théorique. La priorité réelle croise le score avec l’exposition, la criticité de l’actif et l’existence d’un exploit : une faille exploitable depuis Internet passe devant." },
+  { id:"S4-4", t:"La première heure d’un ransomware", obj:"4.8", dom:4, card:"C4-03", sit:"Ransomware : les postes chiffrent leurs fichiers les uns après les autres. Il est 9 h 05, tout le monde vient d’arriver.", opts:["Restaurer immédiatement les sauvegardes sur les postes touchés","Contenir (isoler), préserver les preuves, éradiquer la cause, puis seulement restaurer","Payer vite pour débloquer la journée"], ok:1, why:"L’ordre compte : contenir pour stopper la propagation, préserver les preuves, éradiquer la persistance — restaurer avant d’éradiquer, c’est offrir des machines propres à une attaque encore présente." },
+  { id:"S4-5", t:"Que disent les logs ?", obj:"4.9", dom:4, card:"C4-02", sit:"Un compte se connecte avec succès juste après une rafale d’échecs. Pour reconstituer ce qui s’est passé, quelles sources regardes-tu en premier ?", opts:["Uniquement le journal antivirus du poste","Journaux d’authentification, pare-feu et proxy : croiser les sources pour raconter l’enchaînement","Les e-mails de la journée"], ok:1, why:"Aucune source seule ne raconte l’histoire : l’authentification montre les échecs et la réussite, le pare-feu l’origine, le proxy la suite. C’est le travail de corrélation — celui d’un SIEM quand il y en a un." },
+  { id:"S5-1", t:"Le conseil et le budget", obj:"5.2", dom:5, card:"C5-01", sit:"Trois risques identifiés, un budget pour en traiter deux. Comment décider, chiffres à l’appui ?", opts:["Traiter les deux risques dont tout le monde parle","Calculer l’exposition (ALE = SLE × ARO) pour chaque risque, puis atténuer, transférer, accepter ou éviter en connaissance de cause","Ne rien traiter tant que rien n’est arrivé"], ok:1, why:"SLE = valeur de l’actif × facteur d’exposition ; ALE = SLE × ARO (taux d’occurrence annuel). Chiffrer permet de comparer le coût du traitement au coût du risque — et de justifier le choix devant la direction." },
+  { id:"S5-2", t:"Le sous-traitant", obj:"5.3", dom:5, card:"C5-07", sit:"Un prestataire de maintenance garde un accès à distance permanent, jour et nuit, « au cas où ». Rien n’est journalisé.", opts:["C’est un partenaire de confiance : ne rien changer","Évaluer le risque tiers : accès limité aux interventions, surveillé, journalisé, revu périodiquement, clauses au contrat","Lui demander de changer son mot de passe chaque année"], ok:1, why:"Leur faiblesse devient la tienne : un accès permanent et non surveillé chez un tiers est une porte ouverte par procuration. Accès à la demande, durée limitée, journalisation, revue périodique et clauses contractuelles." },
+  { id:"S5-3", t:"Le faux phishing maison", obj:"5.6", dom:5, card:"C5-08", sit:"La simulation de phishing maison piège 30 % des employés. La direction veut les noms pour « faire un exemple ».", opts:["Donner les noms : ça fera réfléchir les autres","Interpréter le résultat sans blâmer : former, expliquer les indices, puis remesurer la progression à la prochaine simulation","Arrêter les simulations : elles vexent les équipes"], ok:1, why:"30 %, c’est une mesure de départ, pas une faute collective. Blâmer détruit le signalement futur ; former et remesurer fait baisser le taux — c’est le but d’une sensibilisation." }
+];
+var CARDS40 = [
+  { id:"C1-01", q:"Quels sont les trois piliers de la triade CIA ?", a:"Confidentialité, intégrité, disponibilité." },
+  { id:"C1-02", q:"Quels sont les types de contrôles de sécurité ?", a:"Préventif, dissuasif, détectif, correctif, compensatoire, directif.", nu:"<b>Piège :</b> une caméra qui enregistre, c'est d'abord un contrôle détectif (elle peut aussi dissuader)." },
+  { id:"C1-03", q:"Quelles sont les quatre catégories de contrôles ?", a:"Techniques, de gestion, opérationnels, physiques." },
+  { id:"C1-04", q:"Chiffrement symétrique ou asymétrique ?", a:"Symétrique : une seule clé partagée, rapide. Asymétrique : paire clé publique / clé privée (échange de clés, signatures)." },
+  { id:"C1-05", q:"Hachage ou chiffrement ?", a:"Le hachage donne une empreinte à sens unique (intégrité). Le chiffrement est réversible avec la clé (confidentialité)." },
+  { id:"C1-06", q:"À quoi sert le salage d’un mot de passe ?", a:"À rendre chaque empreinte unique pour contrer les tables précalculées." },
+  { id:"C1-07", q:"Que signifie AAA ?", a:"Authentification, autorisation, traçabilité (accounting)." },
+  { id:"C1-08", q:"Principe du zero trust ?", a:"Ne jamais faire confiance par défaut : vérifier explicitement chaque accès, au moindre privilège, en supposant la compromission possible." },
+  { id:"C2-01", q:"Phishing, spear phishing, whaling ?", a:"Phishing : message de masse. Spear phishing : ciblé sur une personne ou une organisation. Whaling : vise les dirigeants." },
+  { id:"C2-02", q:"Vishing et smishing ?", a:"Hameçonnage par téléphone (voix) et par SMS." },
+  { id:"C2-03", q:"Compromission de messagerie professionnelle (BEC) ?", a:"Usurper un dirigeant ou un fournisseur pour détourner un paiement. Parade : vérification hors canal.", nu:"<b>Piège :</b> le faux fournisseur ne se repère pas dans le mail : on rappelle sur un numéro connu, hors canal." },
+  { id:"C2-04", q:"Force brute, password spraying, credential stuffing ?", a:"Force brute : beaucoup d’essais sur un compte. Spraying : peu de mots de passe courants sur beaucoup de comptes. Stuffing : identifiants volés ailleurs.", nu:"<b>Nuance :</b> peu d'essais sur beaucoup de comptes = spraying, pas de la force brute." },
+  { id:"C2-05", q:"Injection SQL : principe et parade ?", a:"Requêtes malveillantes via des entrées non filtrées. Parade : requêtes paramétrées et validation des entrées." },
+  { id:"C2-06", q:"Script intersites (XSS) ?", a:"Script injecté exécuté dans le navigateur d’autres utilisateurs. Parade : encodage de sortie, validation, politique de sécurité du contenu." },
+  { id:"C2-07", q:"Qu’est-ce qu’un zero-day ?", a:"Une vulnérabilité inconnue de l’éditeur ou sans correctif disponible." },
+  { id:"C2-08", q:"Menace interne ?", a:"Risque venant d’une personne ayant un accès légitime (malveillante ou négligente)." },
+  { id:"C3-01", q:"À quoi sert une DMZ ?", a:"Zone tampon qui expose des services publics tout en protégeant le réseau interne." },
+  { id:"C3-02", q:"Pourquoi segmenter un réseau ?", a:"Pour limiter la propagation d’une attaque et appliquer des règles par zone." },
+  { id:"C3-03", q:"Pare-feu avec ou sans suivi d’état (stateful / stateless) ?", a:"Stateful : suit l’état des connexions. Stateless : filtre chaque paquet isolément." },
+  { id:"C3-04", q:"IDS ou IPS ?", a:"IDS : détecte et alerte. IPS : placé en ligne, peut aussi bloquer." },
+  { id:"C3-05", q:"Responsabilité partagée dans le cloud ?", a:"Le fournisseur sécurise l’infrastructure ; le client sécurise ses données, ses accès et ses configurations (la part varie selon IaaS, PaaS, SaaS).", nu:"<b>Mini-exemple :</b> un stockage public qui expose des fichiers clients — c'est au client de corriger la configuration, pas au fournisseur." },
+  { id:"C3-06", q:"Règle de sauvegarde 3-2-1 ?", a:"3 copies, sur 2 supports différents, dont 1 hors site (ou hors ligne).", nu:"<b>Mini-exemple :</b> dernière copie corrompue = restauration impossible : on teste les restaurations, pas seulement les sauvegardes." },
+  { id:"C3-07", q:"RTO ou RPO ?", a:"RTO : durée maximale d’indisponibilité acceptée. RPO : perte de données maximale acceptée (en temps).", nu:"<b>Mini-exemple :</b> perte acceptée de 15 minutes de données = RPO de 15 minutes." },
+  { id:"C3-08", q:"Haute disponibilité ou reprise après sinistre ?", a:"Haute disponibilité : continuer malgré une panne (redondance). PRA : rétablir après un sinistre majeur." },
+  { id:"C4-01", q:"Faux positif ou faux négatif ?", a:"Faux positif : alerte sans menace réelle. Faux négatif : menace réelle non détectée." },
+  { id:"C4-02", q:"À quoi sert un SIEM ?", a:"À collecter et corréler les journaux de plusieurs sources pour alerter et enquêter." },
+  { id:"C4-03", q:"Étapes d’une réponse à incident ?", a:"Préparation, détection, analyse, confinement, éradication, récupération, retour d’expérience.", nu:"<b>Piège :</b> restaurer avant d'éradiquer relance l'attaque (tâche planifiée MajService). L'ordre compte : contenir, éradiquer, puis restaurer." },
+  { id:"C4-04", q:"Pourquoi ne pas restaurer avant d’avoir éradiqué ?", a:"Risque de réinfection : la cause (persistance, accès) est encore là.", nu:"<b>Mini-exemple :</b> dans la Mission 1, la tâche « MajService » relançait l'attaque tant qu'elle n'était pas supprimée." },
+  { id:"C4-05", q:"Que mesure le CVSS ?", a:"La gravité d’une vulnérabilité (0 à 10). À compléter par le contexte : exposition, criticité de l’actif, exploit connu.", nu:"<b>Nuance :</b> un score plus faible mais exposé à Internet avec un exploit public passe avant un score plus élevé non exposé." },
+  { id:"C4-06", q:"Pourquoi désactiver vite les comptes des personnes parties ?", a:"Les comptes orphelins sont des accès non surveillés exploitables." },
+  { id:"C4-07", q:"Chaîne de conservation des preuves ?", a:"Documente qui a manipulé une preuve et quand, pour garantir son intégrité." },
+  { id:"C4-08", q:"Les facteurs d’authentification ?", a:"Ce que tu sais (mot de passe), ce que tu as (clé, appareil), ce que tu es (biométrie)." },
+  { id:"C5-01", q:"SLE, ARO, ALE ?", a:"SLE = valeur de l’actif × facteur d’exposition. ALE = SLE × ARO (taux d’occurrence annuel).", nu:"<b>Mini-exemple :</b> actif 200 000 € × 25 % = SLE 50 000 € ; × ARO 0,5 = ALE 25 000 €." },
+  { id:"C5-02", q:"Quatre façons de traiter un risque ?", a:"Atténuer, transférer (assurance), accepter, éviter." },
+  { id:"C5-03", q:"Qu’est-ce que le risque résiduel ?", a:"Le risque qui reste après l’application des contrôles." },
+  { id:"C5-04", q:"Politique, norme, procédure ?", a:"Politique : intentions de haut niveau. Norme : exigences précises. Procédure : étapes détaillées." },
+  { id:"C5-05", q:"RGPD : délai de notification d’une violation ?", a:"À l’autorité de contrôle, en principe sous 72 heures après en avoir pris connaissance, si les personnes sont exposées à un risque." },
+  { id:"C5-06", q:"Audit interne ou externe ?", a:"Interne : réalisé par l’organisation. Externe : par un tiers indépendant." },
+  { id:"C5-07", q:"Pourquoi évaluer les fournisseurs ?", a:"Leur faiblesse devient la tienne : questionnaires, audits, clauses, accès limités." },
+  { id:"C5-08", q:"Que vise la sensibilisation à la sécurité ?", a:"Former et mesurer les comportements (simulations de phishing, retours positifs) pour réduire l’erreur humaine." }
+];
+var M1_CARD_IDS = ["C2-01","C2-03","C4-01","C4-02","C4-03","C4-04","C5-07"];
+var EXAMQ = [
+  { q:"Un ransomware est confirmé sur plusieurs postes. Première action ?", opts:["Restaurer les sauvegardes","Isoler les systèmes touchés","Payer la rançon","Réinstaller un poste"], ok:1, why:"On contient d’abord pour stopper la propagation ; on restaure après l’éradication.", card:"C4-03" },
+  { q:"Beaucoup de comptes reçoivent quelques essais avec le même mot de passe courant. Quelle attaque ?", opts:["Force brute classique","Hameçonnage","Script intersites","Password spraying"], ok:3, why:"Peu de mots de passe courants sur beaucoup de comptes : password spraying.", card:"C2-04" },
+  { q:"Une entreprise accepte de perdre au maximum 15 minutes de données. Quelle mesure ?", opts:["SLE","ALE","RPO","RTO"], ok:2, why:"Le RPO fixe la perte de données maximale acceptable.", card:"C3-07" },
+  { q:"Une caméra qui enregistre l’entrée est avant tout un contrôle…", opts:["Détectif","Préventif","Correctif","Compensatoire"], ok:0, why:"Elle permet de détecter et d’enquêter (elle peut aussi dissuader).", card:"C1-02" },
+  { q:"Dans un service IaaS, qui configure et protège le système d’exploitation des machines virtuelles ?", opts:["Le fournisseur","Personne","Les deux à parts égales","Le client"], ok:3, why:"En IaaS, le client gère l’OS, les applications et les données.", card:"C3-05" },
+  { q:"Actif de 200 000 €, facteur d’exposition 25 %, ARO 0,5. ALE ?", opts:["12 500 €","50 000 €","25 000 €","100 000 €"], ok:2, why:"SLE = 200 000 × 0,25 = 50 000 ; ALE = 50 000 × 0,5 = 25 000.", card:"C5-01" },
+  { q:"Un employé quitte l’entreprise. Que faire ?", opts:["Désactiver ses comptes dès son départ et auditer ses accès","Supprimer ses droits à la fin du mois","Les laisser actifs 30 jours","Changer son nom d’utilisateur"], ok:0, why:"Les comptes orphelins sont un risque ; on désactive tout de suite.", card:"C4-06" },
+  { q:"Un faux technicien appelle un employé pour obtenir son mot de passe. Quelle attaque ?", opts:["Smishing","Vishing","Whaling","Pharming"], ok:1, why:"L’hameçonnage par téléphone s’appelle vishing.", card:"C2-02" },
+  { q:"Quel facteur peut justifier de corriger d’abord une vulnérabilité au score CVSS plus faible ?", opts:["Son nom","Sa date de découverte","Une exposition à Internet avec exploit public","Le fournisseur"], ok:2, why:"Le contexte (exposition, exploit connu) compte autant que le score.", card:"C4-05" },
+  { q:"Quel mécanisme permet de vérifier qu’un fichier n’a pas été modifié ?", opts:["Hachage","Chiffrement symétrique","Salage","Compression"], ok:0, why:"Une empreinte (hachage) change si le fichier change.", card:"C1-05" }
+];
+var FW_RULES = [
+  { id:"r1", txt:"Internet → Serveur web (DMZ) · port 443 · Autoriser" },
+  { id:"r2", txt:"Internet → Réseau interne · port 3389 (RDP) · Refuser" },
+  { id:"r3", txt:"Postes employés → Internet · port 443 · Autoriser" },
+  { id:"r4", txt:"Tout → Tout · Tous ports · Refuser (règle par défaut)" }
+];
+var FW_DISPLAY = ["r3","r1","r4","r2"];
+/* ---------- Simulations PBQ supplémentaires (avis pédagogique) ---------- */
+var SIMS = {
+  ir:{ title:"Réponse à incident — l'ordre des étapes", sub:"Remets les sept étapes dans l'ordre, comme dans une vraie réponse à incident.",
+    order:["Préparation","Détection","Analyse","Confinement","Éradication","Récupération","Retour d'expérience"],
+    display:["Analyse","Récupération","Préparation","Éradication","Retour d'expérience","Détection","Confinement"],
+    cards:["C4-03","C4-04"],
+    why:"L'ordre n'est pas une formalité : on contient avant d'éradiquer, on éradique avant de récupérer — restaurer trop tôt relance l'attaque, comme la tâche « MajService » de la Mission 1." },
+  ctrl:{ title:"Classification de contrôles", sub:"Pour chaque mesure, choisis son type de contrôle.",
+    types:["Préventif","Détectif","Correctif","Directif"],
+    items:[
+      { t:"Une caméra qui enregistre l'entrée du bâtiment", type:"Détectif" },
+      { t:"Un pare-feu qui bloque le trafic non autorisé", type:"Préventif" },
+      { t:"Une sauvegarde qui permet de restaurer après un incident", type:"Correctif" },
+      { t:"Un journal d'accès, consulté après coup", type:"Détectif" },
+      { t:"Une porte à badge qui refuse l'accès aux non-autorisés", type:"Préventif" },
+      { t:"Une procédure qui impose de signaler tout incident au SOC", type:"Directif" }
+    ],
+    cards:["C1-02"],
+    why:"Le piège classique : la caméra qui enregistre est d'abord détective — elle sert à voir et à prouver après coup, même si sa présence peut aussi dissuader." },
+  threat:{ title:"Matching de menaces", sub:"Pour chaque description, retrouve le nom exact de l'attaque.",
+    types:["Phishing","Spear phishing","Whaling","Vishing","Smishing","Password spraying","Credential stuffing"],
+    items:[
+      { t:"Un message de masse promettant un gain, envoyé à des milliers d'adresses", type:"Phishing" },
+      { t:"Un message taillé pour une personne précise, avec son nom et son projet en cours", type:"Spear phishing" },
+      { t:"Un message qui vise directement la directrice financière de l'entreprise", type:"Whaling" },
+      { t:"Un appel téléphonique d'un faux technicien qui demande le mot de passe", type:"Vishing" },
+      { t:"Un SMS annonçant un colis bloqué, avec un lien à suivre", type:"Smishing" },
+      { t:"Quelques essais avec un mot de passe courant, tentés sur des centaines de comptes", type:"Password spraying" },
+      { t:"Des identifiants volés sur un autre site, testés en masse ici", type:"Credential stuffing" }
+    ],
+    cards:["C2-01","C2-02","C2-04"],
+    why:"Le canal et la cible font le nom : voix = vishing, SMS = smishing, dirigeants = whaling. Et côté mots de passe : peu d'essais sur beaucoup de comptes, c'est du spraying ; des identifiants volés ailleurs, c'est du stuffing." }
+};
+var packSim = null;
+function startPackSim(id){
+  packSim = { id:id, order:[], assign:{}, sel:null, phase:"play", counted:false };
+  packTab = "sims";
+  renderPack(); window.scrollTo(0,0);
+}
+function renderPackSims(root){
+  var html = "";
+  if(!packSim){
+    html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Retour">‹</button><div class="ttl">Simulations PBQ</div></div>';
+    html += '<div class="stepct">Trois mini-simulations, en plus de la simulation pare-feu du mini-examen · Seuil d\'entraînement : plus de 80 %</div>';
+    ["ir","ctrl","threat"].forEach(function(id){
+      var d = SIMS[id], st = S.pack.sims[id];
+      html += '<div class="card"><div class="row between"><span class="tag soc">Simulation PBQ</span>'+(st && st.plays ? '<span class="tag done">Meilleur : '+st.best+' % · '+st.plays+' partie'+(st.plays>1?"s":"")+'</span>' : '')+'</div><h3 style="margin-top:8px">'+d.title+'</h3><p>'+d.sub+'</p><button class="btn primary big" data-sim="'+id+'">'+(st && st.plays ? "Rejouer" : "Jouer")+'</button></div>';
+    });
+    root.innerHTML = html;
+    $("pkBack").addEventListener("click", function(){ packTab="home"; renderPack(); });
+    root.querySelectorAll("[data-sim]").forEach(function(b){
+      b.addEventListener("click", function(){ sndTap(); startPackSim(b.getAttribute("data-sim")); });
+    });
+    return;
+  }
+  var d = SIMS[packSim.id];
+  if(packSim.phase==="play"){
+    html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Quitter">✕</button><div class="ttl">'+d.title+'</div></div>';
+    if(packSim.id==="ir"){
+      html += '<div class="stepct">Simulation (PBQ) · Touche les étapes dans le bon ordre</div><div class="progressline"><i style="width:'+Math.round(100*packSim.order.length/7)+'%"></i></div>';
+      html += '<div class="alertcard"><div class="body" style="font-size:15.5px">'+d.sub+'</div>';
+      d.display.forEach(function(step){
+        var pos = packSim.order.indexOf(step);
+        html += '<button class="ruleitem" data-ir="'+esc(step)+'" '+(pos>=0?"disabled":"")+'>'+(pos>=0?'<span class="ord">'+(pos+1)+'</span>':'')+esc(step)+'</button>';
+      });
+      html += '</div>';
+      html += '<div class="row" style="gap:9px;margin-top:10px"><button class="btn" style="flex:1" id="pkSimReset">Recommencer</button><button class="btn primary" style="flex:1" id="pkSimGo" '+(packSim.order.length>=7?"":"disabled")+'>Voir mon résultat</button></div>';
+      root.innerHTML = html;
+      $("pkBack").addEventListener("click", function(){ packSim = null; renderPack(); });
+      root.querySelectorAll("[data-ir]").forEach(function(b){
+        b.addEventListener("click", function(){ packSim.order.push(b.getAttribute("data-ir")); sndTap(); renderPackSims(root); });
+      });
+      var rs = $("pkSimReset"); if(rs) rs.addEventListener("click", function(){ packSim.order = []; renderPackSims(root); });
+      var go = $("pkSimGo"); if(go) go.addEventListener("click", function(){ packSim.phase = "res"; sndTap(); renderPackSims(root); window.scrollTo(0,0); });
+      return;
+    }
+    var total = d.items.length, assigned = Object.keys(packSim.assign).length;
+    html += '<div class="stepct">Simulation (PBQ) · Associer : '+assigned+' / '+total+'</div><div class="progressline"><i style="width:'+Math.round(100*assigned/total)+'%"></i></div>';
+    html += '<div class="alertcard"><div class="body" style="font-size:15.5px">'+d.sub+' Touche un élément, puis son type.</div>';
+    d.items.forEach(function(it, ii){
+      html += '<button class="simitem'+(packSim.sel===ii?" sel":"")+'" data-item="'+ii+'"><span>'+esc(it.t)+'</span>'+(packSim.assign[ii] ? '<span class="given">'+esc(packSim.assign[ii])+'</span>' : '')+'</button>';
+    });
+    html += '<div class="chiprow" style="margin-top:12px">';
+    d.types.forEach(function(t){ html += '<button class="fchip" data-type="'+esc(t)+'">'+esc(t)+'</button>'; });
+    html += '</div></div>';
+    html += '<button class="btn primary big" id="pkSimGo" style="margin-top:10px" '+(assigned>=total?"":"disabled")+'>Voir mon résultat</button>';
+    root.innerHTML = html;
+    $("pkBack").addEventListener("click", function(){ packSim = null; renderPack(); });
+    root.querySelectorAll("[data-item]").forEach(function(b){
+      b.addEventListener("click", function(){ packSim.sel = +b.getAttribute("data-item"); sndTap(); renderPackSims(root); });
+    });
+    root.querySelectorAll("[data-type]").forEach(function(b){
+      b.addEventListener("click", function(){
+        if(packSim.sel===null){ toast("Touche d'abord un élément de la liste."); return; }
+        packSim.assign[packSim.sel] = b.getAttribute("data-type");
+        var nxt = null;
+        d.items.forEach(function(it, ii){ if(packSim.assign[ii]===undefined && nxt===null) nxt = ii; });
+        packSim.sel = nxt;
+        sndTap(); renderPackSims(root);
+      });
+    });
+    var go2 = $("pkSimGo"); if(go2) go2.addEventListener("click", function(){ packSim.phase = "res"; sndTap(); renderPackSims(root); window.scrollTo(0,0); });
+    return;
+  }
+  /* résultats */
+  var good = 0, total = 0, corr = "";
+  if(packSim.id==="ir"){
+    total = d.order.length;
+    packSim.order.forEach(function(step, pos){ if(d.order[pos]===step) good++; });
+    corr = d.order.map(function(step, pos){
+      var mine = packSim.order[pos], okc = mine===step;
+      return whyRow(okc, okc?"ok":"ko", "Étape "+(pos+1)+" — "+step, okc ? "Bien placée." : "Tu avais mis : "+mine+".");
+    }).join("");
+  } else {
+    total = d.items.length;
+    corr = d.items.map(function(it, ii){
+      var mine = packSim.assign[ii], okc = mine===it.type;
+      if(okc) good++;
+      return whyRow(okc, okc?"ok":"ko", it.t, "Bonne réponse : "+it.type+(okc ? "." : " · Ta réponse : "+(mine||"—")+"."));
+    }).join("");
+  }
+  var pct = Math.round(100*good/total);
+  if(!packSim.counted){
+    packSim.counted = true;
+    var prev = S.pack.sims[packSim.id] || { best:0, plays:0 };
+    S.pack.sims[packSim.id] = { best:Math.max(prev.best||0, pct), plays:(prev.plays||0)+1 };
+    S.credits += 10; S.xp.soc += 15;
+    save();
+  }
+  html += '<div class="ghead"><div class="ttl">'+d.title+' — résultat</div></div>';
+  html += '<div class="scorebig">'+pct+'<small> %</small></div><div class="gradelbl">'+(pct>80 ? "Au-dessus du seuil d’entraînement (80 %)" : "Sous le seuil d’entraînement (80 %) — refais la simulation, puis revois la carte liée")+'</div>';
+  html += '<div class="card"><h3>Barème</h3><div class="breakrow"><div class="bl"><span>Bonnes réponses</span><span>'+good+' / '+total+'</span></div><div class="breakbar"><i style="width:'+pct+'%"></i></div></div><p style="margin:8px 0 0">'+d.why+'</p></div>';
+  html += '<div class="reward"><div class="rw"><div class="rv" style="color:var(--cyan)">+15 XP</div><div class="rl">SOC</div></div><div class="rw"><div class="rv" style="color:var(--orange)">+10</div><div class="rl">Crédits</div></div></div>';
+  html += '<div class="card"><h3>Corrections</h3>'+corr;
+  d.cards.forEach(function(cid){ html += '<div style="margin:8px 0 2px"><button class="btn" data-review-card="'+cid+'">Revoir la carte '+cid+'</button></div>'; });
+  html += '</div>';
+  html += '<div class="row" style="gap:9px"><button class="btn" style="flex:1" id="pkSimList">Autres simulations</button><button class="btn primary" style="flex:1" id="pkSimRetry">Refaire</button></div>';
+  root.innerHTML = html;
+  root.querySelectorAll("[data-review-card]").forEach(function(b){
+    b.addEventListener("click", function(){ var cid = b.getAttribute("data-review-card"); packSim = null; openCardInPack(cid); });
+  });
+  $("pkSimList").addEventListener("click", function(){ packSim = null; renderPack(); });
+  $("pkSimRetry").addEventListener("click", function(){ startPackSim(packSim.id); });
+  if(pct>80) sndOk(); else sndBad();
+}
+var PARCOURS = [
+  { w:"Semaines 1–2", t:"Fondations", scen:["S1-1","S1-2","S1-3","S2-1"], cards:["C1-01","C1-02","C1-03","C1-04","C1-05","C1-06","C1-07","C1-08"], obj:"Concepts généraux solides, notions de contrôles et de chiffrement." },
+  { w:"Semaines 3–4", t:"Menaces et vulnérabilités", scen:["S2-2","S2-3","S2-4","S4-3"], cards:["C2-01","C2-02","C2-03","C2-04","C2-05","C2-06","C2-07","C2-08","C4-05"], obj:"Reconnaître les familles de menaces et prioriser les correctifs." },
+  { w:"Semaines 5–6", t:"Architecture et réseau", scen:["S3-1","S3-2","S3-3"], cards:["C3-01","C3-02","C3-03","C3-04","C3-05","C3-06","C3-07","C3-08"], obj:"Concevoir un réseau segmenté, comprendre le cloud et la résilience." },
+  { w:"Semaines 7–8", t:"Opérations de sécurité", scen:["S4-1","S4-2","S4-4","S4-5"], cards:["C4-01","C4-02","C4-03","C4-04","C4-06","C4-07","C4-08"], obj:"Triage, journaux, réponse à incident, identités." },
+  { w:"Semaine 9", t:"Gouvernance et risque", scen:["S5-1","S5-2","S5-3"], cards:["C5-01","C5-02","C5-03","C5-04","C5-05","C5-06","C5-07","C5-08"], obj:"Risques, conformité, tiers, sensibilisation." },
+  { w:"Semaine 10", t:"Points faibles", scen:[], cards:[], obj:"Reprendre les scénarios les moins réussis et les cartes en retard. Objectif : remonter les domaines les plus bas.", special:"weak" },
+  { w:"Semaine 11", t:"Examens blancs", scen:[], cards:[], obj:"Mini-examen du pack, puis un examen complet du jeu ; revoir les cartes des erreurs. Objectif : analyser les écarts par domaine.", special:"exam" },
+  { w:"Semaine 12", t:"Dernière ligne droite", scen:[], cards:[], obj:"Examen blanc final et révision éclair. Objectif : des examens blancs réguliers au-dessus du seuil visé, puis l’inscription.", special:"final" }
+];
+var CARD_INTERVALS = [1,3,7,14,30];
+var packTab = "home", packScenId = null, packScenAnswer = null, packCardFilter = "due", packCardIdx = 0, packCardFlipped = false;
+var packExam = null;
+function cardState(id){
+  if(!S.pack.cards[id]) S.pack.cards[id] = { lv:0, due:0, n:0 };
+  return S.pack.cards[id];
+}
+function cardDueList(){
+  var now = Date.now();
+  return CARDS40.filter(function(c){ var st = S.pack.cards[c.id]; return !st || !st.n || (st.due && st.due <= now); });
+}
+function cardListForFilter(){
+  if(packCardFilter==="due") return cardDueList();
+  if(packCardFilter==="all") return CARDS40.slice();
+  var d = +packCardFilter;
+  return CARDS40.filter(function(c){ return +c.id.charAt(1)===d; });
+}
+function scenDoneCount(){ return Object.keys(S.pack.scen).length; }
+function cardsReviewedCount(){ return Object.keys(S.pack.cards).filter(function(k){ return S.pack.cards[k].n>0; }).length; }
+function openScenInPack(scenId){
+  packTab = "scen"; packScenId = scenId; packScenAnswer = null;
+  show("pack");
+}
+function openCardInPack(cardId){
+  packTab = "cards"; packCardFilter = "all";
+  var list = cardListForFilter();
+  for(var i=0;i<list.length;i++){ if(list[i].id===cardId){ packCardIdx = i; break; } }
+  packCardFlipped = false;
+  show("pack");
+}
+function renderPack(){
+  var root = $("view-pack");
+  var html = "";
+  if(packTab==="home"){
+    html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Retour">‹</button><div class="ttl">Pack Security+</div></div>';
+    html += '<div class="stepct">Scénarios : '+scenDoneCount()+' / 18 · Cartes revues : '+cardsReviewedCount()+' / 40 · Cartes à revoir : '+cardDueList().length+'</div><div class="progressline"><i style="width:'+Math.round(100*(scenDoneCount()+cardsReviewedCount())/58)+'%"></i></div>';
+    html += '<div style="margin:2px 0 4px"><span class="tag reseau">Révise pour l\'examen</span></div>';
+    html += '<div class="packtabs">'
+      + '<button class="packtab" data-pk="scen"><b>Scénarios éclair</b><span>18 situations, une décision, un debrief · '+scenDoneCount()+' / 18</span></button>'
+      + '<button class="packtab" data-pk="cards"><b>Cartes de révision</b><span>40 cartes qui reviennent à intervalles espacés · '+cardDueList().length+' à revoir</span></button>'
+      + '<button class="packtab" data-pk="exam"><b>Mini-examen blanc</b><span>10 questions + 1 simulation pare-feu'+(S.pack.examPlays ? ' · meilleur : '+S.pack.examBest+' %' : '')+'</span></button>'
+      + '<button class="packtab" data-pk="sims"><b>Simulations PBQ</b><span>Réponse à incident, contrôles, menaces — 3 mini-simulations</span></button>'
+      + '<button class="packtab" data-pk="parcours"><b>Parcours 12 semaines</b><span>Le plan complet, suivi au fil de tes parties</span></button>'
+      + '</div>';
+    html += '<button class="btn big" id="pkGloss" style="width:100%;margin-top:12px">Glossaire — Fonctionnement du jeu</button>';
+    root.innerHTML = html;
+    $("pkBack").addEventListener("click", function(){ show("hub"); });
+    $("pkGloss").addEventListener("click", function(){ renderHelp(); show("help"); });
+    root.querySelectorAll("[data-pk]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k = b.getAttribute("data-pk"); sndTap();
+        if(k==="exam"){ startPackExam(); return; }
+        packTab = k; packScenAnswer = null;
+        if(k==="sims") packSim = null;
+        if(k==="cards"){ packCardIdx = 0; packCardFlipped = false; }
+        renderPack();
+      });
+    });
+    return;
+  }
+  if(packTab==="scen"){
+    if(packScenId){
+      var sc = SCENARIOS.filter(function(x){ return x.id===packScenId; })[0];
+      html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Retour">‹</button><div class="ttl">Scénario '+sc.id+'</div></div>';
+      html += '<div class="stepct">'+PACK_DOMS[sc.dom]+' · Objectif Security+ '+sc.obj+'</div>';
+      html += '<div class="alertcard"><span class="tag soc">'+sc.id+' · '+esc(sc.t)+'</span>'+(SCEN_ORIGIN[sc.id] ? '<br><span class="origin">Vu dans la Mission 1 — variante '+SCEN_ORIGIN[sc.id]+'</span>' : '')+'<div class="body" style="font-size:15.5px;margin-top:8px">'+sc.sit+'</div>';
+      if(packScenAnswer===null){
+        html += '<div class="jopts">';
+        sc.opts.forEach(function(o, oi){ html += '<button data-so="'+oi+'">'+esc(o)+'</button>'; });
+        html += '</div>';
+      } else {
+        var good = packScenAnswer===sc.ok;
+        html += '<div class="conseq" style="margin-top:12px"><b>'+(good ? "Bonne décision." : "Pas celle-là.")+'</b><br>'+sc.why+'</div>';
+        html += '<div class="row" style="gap:9px;margin-top:12px"><button class="btn" style="flex:1" id="pkCardLink">Revoir la carte '+sc.card+'</button><button class="btn primary" style="flex:1" id="pkScenList">Autres scénarios</button></div>';
+      }
+      html += '</div>';
+      root.innerHTML = html;
+      $("pkBack").addEventListener("click", function(){ packScenId = null; packScenAnswer = null; renderPack(); });
+      root.querySelectorAll("[data-so]").forEach(function(b){
+        b.addEventListener("click", function(){
+          var oi = +b.getAttribute("data-so");
+          packScenAnswer = oi;
+          var firstTime = !S.pack.scen[sc.id];
+          S.pack.scen[sc.id] = true;
+          var sc100 = oi===sc.ok ? 100 : 0;
+          if(sc100 > (S.pack.scenBest[sc.id]||0)) S.pack.scenBest[sc.id] = sc100;
+          if(oi===sc.ok){
+            S.xp[sc.dom===3 ? "reseau" : "soc"] += 20; S.credits += 10;
+            cardState(sc.card);
+            if(S.pack.cards[sc.card].due===0) S.pack.cards[sc.card].due = Date.now();
+            sndOk();
+          } else {
+            var st = cardState(sc.card); st.due = Date.now();
+            sndBad();
+          }
+          if(firstTime && !S.delayedDue && !S.delayedDone) S.delayedDue = Date.now() + 7*24*3600*1000;
+          save(); renderPack();
+        });
+      });
+      var cl = $("pkCardLink"); if(cl) cl.addEventListener("click", function(){ openCardInPack(sc.card); });
+      var sl2 = $("pkScenList"); if(sl2) sl2.addEventListener("click", function(){ packScenId = null; packScenAnswer = null; renderPack(); });
+      return;
+    }
+    html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Retour">‹</button><div class="ttl">Scénarios éclair</div></div>';
+    html += '<div class="stepct">'+scenDoneCount()+' / 18 terminés · 3 à 5 minutes chacun</div>';
+    [1,2,3,4,5].forEach(function(d){
+      html += '<h2>'+PACK_DOMS[d]+'</h2>';
+      SCENARIOS.filter(function(s){ return s.dom===d; }).forEach(function(s){
+        var done = !!S.pack.scen[s.id], best = S.pack.scenBest[s.id];
+        html += '<div class="card"><div class="row between"><span class="tag soc">'+s.id+' · Objectif '+s.obj+'</span>'+(done ? '<span class="tag '+(best>=100?"done":"")+'">'+(best>=100?"Réussi":"Terminé")+'</span>' : '')+'</div><h3 style="margin-top:8px">'+esc(s.t)+'</h3>'+(SCEN_ORIGIN[s.id] ? '<span class="origin">Vu dans la Mission 1 — variante '+SCEN_ORIGIN[s.id]+'</span>' : '')+'<p>'+esc(s.sit)+'</p><button class="btn primary big" data-scen="'+s.id+'">'+(done?"Rejouer":"Jouer")+'</button></div>';
+      });
+    });
+    root.innerHTML = html;
+    $("pkBack").addEventListener("click", function(){ packTab="home"; renderPack(); });
+    root.querySelectorAll("[data-scen]").forEach(function(b){
+      b.addEventListener("click", function(){ packScenId = b.getAttribute("data-scen"); packScenAnswer = null; sndTap(); renderPack(); window.scrollTo(0,0); });
+    });
+    return;
+  }
+  if(packTab==="cards"){
+    var list = cardListForFilter();
+    if(packCardIdx >= list.length) packCardIdx = 0;
+    var dueN = cardDueList().length;
+    html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Retour">‹</button><div class="ttl">Cartes de révision</div></div>';
+    html += '<div class="stepct">Revues : '+cardsReviewedCount()+' / 40 · À revoir maintenant : '+dueN+' · Répétition espacée : 1, 3, 7, 14 puis 30 jours</div>';
+    html += '<div class="chiprow"><button class="fchip'+(packCardFilter==="due"?" on":"")+'" data-cf="due">À revoir ('+dueN+')</button><button class="fchip'+(packCardFilter==="all"?" on":"")+'" data-cf="all">Toutes (40)</button>';
+    [1,2,3,4,5].forEach(function(d){ html += '<button class="fchip'+(packCardFilter===String(d)?" on":"")+'" data-cf="'+d+'">Domaine '+d+'</button>'; });
+    html += '</div>';
+    if(!list.length){
+      html += '<div class="card"><h3>Rien à revoir pour le moment</h3><p>Toutes les cartes de cette sélection sont à jour. Elles reviendront selon leur intervalle — ou rouvre l’onglet « Toutes » pour réviser en avance.</p></div>';
+    } else {
+      var c = list[packCardIdx], st = cardState(c.id);
+      var isM1 = M1_CARD_IDS.indexOf(c.id)>=0;
+      html += '<div class="stepct" style="margin-top:8px">Carte '+(packCardIdx+1)+' / '+list.length+(st.n ? ' · Revue '+st.n+' fois · niveau '+(st.lv+1)+' / 5' : ' · Jamais revue')+(isM1 ? ' · Aussi générée par la Mission 1' : '')+'</div>';
+      html += '<div class="fcardwrap"><div class="fcard'+(packCardFlipped?" flipped":"")+'" id="pkCard" role="button" aria-label="Retourner la carte"><div class="fface"><div class="fid">'+c.id+' · Question · '+PACK_DOMS[+c.id.charAt(1)]+'</div><div class="fq">'+esc(c.q)+'</div>'+(CARD_ORIGIN[c.id] ? '<span class="origin">Vu dans la Mission 1 — variante '+CARD_ORIGIN[c.id]+'</span>' : '')+'<div class="fhint">Touche la carte pour voir la réponse.</div></div><div class="fface back"><div class="fid">'+c.id+' · Réponse</div><div class="fa">'+esc(c.a)+'</div>'+(c.nu ? '<div class="fnuance">'+c.nu+'</div>' : '')+'<div class="fhint">Sois honnête : tu savais, ou pas encore ?</div></div></div></div>';
+      if(packCardFlipped){
+        html += '<div class="row" style="gap:9px;margin-top:12px"><button class="btn" style="flex:1" id="pkCardKo">À revoir</button><button class="btn primary" style="flex:1" id="pkCardOk">Je sais</button></div>';
+      } else {
+        html += '<button class="btn primary big" id="pkFlip" style="margin-top:12px">Retourner la carte</button>';
+      }
+      html += '<div class="row" style="gap:9px;margin-top:10px"><button class="btn" style="flex:1" id="pkPrev" '+(packCardIdx<=0?"disabled":"")+'>‹ Précédente</button><button class="btn" style="flex:1" id="pkNext" '+(packCardIdx>=list.length-1?"disabled":"")+'>Suivante ›</button></div>';
+    }
+    root.innerHTML = html;
+    $("pkBack").addEventListener("click", function(){ packTab="home"; renderPack(); });
+    root.querySelectorAll("[data-cf]").forEach(function(b){
+      b.addEventListener("click", function(){ packCardFilter = b.getAttribute("data-cf"); packCardIdx = 0; packCardFlipped = false; sndTap(); renderPack(); });
+    });
+    var flip = function(){ packCardFlipped = !packCardFlipped; renderPack(); };
+    var pkc = $("pkCard"); if(pkc) pkc.addEventListener("click", flip);
+    var pkb = $("pkFlip"); if(pkb) pkb.addEventListener("click", flip);
+    var prev = $("pkPrev"); if(prev) prev.addEventListener("click", function(){ packCardIdx--; packCardFlipped = false; renderPack(); });
+    var next = $("pkNext"); if(next) next.addEventListener("click", function(){ packCardIdx++; packCardFlipped = false; renderPack(); });
+    var okB = $("pkCardOk"), koB = $("pkCardKo");
+    function gradeCard(known){
+      var cc = list[packCardIdx], ss = cardState(cc.id);
+      ss.n++;
+      if(known){ ss.lv = Math.min(4, ss.lv+1); ss.due = Date.now() + CARD_INTERVALS[ss.lv]*24*3600*1000; }
+      else { ss.lv = 0; ss.due = Date.now() + CARD_INTERVALS[0]*24*3600*1000; }
+      save(); sndTap();
+      if(packCardFilter==="due"){ packCardFlipped = false; renderPack(); }
+      else if(packCardIdx < list.length-1){ packCardIdx++; packCardFlipped = false; renderPack(); }
+      else { packCardFlipped = false; renderPack(); toast("Session terminée pour cette sélection."); }
+    }
+    if(okB) okB.addEventListener("click", function(){ gradeCard(true); });
+    if(koB) koB.addEventListener("click", function(){ gradeCard(false); });
+    return;
+  }
+  if(packTab==="sims"){ renderPackSims(root); return; }
+  if(packTab==="exam"){ renderPackExam(root); return; }
+  if(packTab==="parcours"){
+    html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Retour">‹</button><div class="ttl">Parcours 12 semaines</div></div>';
+    html += '<div class="stepct">Rythme conseillé : 5 cartes par jour en session éclair, 2 à 3 scénarios par semaine, une mission du jeu le week-end.</div>';
+    PARCOURS.forEach(function(w){
+      var pct = null, detail = "";
+      if(w.special==="weak"){
+        var weakScen = SCENARIOS.filter(function(s){ return S.pack.scen[s.id] && (S.pack.scenBest[s.id]||0)<100; }).length;
+        var lateCards = cardDueList().length;
+        detail = "Scénarios terminés mais non réussis : "+weakScen+" · Cartes en retard : "+lateCards;
+        pct = (weakScen===0 && scenDoneCount()>0) ? 100 : 0;
+      } else if(w.special==="exam"){
+        detail = S.pack.examPlays ? "Mini-examen passé "+S.pack.examPlays+" fois · meilleur : "+S.pack.examBest+" %" : "Mini-examen pas encore passé";
+        pct = S.pack.examPlays ? Math.min(100, S.pack.examBest) : 0;
+      } else if(w.special==="final"){
+        detail = S.pack.examBest>=80 ? "Meilleur mini-examen : "+S.pack.examBest+" % — au-dessus du seuil d’entraînement" : "Meilleur mini-examen : "+(S.pack.examPlays ? S.pack.examBest+" %" : "pas encore passé")+" — seuil visé : plus de 80 %";
+        pct = S.pack.examBest>=80 ? 100 : S.pack.examBest;
+      } else {
+        var sd = w.scen.filter(function(id){ return S.pack.scen[id]; }).length;
+        var cd = w.cards.filter(function(id){ return S.pack.cards[id] && S.pack.cards[id].n>0; }).length;
+        var tot = w.scen.length + w.cards.length, dn = sd + cd;
+        pct = tot ? Math.round(100*dn/tot) : 0;
+        detail = "Scénarios : "+sd+" / "+w.scen.length+" · Cartes : "+cd+" / "+w.cards.length;
+      }
+      html += '<div class="weekrow"><div class="wl">'+w.w+' — '+w.t+'<span>'+pct+' %</span></div><div class="trustbar"><i style="width:'+pct+'%"></i></div><p>'+w.obj+'</p><p>'+detail+'</p></div>';
+    });
+    var totScenPct = Math.round(100*scenDoneCount()/18), totCardPct = Math.round(100*cardsReviewedCount()/40);
+    html += '<div class="card"><h3>Progression globale du pack</h3><div class="xpbar"><div class="xl">Scénarios éclair<span>'+scenDoneCount()+' / 18</span></div><div class="xptrack"><i style="width:'+totScenPct+'%"></i></div></div><div class="xpbar"><div class="xl">Cartes de révision<span>'+cardsReviewedCount()+' / 40</span></div><div class="xptrack"><i class="mag" style="width:'+totCardPct+'%"></i></div></div><div class="xpbar"><div class="xl">Mini-examen blanc<span>'+(S.pack.examPlays ? "meilleur "+S.pack.examBest+" %" : "pas encore passé")+'</span></div><div class="xptrack"><i style="width:'+S.pack.examBest+'%"></i></div></div></div>';
+    root.innerHTML = html;
+    $("pkBack").addEventListener("click", function(){ packTab="home"; renderPack(); });
+    return;
+  }
+}
+function startPackExam(){
+  packExam = { idx:0, answers:{}, fwOrder:[], phase:"q" };
+  packTab = "exam";
+  show("pack");
+}
+function renderPackExam(root){
+  var html = "";
+  if(!packExam){ packTab = "home"; renderPack(); return; }
+  if(packExam.phase==="q"){
+    var q = EXAMQ[packExam.idx];
+    html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Quitter">✕</button><div class="ttl">Mini-examen blanc</div></div>';
+    html += '<div class="stepct">Question '+(packExam.idx+1)+' / 10 · Sans aide, comme le jour J</div><div class="progressline"><i style="width:'+Math.round(100*packExam.idx/11)+'%"></i></div>';
+    html += '<div class="alertcard"><div class="jq">'+q.q+'</div><div class="jopts">';
+    q.opts.forEach(function(o, oi){ html += '<button data-eq="'+oi+'"'+(packExam.answers[packExam.idx]===oi?' style="border-color:var(--cyan);background:rgba(0,209,255,.10)"':'')+'>'+String.fromCharCode(65+oi)+'. '+esc(o)+'</button>'; });
+    html += '</div></div>';
+    html += '<button class="btn primary big" id="pkEqNext" style="margin-top:12px" '+(packExam.answers[packExam.idx]===undefined?"disabled":"")+'>'+(packExam.idx>=9 ? "Passer à la simulation pare-feu" : "Question suivante")+'</button>';
+    root.innerHTML = html;
+    $("pkBack").addEventListener("click", function(){ packExam = null; packTab = "home"; show("pack"); });
+    root.querySelectorAll("[data-eq]").forEach(function(b){
+      b.addEventListener("click", function(){ packExam.answers[packExam.idx] = +b.getAttribute("data-eq"); sndTap(); renderPackExam(root); });
+    });
+    $("pkEqNext").addEventListener("click", function(){
+      if(packExam.idx>=9) packExam.phase = "fw"; else packExam.idx++;
+      sndTap(); renderPackExam(root); window.scrollTo(0,0);
+    });
+    return;
+  }
+  if(packExam.phase==="fw"){
+    html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Quitter">✕</button><div class="ttl">Mini-examen — simulation</div></div>';
+    html += '<div class="stepct">Simulation (PBQ) · Règles de pare-feu</div><div class="progressline"><i style="width:'+Math.round(100*10/11)+'%"></i></div>';
+    html += '<div class="alertcard"><div class="body" style="font-size:15.5px">Consigne : autoriser le web vers le serveur de la DMZ, bloquer l’accès à distance (RDP) depuis Internet, laisser les employés naviguer — tout le reste est refusé. Touche les règles dans l’ordre où tu les placerais.</div>';
+    FW_DISPLAY.forEach(function(rid){
+      var r = FW_RULES.filter(function(x){ return x.id===rid; })[0];
+      var pos = packExam.fwOrder.indexOf(rid);
+      html += '<button class="ruleitem" data-fw="'+rid+'" '+(pos>=0?"disabled":"")+'>'+(pos>=0?'<span class="ord">'+(pos+1)+'</span>':'')+esc(r.txt)+'</button>';
+    });
+    html += '</div>';
+    html += '<div class="row" style="gap:9px;margin-top:10px"><button class="btn" style="flex:1" id="pkFwReset">Recommencer l’ordre</button><button class="btn primary" style="flex:1" id="pkFwGo" '+(packExam.fwOrder.length>=4?"":"disabled")+'>Voir mon résultat</button></div>';
+    root.innerHTML = html;
+    $("pkBack").addEventListener("click", function(){ packExam = null; packTab = "home"; show("pack"); });
+    root.querySelectorAll("[data-fw]").forEach(function(b){
+      b.addEventListener("click", function(){ packExam.fwOrder.push(b.getAttribute("data-fw")); sndTap(); renderPackExam(root); });
+    });
+    var rs = $("pkFwReset"); if(rs) rs.addEventListener("click", function(){ packExam.fwOrder = []; renderPackExam(root); });
+    var go = $("pkFwGo"); if(go) go.addEventListener("click", function(){ packExam.phase = "res"; sndTap(); renderPackExam(root); window.scrollTo(0,0); });
+    return;
+  }
+  /* résultats */
+  var qGood = 0;
+  EXAMQ.forEach(function(q, i){ if(packExam.answers[i]===q.ok) qGood++; });
+  var fwPts = 0;
+  packExam.fwOrder.forEach(function(rid, pos){ if(FW_RULES[pos].id===rid) fwPts++; });
+  if(packExam.fwOrder[3]==="r4") fwPts += 1;
+  var total = qGood + fwPts, pct = Math.round(100*total/15);
+  if(!packExam.counted){
+    packExam.counted = true;
+    S.pack.examPlays++;
+    if(pct > S.pack.examBest) S.pack.examBest = pct;
+    if(fwPts > S.pack.fwBest) S.pack.fwBest = fwPts;
+    S.credits += 15; S.xp.soc += 30;
+    save();
+  }
+  html += '<div class="ghead"><div class="ttl">Mini-examen blanc — résultat</div></div>';
+  html += '<div class="scorebig">'+pct+'<small> %</small></div><div class="gradelbl">'+(pct>80 ? "Au-dessus du seuil d’entraînement (80 %)" : "Sous le seuil d’entraînement (80 %) — continue les examens blancs avant les examens complets")+'</div>';
+  html += '<div class="card"><h3>Barème</h3>'
+    + '<div class="breakrow"><div class="bl"><span>Questions</span><span>'+qGood+' / 10</span></div><div class="breakbar"><i style="width:'+(qGood*10)+'%"></i></div></div>'
+    + '<div class="breakrow"><div class="bl"><span>Simulation pare-feu</span><span>'+fwPts+' / 5</span></div><div class="breakbar"><i style="width:'+(fwPts*20)+'%"></i></div></div>'
+    + '<p style="margin:8px 0 0">Simulation : 1 point par règle bien placée, 1 point pour la règle par défaut en dernier. Ordre attendu : web DMZ autorisé (443), RDP refusé, navigation employés autorisée, refus par défaut en dernier.</p></div>';
+  html += '<div class="reward"><div class="rw"><div class="rv" style="color:var(--cyan)">+30 XP</div><div class="rl">SOC</div></div><div class="rw"><div class="rv" style="color:var(--orange)">+15</div><div class="rl">Crédits</div></div></div>';
+  html += '<div class="card"><h3>Corrections — et la carte à revoir pour chaque question</h3>';
+  EXAMQ.forEach(function(q, i){
+    var mine = packExam.answers[i], good = mine===q.ok;
+    html += whyRow(good, good?"ok":"ko", "Q"+(i+1)+" — "+q.q, "Bonne réponse : "+String.fromCharCode(65+q.ok)+". "+q.opts[q.ok]+(good ? "" : " · Ta réponse : "+(mine===undefined?"—":String.fromCharCode(65+mine)+". "+q.opts[mine]))+" "+q.why)
+      + '<div style="margin:2px 0 10px"><button class="btn" data-review-card="'+q.card+'">Revoir la carte '+q.card+'</button></div>';
+  });
+  html += '</div>';
+  html += '<div class="row" style="gap:9px"><button class="btn" style="flex:1" id="pkExamHome">Pack Security+</button><button class="btn primary" style="flex:1" id="pkExamRetry">Refaire l’examen</button></div>';
+  root.innerHTML = html;
+  root.querySelectorAll("[data-review-card]").forEach(function(b){
+    b.addEventListener("click", function(){ packExam = null; openCardInPack(b.getAttribute("data-review-card")); });
+  });
+  $("pkExamHome").addEventListener("click", function(){ packExam = null; packTab = "home"; renderPack(); });
+  $("pkExamRetry").addEventListener("click", function(){ startPackExam(); });
+  if(pct>80) sndOk(); else sndBad();
+}
 /* ================= COMPTE (FIREBASE AUTH) ================= */
 var firebaseConfig = {
   apiKey: "AIzaSyB8mll6zHkWJ4NCLiUuZJwNW4zUtc5Dv4c",
@@ -2098,7 +3321,7 @@ function fbErrMsg(e){
     "auth/invalid-login-credentials":"E-mail ou mot de passe incorrect.",
     "auth/email-already-in-use":"Un compte existe déjà avec cet e-mail — connecte-toi.",
     "auth/weak-password":"Mot de passe trop court : 6 caractères minimum.",
-    "auth/network-request-failed":"Pas de connexion internet — la connexion au compte en a besoin. Réessaie en ligne.",
+    "auth/network-request-failed":"Pas de connexion : la connexion demande internet. Ta progression est conservée sur cet appareil — reconnecte-toi pour entrer dans le jeu.",
     "auth/too-many-requests":"Trop d'essais d'un coup. Attends un moment, puis réessaie.",
     "auth/user-disabled":"Ce compte est désactivé.",
     "auth/operation-not-allowed":"La connexion par e-mail n'est pas activée pour ce jeu."
@@ -2120,13 +3343,13 @@ function authBusy(b){
   g.textContent = b ? "Un instant…" : (authMode==="login" ? "Se connecter" : "Créer mon compte");
 }
 function enterGame(){
-  if(!S.coldDone && !S.inProgress && totalXP()===0 && S.plays.tri===0 && S.plays.phish===0 && S.plays.defense===0){ startCold(); }
+  if(!S.coldDone && !S.inProgress && totalXP()===0 && S.plays.tri===0 && S.plays.phish===0 && S.plays.defense===0){ startM1("A"); }
   else show("hub");
 }
 function initAuth(){
   if(typeof firebase==="undefined" || !firebase.auth){
     show("auth");
-    authShowErr("Impossible de joindre le serveur de connexion. Vérifie ta connexion internet, puis réessaie.");
+    authShowErr("Pas de connexion : la connexion demande internet. Ta progression est conservée sur cet appareil — reconnecte-toi pour entrer dans le jeu.");
     var m = $("authMsg");
     if(m){ m.innerHTML = '<button class="btn" id="authRetry" type="button">Réessayer</button>';
       $("authRetry").addEventListener("click", function(){ location.reload(); }); }
@@ -2155,7 +3378,7 @@ $("authForm").addEventListener("submit", function(ev){
   var email = $("authEmail").value.trim(), pw = $("authPass").value;
   if(!email){ authShowErr("Entre ton adresse e-mail."); return; }
   if(!pw){ authShowErr("Entre ton mot de passe."); return; }
-  if(typeof firebase==="undefined" || !firebase.auth){ authShowErr("Connexion au serveur impossible pour le moment. Vérifie ta connexion internet."); return; }
+  if(typeof firebase==="undefined" || !firebase.auth){ authShowErr("Pas de connexion : la connexion demande internet. Ta progression est conservée sur cet appareil — reconnecte-toi pour entrer dans le jeu."); return; }
   authShowErr(""); authBusy(true);
   var auth = firebase.auth();
   var p = authMode==="signup" ? auth.createUserWithEmailAndPassword(email, pw) : auth.signInWithEmailAndPassword(email, pw);
@@ -2170,13 +3393,25 @@ $("authForm").addEventListener("submit", function(ev){
 $("authForgot").addEventListener("click", function(){
   var email = $("authEmail").value.trim();
   if(!email){ authShowErr("Entre d'abord ton e-mail ci-dessus, puis retouche « Mot de passe oublié ? »."); return; }
-  if(typeof firebase==="undefined" || !firebase.auth){ authShowErr("Connexion au serveur impossible pour le moment. Vérifie ta connexion internet."); return; }
+  if(typeof firebase==="undefined" || !firebase.auth){ authShowErr("Pas de connexion : la connexion demande internet. Ta progression est conservée sur cet appareil — reconnecte-toi pour entrer dans le jeu."); return; }
   firebase.auth().sendPasswordResetEmail(email).then(function(){
     authShowErr("");
     toast("E-mail de réinitialisation envoyé à " + email + ".");
   }).catch(function(e){ authShowErr(fbErrMsg(e)); });
 });
 /* ================= INIT ================= */
+window.addEventListener("offline", function(){
+  if(gameEntered && !offlineNoticed){
+    offlineNoticed = true;
+    toast("Connexion perdue : tu peux continuer à jouer — ta progression continue de s'enregistrer sur cet appareil.");
+  } else if(!gameEntered){
+    authShowErr("Pas de connexion : la connexion demande internet. Ta progression est conservée sur cet appareil — reconnecte-toi pour entrer dans le jeu.");
+  }
+});
+window.addEventListener("online", function(){
+  offlineNoticed = false;
+  if(gameEntered) toast("Connexion rétablie.");
+});
 save();
 show("auth");
 initAuth();
