@@ -112,6 +112,17 @@ body.gaming main{padding-bottom:20px;}
 .hintbtn b{color:var(--orange);}
 .hintbox{display:none;margin-top:8px;background:rgba(251,191,36,.08);border:1px solid #713f12;border-radius:12px;padding:10px 12px;font-size:14px;}
 .hintbox.on{display:block;}
+.exambox{background:rgba(45,212,238,.07);border:1px solid var(--cyan-d);border-radius:12px;padding:12px 14px;font-size:14.5px;margin:10px 0;}
+.exambox .et{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px;}
+.exambox p{margin:4px 0;color:var(--txt);}
+.exambox p b{color:var(--cyan);}
+.examoff{margin-top:10px;width:100%;text-align:center;color:var(--mut);font-size:13.5px;font-weight:600;background:var(--panel2);border:1px dashed var(--line);border-radius:12px;padding:11px 10px;}
+.switchrow{display:flex;align-items:center;gap:12px;}
+.switchrow .swtxt{flex:1;min-width:0;}
+.switch{flex:none;width:56px;height:32px;min-height:32px;border-radius:999px;background:var(--panel2);border:1.5px solid var(--line);position:relative;padding:0;}
+.switch i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--mut);transition:left .18s,background .18s;}
+.switch[aria-checked="true"]{border-color:var(--cyan-d);background:rgba(45,212,238,.16);}
+.switch[aria-checked="true"] i{left:27px;background:var(--cyan);}
 /* phishing */
 .mailitem{width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:8px 0;display:block;}
 .mailitem .mf{font-weight:700;font-size:15px;display:flex;justify-content:space-between;gap:8px;}
@@ -358,7 +369,7 @@ function defState(){ return {
   plays:{tri:0, phish:0, defense:0}, best:{tri:0, phish:0, defense:0},
   badges:[], dex:[], fpTotal:0,
   dailyDate:"", dailyDone:false, kevinDone:false, kevinFailed:false,
-  sound:false, inProgress:null, seenIntro:false,
+  sound:false, examMode:false, inProgress:null, seenIntro:false,
   coldDone:false, kevinStage:0,
   coverage:{tri:[], phish:[], defense:[]},
   mastery:{tri:{clean:0,total:0}, phish:{clean:0,total:0}, defense:{clean:0,total:0}},
@@ -369,7 +380,7 @@ function defState(){ return {
 };}
 var S;
 try{ S = JSON.parse(localStorage.getItem(KEY)) || defState(); }catch(e){ S = defState(); }
-["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign"].forEach(function(k){ if(S[k]===undefined) S[k]=defState()[k]; });
+["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","examMode","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign"].forEach(function(k){ if(S[k]===undefined) S[k]=defState()[k]; });
 if(!S.campaign || !S.campaign.trust || !S.campaign.done) S.campaign = defState().campaign;
 if(!S.campaign.upgrades) S.campaign.upgrades = [];
 if(!S.coverage || !S.coverage.tri) S.coverage = defState().coverage;
@@ -384,7 +395,7 @@ function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} 
 function levelOf(xp){ return Math.min(10, Math.floor(xp/100)+1); }
 function levelPct(xp){ return xp>=1000 ? 100 : (xp%100); }
 function totalXP(){ return S.xp.soc + S.xp.reseau; }
-function farmMult(plays){ return plays===0 ? 1 : (plays===1 ? 0.6 : 0.3); }
+/* Plus de dégressivité anti-farming : chaque partie rapporte plein pot, ses paramètres changent à la place (variantes). */
 function dailyGame(){ var games=["tri","phish","defense"]; var d=new Date(); var n = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())/86400000); return games[n%3]; }
 /* ================= AUDIO ================= */
 var AC=null;
@@ -553,6 +564,35 @@ var TRI_VARIANTS = [
   { user:"s.bernard", ip:"203.0.113.77", label:"Variante 2 — Compte s.bernard" },
   { user:"a.diallo", ip:"203.0.113.99", label:"Variante 3 — Compte a.diallo" }
 ];
+var EXAM_NOTES = {
+  tri:"À l'examen (SY0-701), ça tombe comme ça : « Un analyste SOC reçoit 312 événements 4625 suivis d'un 4624, tous depuis la même adresse IP, sur un compte sans MFA. Quelle est la première action ? » Réponse attendue : <b>traiter l'incident comme une compromission confirmée</b> — contenir le compte et escalader. Le piège classique : répondre « faux positif » parce qu'un seul 4624, pris isolément, ressemble à une connexion normale. L'examen teste la corrélation, pas l'alerte seule.",
+  phish:"À l'examen (SY0-701), ça tombe comme ça : « Un employé reçoit un e-mail du PDG demandant un virement urgent et confidentiel. L'adresse d'expédition est pdg@entreprise-support.example et les contrôles SPF et DMARC échouent. De quel type d'attaque s'agit-il ? » Réponse attendue : <b>fraude au président (BEC), une forme d'ingénierie sociale</b>. Le piège : se focaliser sur la pièce jointe ou le lien — ici, il n'y en a pas, et c'est justement le signe.",
+  defense:"À l'examen (SY0-701), ça tombe comme ça : « Une entreprise veut que son serveur Web public reste accessible, sans exposer son réseau interne en cas de compromission. Où place-t-on ce serveur ? » Réponse attendue : <b>dans une DMZ, derrière un pare-feu</b> — et un WAF devant lui pour filtrer les attaques applicatives. Le piège : confondre IDS et pare-feu. Un IDS détecte et alerte ; il ne bloque pas le trafic à lui tout seul.",
+  clinique:"À l'examen (SY0-701), ça tombe comme ça : « Après un ransomware, une organisation découvre que ses sauvegardes n'ont jamais été testées et que la restauration échoue. Quelle mesure aurait évité cette situation ? » Réponse attendue : <b>tester régulièrement les restaurations, dans le cadre d'une stratégie de sauvegarde type 3-2-1</b>. Le piège : « augmenter la fréquence des sauvegardes » — sauvegarder plus souvent un système qu'on ne sait pas restaurer ne protège de rien.",
+  mairie:"À l'examen (SY0-701), ça tombe comme ça : « Le site web d'une collectivité est défiguré un vendredi soir. Quelle est la séquence correcte ? » Réponse attendue : <b>contenir (basculer sur une copie saine), préserver les journaux comme preuves, puis communiquer des faits vérifiés</b>. Le piège : « ne rien dire tant que l'enquête n'est pas terminée » — à l'examen comme dans la vraie vie, le silence laisse la rumeur décider à ta place.",
+  finale:"À l'examen (SY0-701), ça tombe comme ça : « Pendant un incident, un scan massif monopolise l'équipe, tandis qu'un journal montre une unique connexion réussie anormale. Que prioriser ? » Réponse attendue : <b>la connexion réussie</b> — le scan peut être une diversion, et la réponse à incident commence par identifier le vecteur d'entrée réel. Le piège : traiter le signal le plus bruyant en premier. En sécurité des opérations, le signal faible est souvent le vrai incident."
+};
+function examBoxHtml(key){
+  if(!EXAM_NOTES[key]) return "";
+  return '<div class="exambox"><div class="et">Comment cette notion tombe à l\'examen</div><p>'+EXAM_NOTES[key]+'</p></div>';
+}
+/* ---------- Mode Examen : chrono réel ---------- */
+var examTickTimer = null;
+function examClockHtml(){
+  return S.examMode ? '<div class="timer" data-exam-clock title="Chrono réel — Mode Examen">0:00</div>' : '';
+}
+function examStartClock(getStart){
+  clearInterval(examTickTimer);
+  if(!S.examMode) return;
+  examTickTimer = setInterval(function(){
+    var els = document.querySelectorAll("[data-exam-clock]");
+    if(!els.length){ clearInterval(examTickTimer); return; }
+    var st = getStart(); if(!st) return;
+    var sec = Math.max(0, Math.floor((Date.now()-st)/1000));
+    var txt = Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0");
+    els.forEach(function(e){ e.textContent = txt; });
+  }, 500);
+}
 function alertsForVariant(v){
   var cfg = TRI_VARIANTS[v % TRI_VARIANTS.length];
   return ALERTS.map(function(a){
@@ -561,6 +601,91 @@ function alertsForVariant(v){
     if(c.jopts) c.jopts = c.jopts.map(function(o){ return o.split("j.martin").join(cfg.user).split("203.0.113.45").join(cfg.ip); });
     return c;
   });
+}
+var PHISH_VARIANTS = [
+  { label:"Variante 1 — Boîte d'Atlas (semaine A)" },
+  { label:"Variante 2 — Nouveaux expéditeurs, mêmes pièges" },
+  { label:"Variante 3 — Autres adresses, autres montants" }
+];
+function emailsForVariant(v){
+  var n = ((v % 3) + 3) % 3;
+  var list = JSON.parse(JSON.stringify(EMAILS));
+  if(n===1){
+    list[0].time = "08:14";
+    list[1].addr = "paie@atlas-log1stics.example"; list[1].time = "08:29";
+    list[1].body = "URGENT : le virement de paie de 2 140 € n'a pas pu partir. Confirmez vos identifiants dans l'heure, sinon le paiement sera annulé.\n\nCliquez sur le lien ci-dessous et ouvrez le document joint pour vérifier vos informations.";
+    list[1].link.real = "hxxp://paie-secure.example/verifier"; list[1].attach = "Bulletin_nov.docm";
+    list[1].hint = "« log1stics »… avec un 1 à la place du i. Et ce .docm, tu en penses quoi ?";
+    list[1].why = "Domaine usurpé (log1stics avec un 1), urgence fabriquée autour d'un montant précis, lien vers un faux site et pièce jointe .docm : phishing classique.";
+    list[2].from = "L. Fabre — Manager"; list[2].time = "09:18";
+    list[2].body = "Bonjour à tous,\n\nRéunion d'équipe jeudi à 10h en salle B, comme d'habitude. Ordre du jour : point sur les livraisons de décembre.\n\nÀ jeudi,\nL. Fabre";
+    list[3].addr = "pdg@atlas-logistics-help.example"; list[3].time = "09:52";
+    list[3].body = "Je suis en réunion avec un partenaire, je ne peux pas parler. J'ai besoin que vous fassiez un virement de 18 400 €, urgent et confidentiel, aujourd'hui même.\n\nNe le dites à personne, je vous expliquerai après. Répondez-moi vite.";
+    list[3].hint = "Un PDG qui écrit depuis « atlas-logistics-help » et demande le secret ?";
+    list[3].why = "Fraude au président (BEC) : domaine inventé, urgence, montant précis (18 400 €) et secret exigé. On ne vire jamais sur un simple e-mail.";
+    list[4].from = "Yanis — Logistique"; list[4].addr = "colis@atlas-logistcs.example"; list[4].time = "10:24";
+    list[4].attach = "Photos_seminaire_2026.zip";
+    list[4].body = "Salut !\n\nVoici les photos du séminaire de la semaine dernière, tout est dans le fichier joint. Il y en a des bonnes !\n\nYanis";
+    list[4].hint = "L'adresse a l'air presque normale. Presque. Relis-la lettre par lettre : « logistcs ».";
+    list[4].why = "Spear phishing : adresse presque identique (atlas-logistcs, lettres inversées) et pièce jointe .zip. Le contenu sympa ne rend pas le fichier sûr.";
+    list[5].time = "11:42";
+  }
+  if(n===2){
+    list[0].time = "07:58";
+    list[1].addr = "paie@atlas-l0gistcs.example"; list[1].time = "08:41";
+    list[1].body = "URGENT : votre paie de 2 087 € est en attente de validation. Confirmez vos identifiants dans l'heure, sinon votre virement sera bloqué.\n\nCliquez sur le lien ci-dessous et ouvrez le document joint pour vérifier vos informations.";
+    list[1].link.real = "hxxp://atlas-paie.example/connexion"; list[1].attach = "Verification_paie.docm";
+    list[1].hint = "« l0gistcs »… un zéro, et des lettres mélangées. Et ce .docm, tu en penses quoi ?";
+    list[1].why = "Domaine usurpé (l0gistcs, zéro et lettres inversées), urgence fabriquée, lien vers un faux site et pièce jointe .docm : phishing classique.";
+    list[2].from = "M. Aubert — Manager"; list[2].time = "09:27";
+    list[2].body = "Bonjour à tous,\n\nRéunion d'équipe jeudi à 10h en salle B, comme d'habitude. Ordre du jour : point sur les livraisons de décembre.\n\nÀ jeudi,\nM. Aubert";
+    list[3].addr = "pdg@atlas-logistics-support.example"; list[3].time = "10:03";
+    list[3].body = "Je suis en déplacement, injoignable au téléphone. J'ai besoin que vous fassiez un virement de 24 900 €, urgent et confidentiel, aujourd'hui même.\n\nNe le dites à personne, je vous expliquerai après. Répondez-moi vite.";
+    list[3].why = "Fraude au président (BEC) : domaine inventé, urgence, montant précis (24 900 €) et secret exigé. On ne vire jamais sur un simple e-mail.";
+    list[4].from = "Nadia — Logistique"; list[4].addr = "colis@atIas-logistics.example"; list[4].time = "10:37";
+    list[4].attach = "Seminaire_photos.zip";
+    list[4].body = "Salut !\n\nVoici les photos du séminaire de la semaine dernière, tout est dans le fichier joint. Il y en a des bonnes !\n\nNadia";
+    list[4].hint = "L'adresse a l'air presque normale. Presque. Ce « I » majuscule dans « atIas », tu le vois ?";
+    list[4].why = "Spear phishing : adresse presque identique (atIas-logistics, avec un I majuscule à la place du l) et pièce jointe .zip. Le contenu sympa ne rend pas le fichier sûr.";
+    list[5].time = "11:15";
+  }
+  /* Les justifications citent des domaines précis : on les aligne sur la variante. */
+  list.forEach(function(m){ m._variant = n; });
+  return list;
+}
+var DEF_VARIANTS = [
+  { label:"Variante 1 — Trafic de la semaine A" },
+  { label:"Variante 2 — Autres attaques, mêmes zones" },
+  { label:"Variante 3 — Le trafic change de visage" }
+];
+function wavesForVariant(v){
+  var n = ((v % 3) + 3) % 3;
+  var list = JSON.parse(JSON.stringify(WAVES));
+  if(n===1){
+    list[0].label = "Visiteurs du site Web (campagne pub)";
+    list[1].label = "Scan de ports étendu — 2 000 ports";
+    list[3].label = "Force brute sur SSH";
+    list[3].why = "Le SSH ne doit jamais être exposé : un pare-feu à l'entrée ou avant le réseau interne arrête la force brute.";
+    list[4].label = "Attaque XSS sur le site Web";
+    list[4].why = "Le WAF est fait pour ça : il filtre les requêtes Web malveillantes (ici du script injecté) avant qu'elles touchent le serveur.";
+    list[5].label = "Exfiltration par requêtes DNS longues";
+    list[6].label = "Botnet qui scanne — diversion d'ÉCLIPSE";
+    list[7].label = "Navigation des employés (visio de 14 h)";
+  }
+  if(n===2){
+    list[0].label = "Clients sur la page de suivi de colis";
+    list[1].label = "Balayage de vulnérabilités externe";
+    list[1].why = "Un pare-feu à l'entrée ferme les ports avant le balayage. Un IDS voit le balayage, mais ne le bloque pas.";
+    list[2].label = "E-mails des fournisseurs";
+    list[3].label = "Force brute sur VPN";
+    list[3].why = "Le VPN est une porte d'entrée : un pare-feu à l'entrée ou avant le réseau interne arrête la force brute avant qu'elle atteigne les comptes.";
+    list[4].label = "Injection SQL sur le site Web";
+    list[5].label = "Exfiltration par DNS";
+    list[6].label = "Faux trafic massif — diversion d'ÉCLIPSE";
+    list[7].label = "Mise à jour des postes des employés";
+    list[7].why = "Un pare-feu trop strict sur le réseau interne empêche les postes de se mettre à jour : le service s'effondre.";
+  }
+  return list;
 }
 var BADGEDATA = [
   { id:"oeil", name:"Œil de nuit", desc:"Terminer le tri d'alertes sans aucune escalade inutile." },
@@ -862,7 +987,7 @@ function renderMissions(){
   ["tri","phish","defense"].forEach(function(id, n){
     var g = GAMES[id], dg = dailyGame()===id;
     html += '<div class="card"><div class="row between"><span class="tag '+g.domaine+'">Étape '+(n+1)+' · '+g.domLabel+'</span>'+(dg?'<span class="tag">Mission du jour</span>':'')+(S.best[id]>0?'<span class="tag done">Meilleur : '+S.best[id]+' / 100</span>':'')+'</div>'
-      + '<h3 style="margin-top:8px">'+g.name+'</h3><p>'+g.lieu+' · XP de base : '+g.xpBase+(S.plays[id]>0?' · Jouée '+S.plays[id]+' fois':'')+(id==="tri" && S.plays[id]>0 ? ' · Variante suivante : '+(S.plays[id]%3+1)+' / 3' : '')+'</p>'
+      + '<h3 style="margin-top:8px">'+g.name+'</h3><p>'+g.lieu+' · XP de base : '+g.xpBase+(S.plays[id]>0?' · Jouée '+S.plays[id]+' fois':'')+(S.plays[id]>0 ? ' · Variante suivante : '+(S.plays[id]%3+1)+' / 3 — paramètres différents, récompense pleine' : '')+'</p>'
       + '<button class="btn primary big" data-act="play" data-game="'+id+'">'+(S.plays[id]>0?'Rejouer':'Commencer')+'</button></div>';
   });
   if(campDone>=3) html += '<div class="card"><h3>Campagne SOC terminée</h3><p>L\'incident d\'Atlas Logistics est bouclé : tri, phishing, défense. La maîtrise, elle, se confirmera à l\'épreuve différée. Les autres types de missions et les actes suivants restent la vision à long terme — pas le périmètre de ce prototype.</p></div>';
@@ -910,7 +1035,7 @@ function gradeLabel(score){
 function finishMission(gameId, score, breakdown, whyHtml, extra, whyTitle){
   var g = GAMES[gameId];
   var first = S.plays[gameId]===0;
-  var mult = farmMult(S.plays[gameId]) * (first ? 1.5 : 1);
+  var mult = first ? 1.5 : 1; /* rejouer rapporte plein pot : ce sont les paramètres qui changent (variantes) */
   var xp = Math.round(g.xpBase * (score/100) * mult);
   var credits = Math.round((20 + 40*(score/100)) * mult);
   var dailyBonus = 0;
@@ -963,6 +1088,7 @@ function finishMission(gameId, score, breakdown, whyHtml, extra, whyTitle){
   });
   html += '<div class="card"><h3>'+(whyTitle||'Le pourquoi, alerte par alerte')+'</h3>'+whyHtml+'</div>';
   if(gameId==="tri") html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta — Mentore</div><div class="txt">« Bien joué pour Atlas. Mais écoute-moi bien : le même mode opératoire — mêmes heures, même patience — vient d\'être repéré ailleurs dans la ville. Une clinique, puis une mairie. On dirait qu\'ÉCLIPSE répète sa nuit, organisation après organisation. La suite se joue là-bas : Épisode 2, la Clinique Saint-Roch. »</div></div></div></div>';
+  html += examBoxHtml(gameId);
   html += '<p class="sub">Lien Security+ : '+ (gameId==="defense" ? "architecture et sécurité réseau — segmentation, DMZ, défense en profondeur." : gameId==="phish" ? "ingénierie sociale et sécurité des communications — phishing, BEC, SPF/DKIM/DMARC." : "opérations de sécurité et réponse à incident — tri, corrélation, escalade.") +'</p>';
   html += '<div class="row" style="gap:9px"><button class="btn" style="flex:1" id="dbHome">Retour</button><button class="btn primary" style="flex:1" id="dbReplay">Rejouer</button></div>';
   $("view-debrief").innerHTML = html;
@@ -1023,6 +1149,7 @@ function startTri(resume){
   if(!tri.justAnswers) tri.justAnswers = {};
   if(tri.hintCount===undefined) tri.hintCount = 0;
   tri.alerts = alertsForVariant(tri.variant);
+  if(!tri._examStart) tri._examStart = Date.now();
   tri.start = Date.now();
   S.inProgress = { game:"tri", data:tri }; save();
   show("tri");
@@ -1047,7 +1174,8 @@ function tickTri(){
 }
 function renderTriStep(){
   var a = tri.alerts[tri.idx];
-  var html = '<div class="ghead"><button class="quit" id="triQuit" aria-label="Quitter">✕</button><div class="ttl">Tri d\'alertes — Le SOC</div><div class="timer" id="triTimer">3:00</div></div>';
+  var html = '<div class="ghead"><button class="quit" id="triQuit" aria-label="Quitter">✕</button><div class="ttl">Tri d\'alertes — Le SOC</div><div class="timer" id="triTimer">3:00</div>'+(S.examMode?'<div class="timer" data-exam-clock title="Chrono réel — Mode Examen">0:00</div>':'')+'</div>';
+  examStartClock(function(){ return tri ? tri._examStart : null; });
   html += '<div class="stepct">Alerte '+(tri.idx+1)+' / '+tri.alerts.length+' · '+TRI_VARIANTS[tri.variant].label+'</div><div class="progressline"><i style="width:'+Math.round(100*tri.idx/tri.alerts.length)+'%"></i></div>';
   html += '<div class="alertcard"><span class="tag">Alerte SIEM</span><div class="at">'+a.t+'</div>'
     + '<div class="meta"><span>Source : <b>'+a.host+'</b></span><span>Heure : <b>'+a.time+'</b></span></div>'
@@ -1057,21 +1185,26 @@ function renderTriStep(){
     + '<button class="b-fp" data-choice="fp">'+ICONS.check+'Faux positif</button>'
     + '<button class="b-vp" data-choice="vp">'+ICONS.warn+'Vrai positif</button>'
     + '<button class="b-esc" data-choice="esc">'+ICONS.up+'Escalader</button></div>';
-  html += '<button class="hintbtn" id="triHint">Indice d\'Amara — '+(tri.hintCount===0 ? '<b>aide essentielle gratuite</b>' : '<b>15 crédits</b>')+'</button><div class="hintbox" id="triHintBox">« '+a.hint+' »</div>';
+  if(S.examMode){
+    html += '<div class="examoff">Mode Examen actif — indices désactivés pour cette mission.</div>';
+  } else {
+    html += '<button class="hintbtn" id="triHint">Indice d\'Amara — '+(tri.hintCount===0 ? '<b>aide essentielle gratuite</b>' : '<b>15 crédits</b>')+'</button><div class="hintbox" id="triHintBox">« '+a.hint+' »</div>';
+  }
   $("view-tri").innerHTML = html;
   $("triQuit").addEventListener("click", quitGame);
   $("triDet").addEventListener("click", function(){
     tri.seen[tri.idx] = true; S.inProgress.data = tri; save();
     $("triDetails").classList.add("on"); this.textContent = "Détails de l'alerte ▴";
   });
-  $("triHint").addEventListener("click", function(){
+  var thb = $("triHint");
+  if(thb) thb.addEventListener("click", function(){
     if(tri.hintUsed[tri.idx]){ $("triHintBox").classList.add("on"); return; }
     if(tri.hintCount>0 && S.credits < 15){ toast("Pas assez de crédits (15 requis)."); sndBad(); return; }
     if(tri.hintCount>0) S.credits -= 15;
     tri.hintUsed[tri.idx] = true; tri.hintCount++; S.inProgress.data = tri; save();
     $("triHintBox").classList.add("on"); sndTap();
   });
-  if(tri.hintUsed[tri.idx]) $("triHintBox").classList.add("on");
+  if(tri.hintUsed[tri.idx] && $("triHintBox")) $("triHintBox").classList.add("on");
   document.querySelectorAll("#view-tri [data-choice]").forEach(function(b){
     b.addEventListener("click", function(){
       tri.answers[tri.idx] = b.getAttribute("data-choice");
@@ -1136,7 +1269,7 @@ function finishTri(timeout){
   var seenCount = tri.seen.filter(Boolean).length;
   finishMission._newDex = [];
   finishMission._covered = alerts.map(function(a,i){ return i; }).filter(function(i){ return tri.answers[i]!==undefined; });
-  finishMission._hintsUsed = Math.max(0, (tri.hintCount||0) - 1); /* la 1re aide essentielle est gratuite et ne bloque pas la maîtrise */
+  finishMission._hintsUsed = S.examMode ? 0 : Math.max(0, (tri.hintCount||0) - 1); /* la 1re aide essentielle est gratuite et ne bloque pas la maîtrise */
   finishMission._variant = tri.variant||0;
   finishMission._evalHtml =
     '<p style="margin:4px 0"><b>Décision :</b> '+correct+' / '+alerts.length+' classifications justes.</p>'
@@ -1166,23 +1299,42 @@ var PH_JUST = {
 };
 var ph = null;
 function startPhish(resume){
-  ph = resume && resume.data ? resume.data : { results:{}, cur:null, linkSeen:{}, hdrSeen:{}, clicked:{}, hintUsed:{}, just:{}, hintCount:0 };
+  ph = resume && resume.data ? resume.data : { results:{}, cur:null, linkSeen:{}, hdrSeen:{}, clicked:{}, hintUsed:{}, just:{}, hintCount:0, variant:(S.plays.phish % 3), start:Date.now() };
   if(!ph.just) ph.just = {};
   if(ph.hintCount===undefined) ph.hintCount = 0;
+  if(ph.variant===undefined) ph.variant = 0;
+  if(!ph.start) ph.start = Date.now();
+  ph.emails = emailsForVariant(ph.variant);
+  /* Justifications alignées sur les domaines de la variante en cours */
+  if(ph.variant===1){
+    PH_JUST[1] = { q:"Quel indice justifie ton choix ?", opts:["Le domaine expéditeur : atlas-log1stics, avec un 1 à la place du i", "L'e-mail est arrivé tôt le matin", "L'objet contient le mot URGENT"], jok:0 };
+    PH_JUST[3] = { q:"Quel indice justifie ton choix ?", opts:["Le message est très court", "Le PDG écrit depuis un domaine qui n'existe pas chez Atlas et exige un virement secret de 18 400 €", "Le PDG ne signe pas de son prénom"], jok:1 };
+    PH_JUST[4] = { q:"Quel indice justifie ton choix ?", opts:["Yanis écrit d'habitude le lundi", "Le ton est familier, donc suspect", "L'adresse est atlas-logistcs, lettres inversées, et la pièce jointe est un .zip inattendu"], jok:2 };
+  } else if(ph.variant===2){
+    PH_JUST[1] = { q:"Quel indice justifie ton choix ?", opts:["Le domaine expéditeur : atlas-l0gistcs, avec un zéro et des lettres inversées", "L'e-mail est arrivé tôt le matin", "L'objet contient le mot URGENT"], jok:0 };
+    PH_JUST[3] = { q:"Quel indice justifie ton choix ?", opts:["Le message est très court", "Le PDG écrit depuis un domaine qui n'existe pas chez Atlas et exige un virement secret de 24 900 €", "Le PDG ne signe pas de son prénom"], jok:1 };
+    PH_JUST[4] = { q:"Quel indice justifie ton choix ?", opts:["Nadia écrit d'habitude le lundi", "Le ton est familier, donc suspect", "L'adresse est atIas-logistics, avec un I majuscule, et la pièce jointe est un .zip inattendu"], jok:2 };
+  } else {
+    PH_JUST[1] = { q:"Quel indice justifie ton choix ?", opts:["Le domaine expéditeur : atlas-l0gistics, avec un zéro à la place du o", "L'e-mail est arrivé tôt le matin", "L'objet contient le mot URGENT"], jok:0 };
+    PH_JUST[3] = { q:"Quel indice justifie ton choix ?", opts:["Le message est très court", "Le PDG écrit depuis un domaine qui n'existe pas chez Atlas et exige un virement secret", "Le PDG ne signe pas de son prénom"], jok:1 };
+    PH_JUST[4] = { q:"Quel indice justifie ton choix ?", opts:["Karim écrit d'habitude le lundi", "Le ton est familier, donc suspect", "L'adresse est atlas-logistic, sans le s final, et la pièce jointe est un .zip inattendu"], jok:2 };
+  }
   S.inProgress = { game:"phish", data:ph }; save();
   show("phish");
   renderInbox();
 }
 function phSave(){ S.inProgress = { game:"phish", data:ph }; save(); }
 function renderInbox(){
+  var mails = ph.emails || EMAILS;
   var done = Object.keys(ph.results).length;
-  var html = '<div class="ghead"><button class="quit" id="phQuit" aria-label="Quitter">✕</button><div class="ttl">Chasse au phishing</div></div>';
-  html += '<div class="stepct">Examinés : '+done+' / '+EMAILS.length+'</div><div class="progressline"><i style="width:'+Math.round(100*done/EMAILS.length)+'%"></i></div>';
-  EMAILS.forEach(function(m, i){
+  var html = '<div class="ghead"><button class="quit" id="phQuit" aria-label="Quitter">✕</button><div class="ttl">Chasse au phishing</div>'+examClockHtml()+'</div>';
+  html += '<div class="stepct">Examinés : '+done+' / '+mails.length+' · '+PHISH_VARIANTS[ph.variant||0].label+'</div><div class="progressline"><i style="width:'+Math.round(100*done/mails.length)+'%"></i></div>';
+  examStartClock(function(){ return ph && ph.start; });
+  mails.forEach(function(m, i){
     html += '<button class="mailitem'+(ph.results[i]!==undefined?' read':'')+'" data-mail="'+i+'"><span class="mf"><span>'+esc(m.from)+'</span><time>'+m.time+'</time></span><span class="ms">'+esc(m.subj)+'</span>'
       + (ph.results[i]!==undefined ? '<div class="mdone">Traité</div>' : '') + '</button>';
   });
-  if(done >= EMAILS.length) html += '<button class="btn primary big" id="phEnd" style="margin-top:10px">Voir le debrief</button>';
+  if(done >= mails.length) html += '<button class="btn primary big" id="phEnd" style="margin-top:10px">Voir le debrief</button>';
   $("view-phish").innerHTML = html;
   $("phQuit").addEventListener("click", quitGame);
   document.querySelectorAll("#view-phish [data-mail]").forEach(function(b){
@@ -1191,7 +1343,7 @@ function renderInbox(){
   var end = $("phEnd"); if(end) end.addEventListener("click", finishPhish);
 }
 function renderMail(){
-  var i = ph.cur, m = EMAILS[i];
+  var i = ph.cur, m = (ph.emails || EMAILS)[i];
   var html = '<div class="ghead"><button class="quit" id="mBack" aria-label="Retour">‹</button><div class="ttl">E-mail '+(i+1)+' / '+EMAILS.length+'</div></div>';
   html += '<div class="card mailview"><div class="from">De : <b>'+esc(m.from)+'</b><br>'+esc(m.addr)+' · '+m.time+'</div>'
     + '<div class="subj">'+esc(m.subj)+'</div><div class="body">'+esc(m.body)+'</div>';
@@ -1217,7 +1369,11 @@ function renderMail(){
       + '<button class="a-sign" data-mact="signaler">'+ICONS.flag+'Signaler</button>'
       + '<button class="a-suppr" data-mact="supprimer">'+ICONS.trash+'Supprimer</button>'
       + '<button class="a-quar" data-mact="quarantaine">'+ICONS.box+'Quarantaine</button></div>';
-    html += '<button class="hintbtn" id="mHint">Indice d\'Amara — '+((ph.hintCount||0)===0 ? '<b>aide essentielle gratuite</b>' : '<b>15 crédits</b>')+'</button><div class="hintbox" id="mHintBox">« '+m.hint+' »</div>';
+    if(S.examMode){
+      html += '<div class="examoff">Mode Examen actif — indices désactivés pour cette mission.</div>';
+    } else {
+      html += '<button class="hintbtn" id="mHint">Indice d\'Amara — '+((ph.hintCount||0)===0 ? '<b>aide essentielle gratuite</b>' : '<b>15 crédits</b>')+'</button><div class="hintbox" id="mHintBox">« '+m.hint+' »</div>';
+    }
   }
   $("view-phish").innerHTML = html;
   $("mBack").addEventListener("click", function(){ renderInbox(); });
@@ -1299,8 +1455,9 @@ function clickTrappedLink(i, m){
   sheet('<h3>Compte compromis</h3><p>Tu viens de saisir tes identifiants sur un faux site. Le compte d\'Atlas Logistics est aux mains de l\'attaquant. Signale l\'e-mail pour protéger les autres.</p><div class="sbtns"><button class="btn primary big" onclick="closeSheet()">Compris</button></div>');
 }
 function finishPhish(){
+  var mails = ph.emails || EMAILS;
   var reflexPts = 0, legitKept = 0;
-  EMAILS.forEach(function(m, i){
+  mails.forEach(function(m, i){
     var r = ph.results[i];
     if(m.legit){
       if(r==="legit") { reflexPts += 1; legitKept += 1; }
@@ -1312,16 +1469,16 @@ function finishPhish(){
       else if(r==="supprimer") reflexPts += 0.5;
     }
   });
-  var reflex = Math.round(50 * reflexPts / EMAILS.length);
+  var reflex = Math.round(50 * reflexPts / mails.length);
   var idxSeen = 0;
-  EMAILS.forEach(function(m, i){ if(ph.linkSeen[i] || ph.hdrSeen[i]) idxSeen++; });
+  mails.forEach(function(m, i){ if(ph.linkSeen[i] || ph.hdrSeen[i]) idxSeen++; });
   var jKeys = Object.keys(PH_JUST), jGood = 0;
   jKeys.forEach(function(k){ if(ph.just && ph.just[k]) jGood++; });
-  var indices = Math.round(20 * idxSeen / EMAILS.length) + Math.round(10 * jGood / jKeys.length);
+  var indices = Math.round(20 * idxSeen / mails.length) + Math.round(10 * jGood / jKeys.length);
   var fauxpos = Math.round(20 * legitKept / 3);
   var score = reflex + indices + fauxpos;
   var why = "";
-  EMAILS.forEach(function(m, i){
+  mails.forEach(function(m, i){
     var r = ph.results[i];
     var lbl = r==="legit" ? "Légitime" : r==="signaler" ? "Signalé" : r==="supprimer" ? "Supprimé" : r==="quarantaine" ? "En quarantaine" : "Non traité";
     var good, cls;
@@ -1332,13 +1489,13 @@ function finishPhish(){
     why += whyRow(good, cls, (i+1)+". « "+m.subj+" » — toi : "+lbl+(ph.clicked[i] && !m.legit ? " (lien cliqué !)" : ""), m.why + extra);
   });
   finishMission._newDex = [];
-  finishMission._covered = EMAILS.map(function(m,i){ return i; }).filter(function(i){ return ph.results[i]!==undefined; });
-  finishMission._hintsUsed = Math.max(0, (ph.hintCount||0) - 1);
-  finishMission._variant = 0;
+  finishMission._covered = mails.map(function(m,i){ return i; }).filter(function(i){ return ph.results[i]!==undefined; });
+  finishMission._hintsUsed = S.examMode ? 0 : Math.max(0, (ph.hintCount||0) - 1);
+  finishMission._variant = ph.variant||0;
   finishMission._evalHtml =
-    '<p style="margin:4px 0"><b>Décisions :</b> '+Math.round(reflexPts*10)/10+' / '+EMAILS.length+' e-mails traités au mieux.</p>'
+    '<p style="margin:4px 0"><b>Décisions :</b> '+Math.round(reflexPts*10)/10+' / '+mails.length+' e-mails traités au mieux.</p>'
     + '<p style="margin:4px 0"><b>Preuves utilisées :</b> '+jGood+' / '+jKeys.length+' justifications décisives sur les e-mails piégés.</p>'
-    + '<p style="margin:4px 0"><b>Vérifications :</b> destination réelle ou en-têtes examinés sur '+idxSeen+' / '+EMAILS.length+' e-mails.</p>'
+    +     + '<p style="margin:4px 0"><b>Vérifications :</b> destination réelle ou en-têtes examinés sur '+idxSeen+' / '+mails.length+' e-mails.</p>'
     + '<p style="margin:4px 0"><b>Conséquences métier :</b> '+legitKept+' / 3 e-mails légitimes laissés passer — bloquer un vrai e-mail de paie ou du service IT casse le travail des collègues.</p>';
   finishMission("phish", score, [
     { label:"Bons réflexes", got:reflex, max:50 },
@@ -1346,13 +1503,16 @@ function finishPhish(){
     { label:"Faux positifs évités", got:fauxpos, max:20 }
   ], why, function(){
     if(unlockDex("phishing")) finishMission._newDex.push("phishing");
-    if(EMAILS[1] && (ph.results[1]==="signaler"||ph.results[1]==="quarantaine") && !ph.clicked[1] && unlockDex("trojan")) finishMission._newDex.push("trojan");
+    if(mails[1] && (ph.results[1]==="signaler"||ph.results[1]==="quarantaine") && !ph.clicked[1] && unlockDex("trojan")) finishMission._newDex.push("trojan");
   }, "Le pourquoi, e-mail par e-mail");
 }
 /* ================= MINI-JEU 3 : DEFENSE RESEAU ================= */
 var def = null;
 function startDefense(resume){
-  def = resume && resume.data ? resume.data : { placed:{}, selTool:null, hintUsed:false };
+  def = resume && resume.data ? resume.data : { placed:{}, selTool:null, hintUsed:false, variant:(S.plays.defense % 3), start:Date.now() };
+  if(def.variant===undefined) def.variant = 0;
+  if(!def.start) def.start = Date.now();
+  def.waves = wavesForVariant(def.variant);
   S.inProgress = { game:"defense", data:def }; save();
   show("defense");
   renderDefense(false);
@@ -1366,7 +1526,9 @@ function slotHtml(slot){
 }
 function renderDefense(running){
   var spent = defSpent(), left = 12000 - spent;
-  var html = '<div class="ghead"><button class="quit" id="defQuit" aria-label="Quitter">✕</button><div class="ttl">Défense réseau</div></div>';
+  var html = '<div class="ghead"><button class="quit" id="defQuit" aria-label="Quitter">✕</button><div class="ttl">Défense réseau</div>'+examClockHtml()+'</div>';
+  html += '<div class="stepct">'+DEF_VARIANTS[def.variant||0].label+'</div>';
+  examStartClock(function(){ return def && def.start; });
   html += '<div class="netmap" id="netmap"><div class="packet" id="packet"></div>'
     + '<div class="zoneband"><div class="zb-t">Internet</div><div class="nodes"><div class="node">Trafic entrant<span class="ns">clients · visiteurs · attaquants</span></div></div>'+slotHtml(SLOTS[0])+'</div>'
     + '<div class="zoneband dmz"><div class="zb-t">DMZ</div><div class="nodes"><div class="node">Serveur Web<span class="ns">site public</span></div><div class="node">Serveur Mail<span class="ns">messagerie</span></div></div>'+slotHtml(SLOTS[1])+slotHtml(SLOTS[2])+'</div>'
@@ -1381,17 +1543,22 @@ function renderDefense(running){
     html += '<button class="tool'+(def.selTool===k?' sel':'')+'" data-tool="'+k+'">'+TOOLS[k].icon+TOOLS[k].name+'<span class="tp">'+TOOLS[k].cost.toLocaleString("fr-FR")+' €</span></button>';
   }
   html += '</div>';
-  html += '<button class="hintbtn" id="defHint">Indice d\'Amara — <b>aide essentielle gratuite</b></button><div class="hintbox" id="defHintBox">« Chaque équipement a sa place : le WAF protège le Web, le VLAN cloisonne l\'interne, le pare-feu garde les entrées. Un IDS voit tout… mais ne bloque rien tout seul. »</div>';
+  if(S.examMode){
+    html += '<div class="examoff">Mode Examen actif — indices désactivés pour cette mission.</div>';
+  } else {
+    html += '<button class="hintbtn" id="defHint">Indice d\'Amara — <b>aide essentielle gratuite</b></button><div class="hintbox" id="defHintBox">« Chaque équipement a sa place : le WAF protège le Web, le VLAN cloisonne l\'interne, le pare-feu garde les entrées. Un IDS voit tout… mais ne bloque rien tout seul. »</div>';
+  }
   html += '<div id="waveZone"></div>';
   html += '<button class="btn primary big" id="defLaunch" style="margin-top:14px" '+(running?'disabled':'')+'>Lancer les vagues de trafic</button>';
   $("view-defense").innerHTML = html;
   $("defQuit").addEventListener("click", quitGame);
-  $("defHint").addEventListener("click", function(){
+  var dhb = $("defHint");
+  if(dhb) dhb.addEventListener("click", function(){
     if(def.hintUsed){ $("defHintBox").classList.add("on"); return; }
     def.hintUsed = true; defSave();
     $("defHintBox").classList.add("on"); sndTap();
   });
-  if(def.hintUsed) $("defHintBox").classList.add("on");
+  if(def.hintUsed && $("defHintBox")) $("defHintBox").classList.add("on");
   document.querySelectorAll("#view-defense [data-tool]").forEach(function(b){
     b.addEventListener("click", function(){
       if(def.running) return;
@@ -1437,9 +1604,10 @@ function runWaves(){
   var packet = $("packet");
   var idx = 0, service = 100;
   var outcomes = [];
+  var waves = def.waves || WAVES;
   function step(){
-    if(idx >= WAVES.length){ finishDefense(outcomes, service); return; }
-    var w = WAVES[idx], o = waveOutcome(w);
+    if(idx >= waves.length){ finishDefense(outcomes, service); return; }
+    var w = waves[idx], o = waveOutcome(w);
     outcomes.push(o.res);
     var row = document.createElement("div");
     row.className = "wave";
@@ -1477,7 +1645,7 @@ function finishDefense(outcomes, service){
   var simple = Math.max(0, Math.round(10 * (1 - Math.max(0, count-2)/6)));
   var score = blocked + preserved + budget + simple;
   var why = "";
-  WAVES.forEach(function(w, i){
+  (def.waves || WAVES).forEach(function(w, i){
     var res = outcomes[i];
     var cls = res>=1 ? "ok" : res>0 ? "mid" : "ko";
     var lbl = w.type==="legit" ? (res>=1 ? "Trafic passé" : "Trafic bloqué") : (res>=1 ? "Attaque bloquée" : res>0 ? "Attaque détectée seulement" : "Attaque passée");
@@ -1485,9 +1653,9 @@ function finishDefense(outcomes, service){
   });
   why += '<p style="color:var(--mut);font-size:14px">Service final : <b style="color:var(--txt)">'+service+' %</b> · Budget dépensé : <b style="color:var(--txt)">'+spent.toLocaleString("fr-FR")+' €</b></p>';
   finishMission._newDex = [];
-  finishMission._covered = WAVES.map(function(w,i){ return i; });
+  finishMission._covered = (def.waves || WAVES).map(function(w,i){ return i; });
   finishMission._hintsUsed = 0; /* l'indice de placement est l'aide essentielle gratuite */
-  finishMission._variant = 0;
+  finishMission._variant = def.variant||0;
   finishMission._evalHtml =
     '<p style="margin:4px 0"><b>Décisions :</b> '+count+' équipement'+(count>1?'s':'')+' placé'+(count>1?'s':'')+' pour '+spent.toLocaleString("fr-FR")+' € sur 12 000 €.</p>'
     + '<p style="margin:4px 0"><b>Preuves utilisées :</b> chaque vague du debrief relie le résultat à l\'équipement (ou à l\'absence d\'équipement) sur sa zone.</p>'
@@ -1508,7 +1676,7 @@ function finishDefense(outcomes, service){
 var camp = null;
 function startCampChapter(cid){
   if(cid==="finale" && !finaleUnlocked()){ toast("Finale verrouillée : termine d'abord les épisodes 1 à 3."); sndBad(); return; }
-  camp = { id:cid, idx:0, answers:[], intro:true, trustRun:S.campaign.trust.mairie };
+  camp = { id:cid, idx:0, answers:[], intro:true, trustRun:S.campaign.trust.mairie, start:Date.now() };
   show("campaign");
   renderCamp();
 }
@@ -1531,7 +1699,8 @@ function renderCamp(){
   }
   if(camp.idx < sc.questions.length){
     var q = sc.questions[camp.idx];
-    html += '<div class="ghead"><button class="quit" id="campQuit" aria-label="Quitter">✕</button><div class="ttl">'+sc.title+'</div></div>';
+    html += '<div class="ghead"><button class="quit" id="campQuit" aria-label="Quitter">✕</button><div class="ttl">'+sc.title+'</div>'+examClockHtml()+'</div>';
+    examStartClock(function(){ return camp && camp.start; });
     html += '<div class="stepct">Situation '+(camp.idx+1)+' / '+sc.questions.length+' · '+sc.orgName+'</div><div class="progressline"><i style="width:'+Math.round(100*camp.idx/sc.questions.length)+'%"></i></div>';
     if(camp.id==="mairie") html += '<div class="orgline"><div class="ol"><span>Confiance des habitants</span><span>'+camp.trustRun+' / 100</span></div><div class="trustbar"><i style="width:'+camp.trustRun+'%"></i></div></div>';
     if(camp.id==="clinique") html += '<div class="orgline"><div class="ol"><span>Confiance de Saint-Roch</span><span>'+S.campaign.trust.clinique+' / 100</span></div><div class="trustbar"><i style="width:'+S.campaign.trust.clinique+'%"></i></div></div>';
@@ -1556,7 +1725,7 @@ function finishCampChapter(){
   var bonus = camp.id==="finale" ? Math.min(12, 4 * S.campaign.upgrades.length) : 0;
   var score = Math.min(100, base + bonus);
   var first = !S.campaign.done[camp.id];
-  var mult = farmMult(S.campaign.plays[camp.id]) * (first ? 1.5 : 1);
+  var mult = first ? 1.5 : 1; /* rejouer rapporte plein pot, comme les missions */
   var xpBase = camp.id==="finale" ? 150 : 100;
   var xp = Math.round(xpBase * (score/100) * mult);
   var credits = Math.round((20 + 40*(score/100)) * mult);
@@ -1601,6 +1770,7 @@ function finishCampChapter(){
     html += '<div class="conseq">'+(score>=70 ? "Saint-Roch a tenu ses soins toute la nuit, sans jamais tout bloquer. C'est exactement l'équilibre cherché." : score>=40 ? "Les soins ont continué, avec des hésitations qui ont coûté du temps. L'équilibre sécurité / continuité reste le cœur du lieu." : "La nuit a été rude pour les équipes : trop bloquer ou pas assez, à Saint-Roch les deux se paient en soins retardés.")+'</div>';
   }
   html += '<div class="card"><h3>Le pourquoi, situation par situation</h3>'+why+'</div>';
+  html += examBoxHtml(camp.id);
   html += '<p class="sub">Lien Security+ : opérations de sécurité et réponse à incident — adapter la même décision au contexte de chaque organisation.</p>';
   if(camp.id==="clinique" || camp.id==="mairie") html += upgradesSectionHtml();
   html += '<div class="row" style="gap:9px"><button class="btn" style="flex:1" id="campHome">'+(camp.id==="finale" ? "Campagne" : "Missions")+'</button><button class="btn primary" style="flex:1" id="campReplay">Rejouer</button></div>';
@@ -1660,6 +1830,7 @@ function renderProfil(){
       + (FBUser.emailVerified ? '' : '<button class="btn" id="pResend">Renvoyer l\'e-mail de vérification</button>')
       + '<button class="btn danger" id="pLogout">Se déconnecter</button></div></div>';
   }
+  html += '<div class="card"><h3>Mode Examen</h3><div class="switchrow"><div class="swtxt"><p style="margin:0">Chrono réel affiché pendant les missions, et aucun indice — ni le gratuit, ni les payants. Les scores et les récompenses ne changent pas.</p><p style="margin:6px 0 0"><b style="color:var(--txt)">'+(S.examMode ? 'Activé' : 'Désactivé')+'</b></p></div><button class="switch" id="examToggle" role="switch" aria-checked="'+(S.examMode?'true':'false')+'" aria-label="Mode Examen"><i></i></button></div></div>';
   html += '<div class="card"><h3>XP par domaine</h3><p>L\'XP récompense la participation et fait avancer l\'histoire. Il ne prouve pas, à lui seul, une compétence.</p>'
     + '<div class="xpbar"><div class="xl">SOC — Niveau '+levelOf(S.xp.soc)+'<span>'+S.xp.soc+' XP</span></div><div class="xptrack"><i style="width:'+levelPct(S.xp.soc)+'%"></i></div></div>'
     + '<div class="xpbar"><div class="xl">Réseau — Niveau '+levelOf(S.xp.reseau)+'<span>'+S.xp.reseau+' XP</span></div><div class="xptrack"><i class="mag" style="width:'+levelPct(S.xp.reseau)+'%"></i></div></div></div>';
@@ -1699,6 +1870,12 @@ function renderProfil(){
   });
   html += '</div>';
   $("view-profil").innerHTML = html;
+  var et = $("examToggle");
+  if(et) et.addEventListener("click", function(){
+    S.examMode = !S.examMode; save(); sndTap();
+    toast(S.examMode ? "Mode Examen activé : chrono réel, zéro indice." : "Mode Examen désactivé.");
+    renderProfil();
+  });
   $("aliasSave").addEventListener("click", function(){
     var v = $("aliasInput").value.trim();
     if(v){ S.alias = v; save(); toast("Alias mis à jour."); renderProfil(); }
@@ -1744,7 +1921,10 @@ function renderHelp(){
   html += '<h3>Défense réseau (Quartier Réseau)</h3><p>Le réseau d\'Atlas Logistics vu de dessus : Internet en haut, la <b>DMZ</b> au milieu (zone tampon qui expose les serveurs publics, Web et Mail, sans ouvrir le réseau interne), le réseau interne en bas. Tu disposes de <b>12 000 €</b> et de quatre équipements : <b>Pare-feu</b> (filtre le trafic aux frontières), <b>IDS</b> (détecte et alerte, mais ne bloque pas seul), <b>WAF</b> (filtre les attaques Web), <b>VLAN</b> (segmente le réseau interne en zones étanches). Touche un équipement, puis un emplacement pour le poser ; touche un équipement posé pour le retirer et récupérer son prix.</p><p>Ensuite, huit vagues de trafic traversent ton réseau, affichées de façon neutre : du trafic légitime et des attaques, dont un scan massif qui sert de diversion. Le debrief révèle, vague par vague, ce qui était malveillant et pourquoi. Un équipement ne protège que la zone où il est placé. Trop strict, le trafic légitime est bloqué et l\'indicateur <b>Service</b> chute ; trop laxiste, les attaques passent. Barème : Attaques bloquées 40 % · Trafic légitime préservé 30 % · Budget respecté 20 % · Simplicité des règles 10 %.</p>';
   html += '<h3>XP, couverture, maîtrise : trois mesures distinctes</h3><ul><li><b>XP</b> : récompense la participation et fait avancer l\'histoire, par domaine (SOC, Réseau), niveaux N1 à N10. Ton grade actuel : Stagiaire, Acte 1.</li><li><b>Couverture</b> : les objectifs que tu as rencontrés au moins une fois. Rencontrer n\'est pas maîtriser.</li><li><b>Maîtrise</b> : ce que tu réussis seul — au plus la première aide essentielle, gratuite — avec un score d\'au moins 70, dans des situations nouvelles, et confirmé après un délai par l\'épreuve différée. Une réussite avec plusieurs indices fait avancer l\'histoire sans valider la compétence, et les bonus de première réussite ne sont pas des preuves de maîtrise.</li></ul><p>Dans le Profil, la <b>préparation estimée</b> pour Security+ combine couverture et maîtrise observées, et liste ce qui n\'a pas encore été assez évalué. C\'est une estimation, jamais une garantie de réussite à l\'examen.</p>';
   html += '<h3>L\'épreuve différée</h3><p>Sept jours après ta première mission terminée, une épreuve courte te replace devant les mêmes notions dans un <b>autre contexte</b> — la Clinique Saint-Roch — sans indice ni aide. Elle ne rapporte pas d\'XP : elle répond à la vraie question, « as-tu appris à reconnaître une situation, ou seulement mémorisé un scénario ? ». C\'est elle qui confirme la maîtrise.</p>';
-  html += '<h3>Aides et crédits</h3><p>Dans chaque mission, la <b>première aide d\'Amara est l\'aide essentielle : elle est gratuite</b> — l\'apprentissage ne se bloque jamais faute de crédits. Les indices supplémentaires coûtent 15 crédits. Les <b>crédits</b> se gagnent en mission (20 à 60 selon le score, bonus ×1,5 la première fois, +30 pour la mission du jour, refaire rapporte 100 %, puis 60 %, puis 30 %). Règle d\'or : les crédits n\'achètent jamais d\'XP, de réponses ni de réussite.</p>';
+  html += '<h3>Aides et crédits</h3><p>Dans chaque mission, la <b>première aide d\'Amara est l\'aide essentielle : elle est gratuite</b> — l\'apprentissage ne se bloque jamais faute de crédits. Les indices supplémentaires coûtent 15 crédits. Les <b>crédits</b> se gagnent en mission (20 à 60 selon le score, bonus ×1,5 la première fois, +30 pour la mission du jour). <b>Rejouer rapporte plein pot à chaque fois</b> — il n\'y a plus de récompense dégressive (avant : 100 %, puis 60 %, puis 30 %). Règle d\'or : les crédits n\'achètent jamais d\'XP, de réponses ni de réussite.</p>';
+  html += '<h3>Rejouer : des variantes, pas une punition</h3><p>Rejouer une mission ne sert plus à réciter les réponses par cœur : <b>ses paramètres changent à chaque partie</b>. Le tri d\'alertes change déjà de compte visé et d\'adresse IP (trois variantes). La chasse au phishing change d\'expéditeurs, de domaines usurpés, d\'horaires et de montants. La défense réseau change d\'attaques — SSH au lieu de RDP, XSS au lieu d\'injection, balayage au lieu de scan. Le schéma à reconnaître reste le même, les détails non. Et la récompense reste <b>pleine à chaque partie</b> : c\'est la situation qui varie, pas le salaire. La mission du jour suit la même règle quand elle retombe sur un jeu déjà fait.</p>';
+  html += '<h3>Mode Examen</h3><p>L\'interrupteur se trouve dans le <b>Profil</b>, section « Mode Examen ». Il est <b>désactivé par défaut</b> et ton choix est gardé sur l\'appareil, d\'une session à l\'autre.</p><ul><li><b>Activé</b> : pendant les missions, un <b>chrono réel</b> tourne en haut de l\'écran — le temps que tu mets vraiment, pas un temps de récit. Et <b>aucun indice</b> : ni l\'aide essentielle gratuite, ni les indices à 15 crédits. Le bouton d\'indice est remplacé par la mention « Mode Examen actif — indices désactivés », pour que tu saches pourquoi il n\'est pas là.</li><li><b>Scores et récompenses inchangés</b> : le mode ne donne ni bonus ni malus. Il retire les aides, c\'est tout — comme le jour de l\'examen, où personne ne te soufflera la réponse.</li><li><b>Désactivé</b> : tout redevient comme avant, première aide gratuite comprise.</li></ul><p>C\'est le mode à utiliser quand tu veux savoir ce que tu sais vraiment, avant de regarder la <b>préparation estimée</b> du Profil.</p>';
+  html += '<h3>La rubrique examen des debriefs</h3><p>À la fin de chaque mission et de chaque épisode de campagne, le debrief se termine par <b>« Comment cette notion tombe à l\'examen »</b> : la même notion, formulée comme une vraie question Security+ (SY0-701) — énoncé, bonne réponse, et le piège dans lequel l\'examen essaie de te faire tomber. Lis-la après avoir joué, jamais pendant : c\'est fait pour ancrer, pas pour souffler.</p>';
   html += '<h3>Succès et Cyberdex</h3><ul><li><b>Œil de nuit</b> : terminer le tri d\'alertes sans aucune escalade inutile.</li><li><b>Pas mon faux positif</b> : bien classer 50 faux positifs au total, toutes parties confondues.</li><li><b>Kevin, non !</b> : empêcher Kevin de la Compta de cliquer sur son e-mail piégé (événement sur l\'accueil).</li></ul><p>Le <b>Cyberdex</b> (dans Profil) rassemble les fiches des notions de cybersécurité. Une fiche se débloque quand tu rencontres la notion en mission : phishing, force brute, cheval de Troie, segmentation, sauvegardes 3-2-1, moindre privilège…</p>';
   html += '<h3>Ton compte</h3><p>Le jeu se joue connecté, avec un e-mail et un mot de passe : c\'est ce qui t\'identifie. À l\'inscription, un e-mail de vérification part vers ta boîte — <b>pas besoin de l\'avoir validé pour jouer</b> : la ligne dans ton Profil te rappelle juste de le faire quand tu veux, avec un bouton pour le renvoyer. Se connecter demande une connexion internet. Ta progression, elle, ne part pas dans le cloud : elle reste enregistrée sur cet appareil uniquement, comme expliqué juste en dessous. Le bouton <b>Se déconnecter</b> se trouve dans le Menu (section « Ton compte ») et dans le Profil.</p>';
   html += '<h3>Sauvegarde et série de jours</h3><p>La progression est enregistrée automatiquement sur cet appareil, y compris une partie en cours : quitte une mission, tu la retrouveras sur l\'accueil avec le bouton <b>Reprendre</b>. Jouer plusieurs jours de suite fait grandir ta série. Le bouton <b>Réinitialiser la progression</b>, ci-dessous dans le Menu, efface tout.</p>';
@@ -1887,6 +2067,7 @@ function renderDelayed(){
       html += whyRow(okc, okc?"ok":"ko", "Situation "+(i+1), q.why);
     });
     html += '</div>';
+    html += examBoxHtml("clinique");
     html += '<p class="sub">Cette épreuve ne rapporte pas d\'XP : elle mesure la maîtrise, dans un contexte différent, après un délai. <b style="color:var(--txt)">+20 crédits</b> pour la démarche.</p>';
     html += '<button class="btn primary big" id="dHome">Retour à Nexus City</button>';
   }
