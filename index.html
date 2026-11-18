@@ -371,6 +371,20 @@ body.authing main{padding-bottom:24px;}
 .netexplain.on{display:block;}
 .netexplain .netexp-t{font-size:12.5px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:#d0bfff;margin-bottom:5px;}
 .netexplain p{margin:0;font-size:13.5px;line-height:1.55;color:var(--txt);}
+/* ---------- dojo (parcours pwn.college adapté) ---------- */
+.belt{display:inline-block;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;letter-spacing:.02em;}
+.belt.orange{background:rgba(240,140,0,.16);color:var(--orange);}
+.belt.jaune{background:rgba(250,204,21,.14);color:#ffd43b;}
+.belt.verte{background:rgba(18,184,134,.15);color:var(--green);}
+.belt.bleue{background:rgba(28,126,214,.18);color:var(--blue);}
+.belt.blanc{background:rgba(242,245,252,.12);color:var(--txt);}
+.modlist{font-size:12.5px;color:var(--mut);line-height:1.55;margin:4px 0 0;}
+.term{background:#050a16;border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:#a5d8ff;margin:10px 0;}
+.term .tdim{color:var(--mut);}
+.lessonread p{margin:8px 0;font-size:15px;line-height:1.55;color:var(--txt);}
+.lessonread p:first-child{margin-top:2px;}
+.dojonote{font-size:12.5px;color:var(--mut);line-height:1.5;}
+.dojonote a{color:var(--cyan);}
 @media (prefers-reduced-motion:reduce){ .netpacket,.netstep,.netcard{transition:none;} }
 @media (min-width:520px){ .zones{gap:11px;} }
 </style>
@@ -435,10 +449,13 @@ body.authing main{padding-bottom:24px;}
     <section class="view" id="view-campaign"></section>
     <!-- PACK SECURITY+ -->
     <section class="view" id="view-pack"></section>
+    <!-- DOJO -->
+    <section class="view" id="view-dojo"></section>
   </main>
   <nav id="bottomnav">
     <button data-nav="hub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>Accueil</button>
     <button data-nav="missions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>Missions</button>
+    <button data-nav="dojo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 21.5v-17"/><path d="M5 5c4-2.2 7 2 12 .3v8.9c-5 1.7-8-2.5-12-.3"/></svg>Dojo</button>
     <button data-nav="profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.4-3.6 4.2-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/></svg>Profil</button>
     <button data-nav="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
   </nav>
@@ -468,11 +485,13 @@ function defState(){ return {
   m1:{ done:false, best:{A:0, B:0, C:0}, plays:{A:0, B:0, C:0} },
   campaign:{ done:{clinique:false, mairie:false, finale:false}, best:{clinique:0, mairie:0, finale:0}, plays:{clinique:0, mairie:0, finale:0},
     trust:{atlas:50, clinique:50, mairie:50}, upgrades:[], finished:false },
-  pack:{ scen:{}, scenBest:{}, cards:{}, examBest:0, examPlays:0, fwBest:0, sims:{} }
+  pack:{ scen:{}, scenBest:{}, cards:{}, examBest:0, examPlays:0, fwBest:0, sims:{} },
+  dojo:{ done:{}, best:{} }
 };}
 var S;
 try{ S = JSON.parse(localStorage.getItem(KEY)) || defState(); }catch(e){ S = defState(); }
-["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","examMode","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign","m1","pack"].forEach(function(k){ if(S[k]===undefined) S[k]=defState()[k]; });
+["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","examMode","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign","m1","pack","dojo"].forEach(function(k){ if(S[k]===undefined) S[k]=defState()[k]; });
+if(!S.dojo || !S.dojo.done || !S.dojo.best) S.dojo = defState().dojo;
 if(!S.pack || !S.pack.cards || !S.pack.scen) S.pack = defState().pack;
 if(!S.pack.sims) S.pack.sims = {};
 if(!S.m1 || !S.m1.best || !S.m1.plays) S.m1 = defState().m1;
@@ -567,6 +586,7 @@ function show(view){
   window.scrollTo(0,0);
   if(view==="hub") renderHub();
   if(view==="pack") renderPack();
+  if(view==="dojo") renderDojo();
   if(view==="missions") renderMissions();
   if(view==="profil") renderProfil();
   if(view==="menu") renderMenu();
@@ -1058,6 +1078,7 @@ function renderHub(){
   html += '</div></div>';
   var pkScen = Object.keys(S.pack.scen).length, pkCards = Object.keys(S.pack.cards).filter(function(k){ return S.pack.cards[k].n>0; }).length;
   html += '<div class="card"><div class="row between"><div><span class="tag reseau">Pack Security+ · Révise pour l\'examen</span><h3 style="margin-top:6px">Réviser comme on joue</h3><p>Scénarios éclair : '+pkScen+' / 18 · Cartes revues : '+pkCards+' / 40'+(S.pack.examPlays ? ' · Mini-examen : meilleur '+S.pack.examBest+' %' : '')+'</p></div></div><button class="btn primary big" data-act="gopack">Ouvrir le Pack Security+</button></div>';
+  html += '<div class="card"><div class="row between"><div><span class="tag soc">Le Dojo · Parcours pwn.college adapté</span><h3 style="margin-top:6px">Apprendre le hacking, un dojo à la fois</h3><p>Start Here : '+dojoDoneCount()+' / '+DOJO_LESSONS.length+' leçons · La carte complète des dojos t\'attend dans l\'onglet Dojo.</p></div></div><button class="btn primary big" data-act="godojo">Ouvrir le Dojo</button></div>';
   html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta — Mentore</div><div class="txt">« Trois secteurs actifs pour l\'instant : le SOC, le QG et le Quartier Réseau. Le reste de la ville ouvrira plus tard. Au travail, '+esc(S.alias)+'. »</div></div></div>'
     + '<div class="mentor" style="margin-top:12px"><div class="ava" style="background:linear-gradient(135deg,#7048E8,#4c2a9e)">DV</div><div><div class="who" style="color:var(--blue)">Directrice Valence — Direction d\'Aegis</div><div class="txt">« Montrez-moi l\'impact. »</div></div></div>'
     + '<div class="mentor" style="margin-top:12px"><div class="ava" style="background:linear-gradient(135deg,#8FA3C4,#5b6b8c)">LC</div><div><div class="who" style="color:var(--blue)">Le Cartographe — il connaît Nexus City par cœur</div><div class="txt">« Je connais chaque chemin. »</div></div></div></div>';
@@ -1072,6 +1093,8 @@ function bindActions(root){
       if(act==="play") startBriefing(el.getAttribute("data-game"));
       if(act==="gomissions") show("missions");
       if(act==="gopack"){ packTab="home"; show("pack"); }
+      if(act==="godojo"){ dojoScreen="map"; show("dojo"); }
+      if(act==="gostarthere"){ dojoScreen="start"; show("dojo"); }
       if(act==="gocampaign") openCampaign();
       if(act==="resume" && S.inProgress) resumeGame();
       if(act==="delayed") startDelayed();
@@ -1139,6 +1162,8 @@ function renderMissions(){
   html += upgradesSectionHtml();
   html += '<h2>Pack Security+</h2><p class="sub"><span class="tag reseau">Révise pour l\'examen</span></p><p class="sub">L\'entraînement hors mission : scénarios éclair, cartes de révision, mini-examen blanc, simulations PBQ et parcours de 12 semaines.</p>';
   html += '<div class="card"><div class="row between"><div><h3>Pack Security+</h3><p>Scénarios : '+Object.keys(S.pack.scen).length+' / 18 · Cartes revues : '+Object.keys(S.pack.cards).filter(function(k){ return S.pack.cards[k].n>0; }).length+' / 40</p></div></div><button class="btn primary big" data-act="gopack">Ouvrir le Pack Security+</button></div>';
+  html += '<h2>Le Dojo</h2><p class="sub"><span class="tag soc">Parcours pwn.college adapté en français</span></p><p class="sub">Le parcours d\'entraînement au hacking, dojo par dojo : Start Here est déjà jouable, les autres arrivent un par un.</p>';
+  html += '<div class="card"><div class="row between"><div><h3>Start Here</h3><p>Leçons terminées : '+dojoDoneCount()+' / '+DOJO_LESSONS.length+'</p></div>'+(dojoDoneCount()>=DOJO_LESSONS.length?'<span class="tag done">Terminé</span>':'')+'</div><button class="btn primary big" data-act="gostarthere">Entrer dans Start Here</button></div>';
   html += '<h2>Secteurs fermés</h2>';
   [["Labo Forensics","Analyse de preuves"],["La Banque","Fraude et transactions"],["Tour Rouge","Territoire d'ÉCLIPSE"],["Quartier Dev","Code et applications"],["Tour du Conseil","Stratégie et gouvernance"],["Ciel Cloud","Infrastructure cloud"]].forEach(function(l){
     html += '<div class="card" style="opacity:.55"><div class="row between"><div><h3>'+l[0]+'</h3><p>'+l[1]+'</p></div><span class="tag lock">Bientôt</span></div></div>';
@@ -2000,6 +2025,7 @@ function renderProfil(){
     + '<p>Clinique Saint-Roch — meilleur : <b style="color:var(--txt)">'+(S.campaign.done.clinique ? S.campaign.best.clinique+' / 100' : 'pas encore joué')+'</b><br>Mairie de Nexus City — meilleur : <b style="color:var(--txt)">'+(S.campaign.done.mairie ? S.campaign.best.mairie+' / 100' : 'pas encore joué')+'</b></p>'
     + '<p>Confiance — Atlas : <b style="color:var(--txt)">'+S.campaign.trust.atlas+' / 100</b> · Saint-Roch : <b style="color:var(--txt)">'+S.campaign.trust.clinique+' / 100</b> · Mairie : <b style="color:var(--txt)">'+S.campaign.trust.mairie+' / 100</b></p>'
     + '<p>Améliorations durables en place : <b style="color:var(--txt)">'+(S.campaign.upgrades.length ? S.campaign.upgrades.map(function(u){ return UPGRADES.filter(function(x){return x.id===u;})[0].name; }).join(" · ") : "aucune")+'</b></p></div>';
+  html += '<div class="card"><h3>Le Dojo — parcours pwn.college</h3><p>Start Here : <b style="color:var(--txt)">'+dojoDoneCount()+' / '+DOJO_LESSONS.length+' leçons terminées</b>'+(dojoDoneCount()>=DOJO_LESSONS.length ? ' — dojo terminé, les suivants arrivent un par un.' : ' — la suite se joue dans l\'onglet Dojo.')+'</p><div class="xptrack"><i style="width:'+Math.round(100*dojoDoneCount()/DOJO_LESSONS.length)+'%"></i></div></div>';
   html += '<div class="card"><h3>Succès</h3><div class="badges">';
   BADGEDATA.forEach(function(b){
     var on = S.badges.indexOf(b.id)>=0;
@@ -2036,6 +2062,7 @@ function renderMenu(){
       + (FBUser.emailVerified ? '<p>E-mail vérifié.</p>' : '<p>E-mail pas encore vérifié — tu peux jouer quand même.</p>')
       + '<button class="btn danger" id="mLogout">Se déconnecter</button></div>';
   }
+  html += '<button class="menuitem" id="mDojo">'+ICONS.flag+'Le Dojo — parcours pwn.college<span class="chev">›</span></button>';
   html += '<button class="menuitem" id="mPack">'+ICONS.medal+'Pack Security+<span class="chev">›</span></button>';
   html += '<button class="menuitem" id="mHelp">'+ICONS.shield+'Fonctionnement du jeu<span class="chev">›</span></button>';
   html += '<button class="menuitem" id="mSound">'+(S.sound?ICONS.sndOn:ICONS.sndOff)+'Son : '+(S.sound?'activé':'coupé')+'<span class="chev">›</span></button>';
@@ -2043,6 +2070,7 @@ function renderMenu(){
   html += '<div class="card"><h3>Nexus Guardian — Phase 0</h3><p>Prototype local. Progression sauvegardée sur cet appareil uniquement.</p><p id="saveStateLine">'+(saveFailed ? "Progression non enregistrée sur cet appareil — stockage indisponible. Elle reste en mémoire pour cette session." : "Progression enregistrée sur cet appareil.")+'</p><p>Personnages : Cdt. Amara Keïta (mentore) · Directrice Valence — « Montrez-moi l\'impact. » · Le Cartographe — « Je connais chaque chemin. » · Léo « Zéro » (hacker éthique) · Kevin de la Compta · ÉCLIPSE (collectif ennemi).</p></div>';
   $("view-menu").innerHTML = html;
   var ml = $("mLogout"); if(ml) ml.addEventListener("click", function(){ doSignOut(); });
+  $("mDojo").addEventListener("click", function(){ dojoScreen="map"; show("dojo"); });
   $("mPack").addEventListener("click", function(){ packTab="home"; show("pack"); });
   $("mHelp").addEventListener("click", function(){ renderHelp(); show("help"); });
   $("mSound").addEventListener("click", function(){ S.sound=!S.sound; save(); renderMenu(); if(S.sound) sndTap(); });
@@ -2079,6 +2107,7 @@ function renderHelp(){
   html += '<h3>Mini-campagne — La nuit d\'ÉCLIPSE</h3><p>Depuis l\'accueil, le bouton <b>Ouvrir la campagne</b> mène à l\'écran de campagne : quatre chapitres, une barre de progression, et l\'état de chacun — terminé, disponible ou verrouillé.</p><ul><li><b>Épisode 1 — Atlas Logistics</b> : la Mission 1 « Alerte à 03h12 », variante A, dans son déroulé complet (voir la section Mission 1 ci-dessus). Dans l\'histoire, tu as <b>45 minutes de temps de jeu (accéléré)</b> avant la relève de <b>04h00</b> — en vrai, la mission dure environ <b>12 minutes</b>. L\'horloge est celle du récit, pas un minuteur de plus : le chrono de jeu reste celui affiché en mission.</li><li><b>Épisode 2 — Clinique Saint-Roch</b> : mêmes réflexes, autre contrainte — les urgences et les dossiers patients ne peuvent pas s\'arrêter. Chaque décision de confinement affiche son <b>impact métier</b> avant de choisir : protéger ne veut jamais dire tout bloquer. Le debrief parle continuité des soins, sauvegardes testées et confidentialité des données de santé. Attention : l\'épreuve différée se déroule aussi à Saint-Roch, mais c\'est un autre scénario, court — un retest des notions, pas une redite de l\'épisode.</li><li><b>Épisode 3 — Mairie de Nexus City</b> : les services aux habitants sont frappés et informer les habitants est obligatoire. Le compteur <b>Confiance des habitants</b> reste visible pendant tout l\'épisode et bouge à chaque décision : chaque heure de retard et chaque message maladroit coûtent, la transparence mesurée rapporte. En cours d\'épisode, un journaliste demande un point de situation : à toi de choisir quoi répondre, avec les seuls faits vérifiés. Le debrief parle communication de crise, notification des autorités et continuité des services publics.</li><li><b>Finale — Le retour d\'ÉCLIPSE</b> : verrouillée tant que les épisodes 1 à 3 ne sont pas terminés. La même nuit, les trois organisations sont frappées ensemble : diversion, force brute, chiffrement, revendication publique. Tu y réutilises tout — tri, phishing, confinement, communication. Le debrief final est un <b>debrief de campagne complet</b> : la mémoire de la ville, le bilan des quatre chapitres, les décisions qui ont compté et la préparation estimée mise à jour.</li></ul><p>Chaque épisode rapporte XP et crédits comme une mission, bonus de première fois compris. Un épisode terminé peut toujours être rejoué — la campagne entière aussi, une fois la finale bouclée.</p>';
   html += '<h3>La ville se souvient : améliorations, confiance, faiblesses</h3><p>La mini-campagne a une mémoire, affichée sur l\'écran de campagne :</p><ul><li><b>Améliorations durables</b> (40 crédits chacune, installables depuis l\'écran de campagne, l\'écran Missions ou le debrief d\'un épisode) : <b>Journalisation renforcée</b> — un indice supplémentaire apparaît dans un épisode ultérieur et en finale ; <b>MFA généralisée</b> — la force brute bute sur le second facteur, un compte compromis de moins à gérer ; <b>Sauvegardes 3-2-1 vérifiées</b> — la restauration devient une procédure testée, plus rapide, avec moins de dégâts. Quand un effet s\'applique pendant un épisode, le jeu le dit explicitement, au moment où il sert.</li><li><b>Confiance par organisation</b> (Atlas, Clinique, Mairie) : elle monte ou baisse selon tes décisions et reste affichée sur l\'écran de campagne. En finale, une confiance haute fait partager les journaux volontiers — un indice de plus ; une confiance basse ajoute une étape de persuasion.</li><li><b>Faiblesses connues</b> : la finale lit ce qui n\'a <b>pas</b> été installé et construit le chemin d\'attaque d\'ÉCLIPSE à partir de ces manques — pas de journalisation, il revient par les angles morts ; pas de MFA, par un mot de passe ; pas de sauvegardes testées, la restauration devient une découverte en pleine nuit. L\'écran d\'introduction de la finale te montre ce chemin avant de commencer.</li></ul><p><b>Le garde-fou, absolu :</b> aucune ancienne décision ne peut rendre la campagne impossible. Sans aucune amélioration et avec une confiance basse, chaque épisode et la finale restent terminables par un autre chemin — plus lent, plus pénible, jamais bloqué. Les conséquences créent des histoires différentes, elles ne condamnent pas le joueur. En finale, les améliorations installées ajoutent jusqu\'à 12 points de « mémoire de la ville » au barème : un bonus, jamais une condition.</p>';
   html += '<h3>Pack Security+</h3><p>Le Pack Security+ est l\'espace d\'entraînement hors mission, accessible depuis l\'accueil, l\'écran Missions ou le Menu. Six sections :</p><ul><li><b>Scénarios éclair</b> : 18 situations courtes (3 à 5 minutes), une décision à prendre, puis un debrief avec le « pourquoi » et la carte de révision liée. Ils couvrent les cinq domaines Security+ et renvoient aux notions des missions (l\'objectif, par exemple 2.2 ou 4.8, est affiché sur chaque scénario). Une bonne décision rapporte 20 XP dans le domaine concerné et 10 crédits ; une erreur fait revenir la carte liée tout de suite dans la file de révision. Rejouer rapporte plein pot, comme partout : aucune récompense dégressive.</li><li><b>Cartes de révision</b> : les 40 cartes C1-01 à C5-08, question d\'un côté, réponse de l\'autre — touche la carte pour la retourner, puis dis honnêtement « Je sais » ou « À revoir ». Les cartes reviennent à <b>intervalles espacés : 1, 3, 7, 14 puis 30 jours</b> quand tu les sais, et dès le lendemain quand tu hésites. C\'est la répétition espacée : revoir juste avant d\'oublier ancre bien mieux que tout relire la veille. Les 7 cartes générées par la Mission 1 (C2-01, C2-03, C4-01, C4-02, C4-03, C4-04, C5-07) font partie de ce même jeu de 40 — pas de doublon : une erreur en mission rend la carte correspondante due ici, et les scénarios renvoient vers leur carte liée. Le filtre « À revoir » ne montre que les cartes dues ; « Toutes » permet de réviser en avance, par domaine si tu veux.</li><li><b>Mini-examen blanc</b> : 10 questions à choix unique, une par thème, suivies d\'une <b>simulation pare-feu</b> (une PBQ : placer quatre règles dans le bon ordre — web vers la DMZ autorisé, RDP depuis Internet refusé, navigation des employés autorisée, refus par défaut en dernier). Aucune correction pendant l\'épreuve : tout arrive à la fin, question par question, avec un bouton vers la carte à revoir. Barème : 10 points de questions + 5 points de simulation (1 par règle bien placée, 1 pour la règle par défaut en dernier). <b>Seuil d\'entraînement : plus de 80 %</b> — en dessous, continue les examens blancs avant de passer aux examens complets du jeu. Chaque tentative rapporte 30 XP SOC et 15 crédits, quel que soit le score.</li><li><b>Simulations PBQ</b> : trois mini-simulations en plus de la simulation pare-feu du mini-examen — remettre les <b>étapes d\'une réponse à incident</b> dans l\'ordre (préparation, détection, analyse, confinement, éradication, récupération, retour d\'expérience), <b>classer des contrôles</b> par type (préventif, détectif, correctif, directif), et <b>associer des menaces à leur nom</b> (phishing, spear phishing, whaling, vishing, smishing, password spraying, credential stuffing). Même présentation que le mini-examen : score en pourcentage, <b>seuil d\'entraînement de 80 %</b>, corrections une par une et bouton vers la carte à revoir (C4-03 et C4-04, C1-02, ou C2-01, C2-02 et C2-04 selon la simulation). Chaque simulation rapporte 15 XP SOC et 10 crédits.</li><li><b>Parcours 12 semaines</b> : le plan de préparation complet — fondations (semaines 1–2), menaces (3–4), architecture (5–6), opérations (7–8), gouvernance (9), points faibles (10), examens blancs (11), dernière ligne droite (12). La progression de chaque bloc se remplit toute seule à mesure que tu termines ses scénarios et revois ses cartes. Rythme conseillé : 5 cartes par jour en session éclair, 2 à 3 scénarios par semaine, une mission du jeu le week-end.</li><li><b>Les 10 concepts réseau animés</b> : une grille de 10 cartes (DHCP, DNS, ARP, switch, routeur, NAT/PAT, TCP, HTTPS, pare-feu, ICMP), chacune avec un mini schéma réseau. Touche une carte : elle s’illumine en violet, son animation se joue étape par étape (points et étiquettes qui apparaissent dans l’ordre) pendant que les autres cartes s’assombrissent. Le bouton « Tout lire » joue les 10 animations dans l’ordre, de 01 à 10. En plus de l’animation, chaque carte affiche juste en dessous l’explication détaillée « Comment ça fonctionne » du concept ; elle reste affichée tant que tu ne touches pas une autre carte.</li></ul><p>Précision honnête : les questions du mini-examen et des scénarios sont des <b>exemples d\'entraînement écrits pour ce jeu</b>, dans l\'esprit de l\'examen Security+ — ce ne sont pas des questions officielles CompTIA.</p>';
+  html += '<h3>Le Dojo — le parcours pwn.college, adapté</h3><p>L\'onglet <b>Dojo</b>, dans la barre du bas, ouvre la carte complète du programme <b>pwn.college</b> — la plateforme gratuite d\'entraînement au hacking de l\'Arizona State University — relevée le 18 novembre 2026 : <b>Getting Started</b> (4 dojos, 376 challenges), le <b>parcours principal</b> (4 dojos, 525 challenges, avec des ceintures : orange, jaune, verte, bleue) et le <b>matériel communautaire</b> (57 entrées, environ 2 900 challenges). Sur pwn.college, un <b>dojo</b> est un parcours par sujet, divisé en <b>modules</b>, eux-mêmes divisés en <b>challenges</b> : chaque challenge explique un concept, se joue dans un vrai terminal Linux dans le navigateur, et se valide en soumettant un <b>flag</b> — la preuve que tu as réussi.</p><p>Dans Nexus Guardian, les dojos deviennent jouables <b>un par un</b>, dans l\'ordre conseillé : <b>Start Here</b> d\'abord (déjà jouable : 10 leçons), puis Linux Luminarium, Playing With Programs, Computing 101 et Intro to Cybersecurity. Les autres dojos sont listés sur la carte avec leurs modules, marqués « À venir ». Chaque leçon suit le même rythme que le reste du jeu : une <b>lecture courte</b>, un <b>exercice jouable</b> (question ou ordre à reconstituer), puis un <b>debrief</b> qui explique le pourquoi. Un exercice réussi rapporte <b>20 XP SOC et 10 crédits</b>, rejouer rapporte plein pot, et ta progression du Dojo est enregistrée sur l\'appareil, comme le reste.</p><p>Honnêteté de source : les leçons du Dojo sont des <b>textes originaux écrits en français pour ce jeu</b>, construits à partir des sujets et de la progression de pwn.college — aucun texte du site n\'est copié, et aucune solution de challenge n\'est publiée ici (pwn.college demande de ne pas publier de writeups : ses challenges servent aussi à noter des étudiants). Pour jouer les vrais challenges, c\'est là-bas que ça se passe, avec un compte gratuit : pwn.college.</p>';
   html += '<h3>Glossaire</h3><p>Les termes officiels en anglais sont affichés à côté des termes français. Un toucher sur un terme ne mène nulle part — c\'est une page à lire, pas un piège.</p><dl class="gloss">'
     + '<dt>SOC <span>· Security Operations Center</span></dt><dd>Centre d\'opérations de sécurité : l\'équipe qui surveille, trie les alertes et répond aux incidents.</dd>'
     + '<dt>SIEM <span>· Security Information and Event Management</span></dt><dd>Outil qui collecte et corrèle les journaux de plusieurs sources pour alerter et enquêter.</dd>'
@@ -3480,6 +3509,307 @@ function renderPackExam(root){
   $("pkExamHome").addEventListener("click", function(){ packExam = null; packTab = "home"; renderPack(); });
   $("pkExamRetry").addEventListener("click", function(){ startPackExam(); });
   if(pct>80) sndOk(); else sndBad();
+}
+/* ================= LE DOJO — PARCOURS PWN.COLLEGE ADAPTÉ =================
+   Source : programme cartographié sur https://pwn.college/dojos le 18 novembre 2026.
+   Les leçons ci-dessous sont des textes ORIGINAUX écrits en français pour Nexus Guardian,
+   construits à partir des sujets et de la progression de pwn.college — aucun texte du site
+   n'est copié, et aucune solution de challenge n'est publiée (règle du site). */
+var dojoScreen = "map", dojoLessonId = null, dojoAnswer = null, dojoOrder = [], dojoOrderDone = false;
+function dojoDoneCount(){ return DOJO_LESSONS.filter(function(l){ return S.dojo.done[l.id]; }).length; }
+var DOJO_LESSONS = [
+  { id:"SH-01", t:"Bienvenue au dojo", sub:"Dojo, module, challenge, flag : les quatre mots à connaître avant tout.",
+    read:["Un dojo, c’est un parcours d’entraînement consacré à un sujet — ici, la prise en main de la plateforme. Il est découpé en modules, et chaque module en challenges : de petits défis qui se suivent dans l’ordre, du plus simple au plus costaud.",
+      "Chaque challenge vise un seul concept. Tu lis une courte explication, tu pratiques dans un vrai environnement Linux, et quand tu as réussi, tu récupères un flag : un jeton secret qui prouve que tu as vraiment fait le travail, et que tu soumets pour valider le challenge.",
+      "C’est exactement le rythme de Nexus Guardian : lire, jouer, comprendre. Ce premier dojo t’apprend à te servir de l’atelier — ensuite seulement, on attaque les vrais sujets."],
+    ex:{ type:"qcm", q:"À quoi sert le flag d’un challenge ?",
+      opts:["C’est le mot de passe de ton compte", "C’est la preuve que tu as réussi le challenge : tu le soumets pour le valider", "C’est le nom du serveur du challenge"], ok:1 },
+    why:"Le flag est une preuve, pas un sésame de connexion. Il est caché dans l’environnement du challenge : le récupérer montre que tu as compris et pratiqué le concept, au lieu de simplement lire la théorie." },
+  { id:"SH-02", t:"Ton espace de travail", sub:"Terminal, éditeur, bureau : ce qui s’ouvre quand tu lances un challenge.",
+    read:["Quand tu lances un challenge, la plateforme ouvre ton espace de travail privé, directement dans le navigateur. Personne d’autre ne voit ce qui s’y passe : tu peux y casser des choses, c’est fait pour.",
+      "Selon le challenge, tu as sous la main un terminal (l’outil principal), un éditeur de code façon VSCode pour écrire des programmes, et parfois un bureau graphique Linux complet. Une connexion SSH est aussi possible, en option, pour travailler depuis ton propre terminal.",
+      "Retiens l’enchaînement : il est le même pour tous les challenges, dans tous les dojos."],
+    ex:{ type:"order", q:"Remets dans l’ordre le déroulé d’un challenge :",
+      items:["Lire l’énoncé du challenge", "Lancer l’espace de travail", "Travailler dans le terminal ou l’éditeur", "Récupérer le flag", "Soumettre le flag pour valider"],
+      disp:[2,0,4,1,3] },
+    why:"Lire avant de lancer, travailler avant de conclure : cet ordre simple évite la plupart des blocages. La soumission du flag vient toujours en dernier — c’est elle qui transforme ton travail en progression." },
+  { id:"SH-03", t:"Le terminal, sans peur", sub:"Une fenêtre, des ordres écrits, et un ordinateur qui obéit au doigt et à l’œil.",
+    read:["Le terminal est une fenêtre où tu donnes des ordres à l’ordinateur en les écrivant, au lieu de cliquer. Au début, l’écran noir impressionne ; en réalité, c’est l’outil le plus précis du hacker : chaque ordre fait exactement ce que tu as demandé, ni plus, ni moins.",
+      "Deux réflexes avant toute chose : savoir où tu es, et regarder ce qu’il y a autour de toi. Tout le reste — ouvrir, copier, lancer, tester — s’apprend challenge après challenge, et le dojo Linux Luminarium y est entièrement consacré.",
+      "Dans ton espace de travail, le terminal est toujours là. C’est par lui que tu lanceras le programme du challenge et que tu iras chercher le flag."],
+    term:"$ pwd\n/home/hacker\n$ ls\nnotes.txt  travail\n<span class=\"tdim\">pwd : où suis-je ? · ls : qu’y a-t-il ici ?</span>",
+    ex:{ type:"qcm", q:"Tu viens d’ouvrir le terminal de ton espace. Quel est le premier réflexe le plus sensé ?",
+      opts:["Taper des commandes au hasard pour voir ce qui se passe", "Regarder où tu es et ce qu’il y a autour de toi avant d’agir", "Fermer le terminal et n’utiliser que le bureau graphique"], ok:1 },
+    why:"Observer avant d’agir : c’est le réflexe de base en sécurité comme en enquête. Savoir où tu es et ce qui t’entoure évite d’agir au mauvais endroit — et c’est ce que font les commandes pwd et ls." },
+  { id:"SH-04", t:"Le programme du challenge : /challenge", sub:"Chaque challenge a son programme, rangé toujours au même endroit.",
+    read:["Dans chaque espace de travail, le programme au cœur du challenge vit dans un dossier dédié : /challenge. C’est lui que tu vas étudier, lancer, tester — parfois jusqu’à trouver sa faille, quand le dojo l’exige.",
+      "Cette régularité est précieuse : quel que soit le dojo, tu sais où regarder en premier. Le dossier contient le ou les programmes du challenge, et souvent de quoi comprendre ce qu’on attend de toi.",
+      "Le programme, lui, ne contient pas le flag. Le flag est gardé ailleurs — c’est toute la leçon suivante."],
+    term:"$ ls /challenge\nprogramme  consignes.txt\n<span class=\"tdim\">Le programme du challenge t’attend toujours au même endroit.</span>",
+    ex:{ type:"qcm", q:"Où se trouve le programme que le challenge te demande d’étudier ?",
+      opts:["Il faut le télécharger depuis un site externe", "Dans le dossier /challenge de ton espace de travail", "Il arrive par e-mail avant chaque challenge"], ok:1 },
+    why:"Toujours au même endroit : /challenge. Cette constance te fait gagner du temps à chaque nouveau défi, et elle te rappelle la règle d’or du lieu : tout ce dont tu as besoin est déjà dans ton espace." },
+  { id:"SH-05", t:"Le trésor gardé : /flag", sub:"Le flag existe, tu peux le voir… mais pas le lire. C’est fait exprès.",
+    read:["Le flag de chaque challenge est rangé dans un fichier nommé /flag, tout en haut du système. Tu peux constater qu’il existe, mais si tu essaies de le lire directement, le système te répondra : permission refusée.",
+      "Pourquoi ? Parce que ce fichier n’appartient qu’à l’utilisateur root, le super-administrateur. Le lire « pour de vrai » demande de passer par le chemin que le challenge enseigne : comprendre le programme, exploiter sa faiblesse ou utiliser correctement l’outil du jour.",
+      "C’est le principe de tous les dojos : le flag n’est jamais donné, il se mérite — et c’est exactement pour ça qu’il prouve quelque chose."],
+    term:"$ cat /flag\ncat: /flag: Permission denied\n<span class=\"tdim\">Normal : ce fichier ne se lit pas, il se conquiert par le chemin du challenge.</span>",
+    ex:{ type:"qcm", q:"Pourquoi ne peux-tu pas simplement ouvrir /flag pour finir le challenge ?",
+      opts:["Parce que le fichier est chiffré avec un mot de passe inconnu", "Parce qu’il n’est lisible que par root : y accéder est précisément ce que le challenge t’apprend à faire", "Parce que le fichier n’existe pas encore"], ok:1 },
+    why:"Question de permissions, pas de chiffrement : /flag appartient à root. Tout l’apprentissage consiste à atteindre ce niveau d’accès par la voie prévue par le challenge — jamais par un simple double-clic." },
+  { id:"SH-06", t:"Le mode privilégié", sub:"Certains challenges te donnent les pleins pouvoirs. À manier avec respect.",
+    read:["Certains challenges démarrent en mode privilégié : ton espace te donne alors les droits de root, le super-administrateur qui peut tout lire, tout modifier, tout casser.",
+      "Ce mode sert quand le sujet l’exige — observer le système en profondeur, par exemple. Mais il change ta responsabilité : une commande lancée en root ne demande pas « tu es sûr ? ». Elle s’exécute, point.",
+      "La bonne habitude se prend dès maintenant : comprendre ce qu’une commande va faire avant de la lancer, surtout avec les pleins pouvoirs. En sécurité, la puissance sans compréhension est la première des failles."],
+    ex:{ type:"qcm", q:"En mode privilégié (droits root), quelle habitude te protège le mieux ?",
+      opts:["Tout lancer en root, c’est plus rapide", "Comprendre l’effet d’une commande avant de la lancer, car rien ne te retiendra", "Ne jamais utiliser le terminal dans ce mode"], ok:1 },
+    why:"Root ne pardonne rien : pas de corbeille, pas de confirmation. La compétence n’est pas d’avoir les pouvoirs, c’est de savoir exactement ce que chaque commande va changer avant de l’exécuter." },
+  { id:"SH-07", t:"Ta maison persiste : le home", sub:"Ce que tu ranges chez toi se retrouve demain ; le reste repart à zéro.",
+    read:["Ton espace de travail a une partie qui dure : ton répertoire personnel, le home. Les fichiers que tu y ranges — tes notes, tes scripts, tes brouillons — sont conservés d’une session à l’autre.",
+      "Le reste de l’environnement du challenge, lui, repart d’un état propre à chaque lancement. C’est volontaire : le programme du challenge doit être intact pour que l’exercice garde son sens, et pour que tu puisses recommencer sans les dégâts de tes essais.",
+      "La règle pratique est simple : ton travail à toi va dans ton home ; le décor du challenge, lui, se réinitialise."],
+    ex:{ type:"qcm", q:"Tu as écrit des notes précieuses pendant un challenge. Où les ranger pour les retrouver à ta prochaine session ?",
+      opts:["À côté du programme, dans /challenge", "Dans ton répertoire personnel (ton home), qui est conservé", "Peu importe, tout est conservé partout"], ok:1 },
+    why:"Seul ton home persiste entre les sessions. L’environnement du challenge repart propre à chaque lancement — c’est ce qui te permet de réessayer un exercice sans traîner tes erreurs de la veille." },
+  { id:"SH-08", t:"Coincé ? Redémarre proprement", sub:"Un challenge cassé n’est pas un échec : c’est un bouton à connaître.",
+    read:["Ça arrivera : un programme modifié de trop, un fichier supprimé par mégarde, et le challenge ne ressemble plus à rien. Pas de panique — chaque challenge peut être redémarré, et son environnement repart alors d’un état propre.",
+      "Redémarrer n’efface pas ta progression sur les autres challenges, et ne touche pas à ton home : tes notes survivent, seul le décor de l’exercice est reconstruit.",
+      "Le bon enchaînement quand tu es coincé tient en quatre temps — à toi de le remettre en ordre dans l’exercice."],
+    ex:{ type:"order", q:"Quand un challenge est cassé ou que tu es coincé, quel est le bon enchaînement ?",
+      items:["Noter ce que tu as déjà essayé", "Relire l’énoncé du challenge", "Redémarrer l’instance du challenge", "Reprendre l’exercice étape par étape"],
+      disp:[1,3,0,2] },
+    why:"Noter avant d’effacer, relire avant de recommencer : le redémarrage remet le décor en place, mais c’est ta méthode qui t’empêche de refaire la même erreur. Un environnement frais + des notes claires = un nouveau départ réel." },
+  { id:"SH-09", t:"Demander de l’aide comme un pro", sub:"SENSAI, la communauté, et l’art de poser une question qui reçoit une réponse.",
+    read:["Personne n’apprend seul. Dans ton espace, un assistant intégré — SENSAI — connaît le contexte du challenge et l’état de ton terminal : il peut t’aiguiller sans faire le travail à ta place. Le module suivant de ce dojo, « Joining the Discord », te branche quant à lui sur la communauté des autres apprenants.",
+      "Mais l’aide ne vaut que par la question. « Ça marche pas » ne permet à personne de t’aider. Ce qui débloque tout : dire ce que tu cherchais à faire, ce que tu as tapé exactement, et ce que tu as vu s’afficher.",
+      "C’est un réflexe de professionnel autant que d’apprenant : au SOC aussi, un signalement précis fait gagner des heures à tout le monde."],
+    ex:{ type:"qcm", q:"Quel message a le plus de chances de te débloquer rapidement ?",
+      opts:["« Ça marche pas, aidez-moi »", "« Je cherche à lancer le programme de /challenge ; j’ai tapé ceci, et voici exactement ce qui s’est affiché »", "« Donnez-moi directement le flag, je suis pressé »"], ok:1 },
+    why:"Objectif, action tentée, résultat observé : avec ces trois éléments, SENSAI ou un humain peut repérer ton erreur en une lecture. Demander le flag, en revanche, ne t’apprendrait rien — et personne ne te le donnera." },
+  { id:"SH-10", t:"L’éthique du hacker", sub:"Les règles du terrain de jeu : apprendre fort, jouer loyal.",
+    read:["Tout ce que tu apprends ici se pratique sur des environnements construits pour ça, avec l’autorisation de leurs concepteurs. C’est ce cadre — et lui seul — qui sépare l’entraînement de l’intrusion.",
+      "Le site a une règle claire, et Nexus Guardian la reprend à son compte : ne publie pas de solutions toutes faites des challenges (writeups, vidéos de résolution). Ces challenges servent aussi à noter de vrais étudiants ; publier les réponses casserait l’apprentissage de tout le monde. Aider quelqu’un à comprendre un concept : oui, toujours. Lui donner la réponse : non.",
+      "Tu sais maintenant te servir de l’atelier : espace de travail, terminal, /challenge, /flag, mode privilégié, home persistant, redémarrage, aide. Le prochain dojo du parcours, Linux Luminarium, t’apprend le métier qui se joue dans le terminal. Bon entraînement, Guardian."],
+    ex:{ type:"qcm", q:"Un ami bloqué sur un challenge te demande la solution complète, prête à copier. Que fais-tu ?",
+      opts:["Tu la lui envoies, entre amis on s’entraide", "Tu lui expliques le concept et tu l’aiguilles sur ce qu’il a déjà essayé, sans donner la réponse", "Tu publies la solution en ligne pour aider tout le monde"], ok:1 },
+    why:"Expliquer un concept fait progresser ; donner la réponse vole l’apprentissage — et publier des solutions est la règle que le site demande explicitement de respecter. C’est aussi ça, la culture hacker : la découverte se partage, pas les flags." }
+];
+/* ---------- Carte des dojos (effectifs relevés sur pwn.college/dojos, 18 nov. 2026) ---------- */
+var DOJO_GS = [
+  { name:"Linux Luminarium", mc:"17 modules · 128 challenges", belt:"blanc", beltTxt:"Récompense : Pingouin blanc",
+    mods:"Hello Hackers (3) · Pondering Paths (8) · Comprehending Commands (15) · Digesting Documentation (7) · File Globbing (10) · Practicing Piping (15) · Shell Variables (8) · Data Manipulation (6) · Processes and Jobs (10) · Untangling Users (4) · Perceiving Permissions (8) · Chaining Commands (12) · Terminal Multiplexing (6) · Pondering PATH (5) · Silly Shenanigans (6) · Daring Destruction (5) · Further Learning (0)",
+    note:"La fondation : maîtriser la ligne de commande Linux en partant de zéro. C’est le dojo d’entrée recommandé par le site." },
+  { name:"Playing With Programs", mc:"4 modules · 116 challenges",
+    mods:"Dealing with Data (19) · Talking Web (36) · Program Misuse (51) · SQL Playground (10)",
+    note:"Interagir avec les programmes : manipuler des données, parler au web, mésuser des programmes (dont l’élévation via les binaires SUID) et jouer avec SQL." },
+  { name:"Computing 101", mc:"13 modules · 132 challenges",
+    mods:"Your First Program (5) · Computer Memory (7) · The Stack (4) · Nibbling on Numbers (8) · Software Introspection (15) · Output and Input (8) · Control Flow (14) · Endian Escapades (8) · Assembly Assortment (11) · The Stack Revisited (9) · Numbers as Strings (24) · Debugging Refresher (8) · Building a Web Server (11)",
+    note:"Programmation bas niveau : assembleur x86-64, mémoire, pile, débogage — jusqu’à construire un serveur web à la main." }
+];
+var DOJO_CORE = [
+  { name:"Intro to Cybersecurity", mc:"7 modules · 183 challenges", belt:"orange", beltTxt:"Ceinture orange",
+    mods:"Web Security (27) · Intercepting Communication (29) · Cryptography (35) · Access Control (19) · Reverse Engineering (39) · Binary Exploitation (21) · Integrated Security (13)",
+    note:"Le cœur du parcours — c’est aussi le cours CSE 365 de l’Arizona State University. Web, réseaux, crypto, contrôle d’accès, rétro-ingénierie, exploitation binaire." },
+  { name:"Program Security", mc:"5 modules · 159 challenges", belt:"jaune", beltTxt:"Ceinture jaune",
+    mods:"Program Security (39) · Reverse Engineering (36) · Return Oriented Programming (30) · Dynamic Allocator Misuse (40) · Program Exploitation (14)",
+    note:"Sécurité des programmes : ROP, mésusage de l’allocateur dynamique (le tas), exploitation." },
+  { name:"System Security", mc:"6 modules · 93 challenges", belt:"verte", beltTxt:"Ceinture verte",
+    mods:"Introduction (0) · Sandboxing (18) · Race Conditions (22) · Kernel Security (24) · Microarchitecture Exploitation (13) · System Exploitation (16)",
+    note:"Du programme isolé au système entier : bacs à sable et évasions, conditions de course, noyau, attaques microarchitecturales type Spectre." },
+  { name:"Software Exploitation", mc:"5 modules · 90 challenges", belt:"bleue", beltTxt:"Ceinture bleue",
+    mods:"Format String Exploits (24) · File Struct Exploits (21) · Exploitation Primitives (20) · Dynamic Allocator Exploitation (17) · Kernel Exploitation (8)",
+    note:"Exploitation avancée de logiciels modernes durcis. Les ceintures se gagnent dans l’ordre ; la brodée n’est expédiée qu’après la bleue." }
+];
+var DOJO_COMM_A = [
+  ["pwn.college Archives","9 modules · 232 challenges","Program Interaction (139) · Talking Web (16) · Program Security Challenges (5) · Reverse Engineering Challenges (14) · Computing 101 (1) · Web Security (1) · Memory Errors (2) · Advanced Exploitation (24) · Assembly Crash Course (30)","Les anciens parcours du site, dont l’Assembly Crash Course archivé."],
+  ["Cryptographic Exploitation","10 modules · 59 challenges annoncés","Introduction (6) · Basic Mathematics (5) · Encrypt Me (1) · RSA (6) · Integrity and Authentication (9) · Block Cipher Exploitation (3) · Pseudo-Random Number Generators (10) · Live Laugh Lattice (9) · ECC (0) · Zero-Knowledge Proofs (0)","Open source. Écart constaté : la somme des modules affichés fait 49, pas 59."],
+  ["Intro to Programming Languages","25 modules · 253 challenges","LecLabs et Projects 1.0 à 5.0 : Linux, C, C++, Scheme, Prolog","Le parcours de cours d’informatique (numérotation CSE240)."],
+  ["The Art of the Shell","5 modules · 55 challenges","The Beginning (3) · Abusing Expansion (22) · Bypassing Input Restrictions (17) · Inputting a Surprise (7) · Other Challenges (6)","Open source. L’art de contourner les restrictions du shell."],
+  ["Intro to Reverse Engineering & Binary Exploitation","8 modules · 33 challenges","C Warmup (5) · Assembly Basics (7) · Looking Inside Programs (7) · Reverse Engineering (6) · Your First Memory Bug (3) · Shellcode (2) · Format Strings (2) · Binary Defenses (1)","Pensé pour débutants ; outils Ghidra et gdb."],
+  ["Web Security — « The Art of Web »","7 modules annoncés · 56 challenges (6 affichés)","Introduction (4) · Authentication and Access Control (2) · Cross-site Scripting (26) · DOM Clobbering (9) · Denial of Service (6) · Server-Side Exploitation (9)","Le dojo de la vidéo que tu m’as montrée : injections, XSS sous toutes ses formes, contournement d’authentification, traversal."],
+  ["DSU Cyber Camps","8 modules · 104 challenges","Using the Dojo (12) · Linux Basics (11) · Python Programming (24) · Encoding (25) · OSINT (4) · Web (12) · PWN/RE (6) · Forensics (10)","Créé par la Dakota State University — l’un des dojos les plus utilisés de la plateforme."],
+  ["Fluffy’s Adventure","8 modules · 28 challenges","Web Security (6) · Cryptography (3) · Hash Cracking (3) · Exploitation (5) · Reverse Engineering (2) · Open Source Intelligence (3) · Forensics (1) · Miscellaneous (5)","Dojo narratif : le renard Fluffy part en quête vers la ceinture bleue."],
+  ["Content Injection","5 modules · 10 challenges","CSV Injection (1) · YAML Injection (3) · JSON Injection (1) · XML Injection (2) · HTML/Javascript Injection (3)","Open source. Tout ce qui se glisse dans un format de données."],
+  ["Privilege Escalation","3 modules · 625 challenges annoncés","SUID (193) · Sudo (357) · Capabilities (7)","En développement. Écart constaté : la somme des modules visibles fait 557, pas 625."],
+  ["Pwndamentals","7 modules · 38 challenges","Stack Exploitation · Return-Oriented Programming · Exploitation Primitives · Kernel Exploitation · Microarchitecture Exploitation · Windows Crash Course · Injection and Hijacking","Agrège des modules d’autres dojos : un dojo de révision."],
+  ["Windows Warzone","2 modules · 17 challenges","Windows Crash Course (8) · Injection and Hijacking (9)",""],
+  ["Pwntools Tutorials","1 module · 12 challenges","Pwntools (12) — niveaux Level 0.0 à 4.0","Apprendre pwntools, la boîte à outils Python des exploitants."],
+  ["The Quarterly Quiz","2 modules · 13 challenges","KylebotFS (4) · V8 Exploitation (9)","Un nouveau module tous les trois mois ; médailles aux trois premiers."],
+  ["Desert CodeSprouts","3 modules · 7 challenges","Web App (3) · Cybersecurity 2026 (3) · Machine Learning (1)","Pour collégiens, sans prérequis : sécurité web, crypto, phishing, chiffrement par substitution."],
+  ["XNU Dojo","6 modules · 61 challenges","Introduction to ARM (15) · ARM64 ROP (13) · Mach IPC (19) · Mach Ports (5) · IOKit (5) · PAC (4)","Le monde Apple : le noyau XNU, issu d’un cours avancé de l’ASU."],
+  ["ARM Architecture","2 modules · 28 challenges","Introduction to ARM (15) · ARM64 ROP (13)","L’architecture des processeurs de ton téléphone."],
+  ["ARM Dojo","1 module · 15 challenges","Introduction to ARM (15) — niveaux Level 1 à 15","Recoupe ARM Architecture : même dépôt, même sujet."],
+  ["Fuzz Dojo","4 modules · 80 challenges","Consent Form (1) · Introduction to Fuzzing (11) · Real World Fuzzing (4) · All Projects (64)","Fuzzing et projets réels (Apache HTTPD, elfutils, PCRE2) ; né d’une étude de recherche."],
+  ["Adversarial Machine Learning Dojo","5 modules · 3 challenges","Prompt Injection (0) · Model Evasion (2) · Model Inversion (0) · Model Extraction (0) · Data Poisoning (1)","Largement en développement : attaquer et piéger les modèles d’IA."],
+  ["Hanto Dojo","7 modules · 44 challenges","Lectures · Flag · Python Jails · Server Side Template Injection · Pickle · Adversarial Machine Learning (12 challenges) · Miscellaneous","Un dojo communautaire très orienté IA et évasions Python."],
+  ["aturt13 Dojo","5 modules · 23 challenges","Blind Format String Exploits (5) · Blind Dynamic Allocator Exploitation (3) · Fuzzing (8) · Limited Primitives (3) · C++ Exploitation (4)","Exploitation avancée, en aveugle."],
+  ["Intro to Forensics Dojo","1 module · 8 challenges","Nom du module non récupéré lors de la cartographie","Forensique numérique : fichiers cachés, stéganographie — un seul pixel peut cacher un message."],
+  ["Lord of OSINT","1 module · 12 challenges","GeoSINT (12) — Crossroads, Distant Shore…","OSINT géographique : retrouver où une photo a été prise."],
+  ["Hacker History","2 modules · 8 challenges","BBS (2) · IRC (6)","Histoire et culture hacker : BBS, IRC, phreaking, lockpicking."],
+  ["DOS Dojo","2 modules · 10 challenges","The Great MS-DOS! (8) · DOS Memory (2)","MS-DOS : installation, disquettes, autoexec.bat, doskey, réseau d’époque."],
+  ["Linux Firmware Rehosting","3 modules · 13 challenges","Noms des modules non récupérés lors de la cartographie","Ré-exécuter des firmwares IoT avec le framework « penguin »."],
+  ["Linux Lunacy","3 modules · 13 challenges","Noms des modules non récupérés lors de la cartographie","Les comportements bizarres — et pertinents pour la sécurité — de Linux."],
+  ["Kernel Exercise Collection","1 module · 6 challenges","Nom du module non récupéré lors de la cartographie","Kernel pwn tiré d’anciens CTF ; en construction."],
+  ["Kitten Playground","1 module · 1 challenge","Hardware Description Language (1)","En construction."],
+  ["RII Router Dojo","1 module · 2 challenges","DIR-868L Emulation and Exploitation (2)","Émulation d’un firmware de routeur et exploitation d’une faille connue."],
+  ["Red Team Dojo","1 module · 3 challenges","Nom du module non récupéré lors de la cartographie","Chaînes d’attaque réalistes : reconnaissance, failles web, élévation de privilèges, mouvement latéral ; en construction."],
+  ["x86 Exploitation","1 module · 8 challenges","Nom du module non récupéré lors de la cartographie","Architecture x86."],
+  ["Honors Dojo","3 entrées · 17, 17 et 11 challenges","Introduction to IRC Servers (6) · Continuous Integration (6) · Web3 Wallet Security Fundamentals (5)","Projets d’étudiants du Barrett Honors College de l’ASU. L’attribution exacte de l’entrée à 11 challenges n’est pas vérifiée."],
+  ["Hunter Dojo","1 module · 4 challenges","babyauto (4)","Découverte automatique de vulnérabilités : analyse statique, fuzzing, exécution symbolique."],
+  ["Hydra Dojo","1 module · 8 challenges","Hydra (8) — Babyspirit, Babycsu, Babyrop, Babysig…","Une série de challenges « baby » progressifs."],
+  ["Kalevala","3 modules · 20 challenges","reverse (9) · kernel (10) · miscellaneous (1)","Par un auteur finlandais ; le nom vient de la mythologie finnoise."],
+  ["PwnTeras","1 module · 9 challenges","Escape Room Crash Course (9)","Encodages (xor, base64, hex, rot13) en format escape room."],
+  ["The House Always Wins","1 module · 9 challenges","Main (9)",""],
+  ["Tyler’s Terrific Trials!","3 modules · 4 challenges","Path Traversal + SQLi + XSS · Cryptography · Reverse Engineering","Démonstrations vidéo de résolution de modules du cours CSE 365 ; effectifs par module non affichés."],
+  ["Westworld Dojo","1 module · 2 challenges","Westworld (2)","Pensé pour débutants."],
+  ["Pancake House","1 module · 1 challenge","Cheese (1)",""],
+  ["imattas dojo","1 module · 1 challenge","PWN and Binary Exploitation (1)",""],
+  ["Amnesia’s Dojo","2 modules · 3 challenges","Welcome (1) · 365 Demo (2)","Challenges pwn pour le cours CSE 365."],
+  ["Defcon 33 Defcon Academy Dojo","4 modules · 7 challenges","Race Against the Machine (1) · Deceit by Design (1) · Linux Legion (4) · Byte-Sized-Basics (1)","Mini-dojo d’initiation créé pour la DEF CON 33."],
+  ["DistrictCon pwn.college Challenges","1 module · 2 challenges","2025 (2) — les niveaux level3 et level4 du village pwn.college",""]
+];
+var DOJO_COMM_B = [
+  ["CTF Archive","110 modules · 861 challenges","Une édition de CTF par module, de CSAW CTF 2011 à SunshineCTF 2021","Une banque de défis classés par catégorie, pas un parcours progressif. Crédit aux auteurs de chaque CTF."],
+  ["ACSAC CTFs","2 modules · 20 challenges annoncés","ACSAC 2025 (10) · ACSAC 2024 (10)","Les statistiques du site en comptent 21."],
+  ["Advent of Pwn","1 module · 12 challenges","Advent of Pwn 2025 — Day 01 à Day 12","Un calendrier de l’avent de challenges."],
+  ["Arizona CTF 2025","5 modules · 23 challenges","Linux (5) · Web Security (4) · Cryptography / Cryptocurrency (5) · Reverse Engineering (5) · Binary Exploitation (4)","Archive du premier Arizona CTF (5 avril 2025)."],
+  ["Academy CTF v2","6 modules · 20 challenges","Misc (4) · Rev (5) · Pwn (3) · Web (3) · Crypto (1) · Hardware (4)","Par les mentorés de la CTF Academy."],
+  ["GCA CTF","8 modules · 104 challenges","Using the Dojo (12) · Linux Basics (11) · Python Programming (24) · Encoding (25) · OSINT (4) · Web (12) · PWN/RE (6) · Forensics (10)","Doublon exact de DSU Cyber Camps : à compter une seule fois."],
+  ["NYITSec CTF 2026","4 modules · 15 challenges","Noms des modules non récupérés lors de la cartographie","CTF d’introduction : Linux, logs, forensique, réseaux, web ; IA autorisée."]
+];
+var DOJO_COMM_C = [
+  ["Cyberguard: Linux Luminarium","17 modules · 128 challenges","Les mêmes 17 modules que Linux Luminarium","Traduction intégrale en portugais du Brésil : pas de contenu nouveau."],
+  ["Demo dojo","1 module · 0 challenge annoncé","cse466-demos","Dépôt temporaire d’exemples pour les cours (24 challenges dans les statistiques du site) : pas un parcours pédagogique."]
+];
+function dojoMapCard(name, mc, mods, note, beltCls, beltTxt){
+  var h = '<div class="card"><div class="row between"><h3 style="margin:0">'+esc(name)+'</h3><span class="tag lock">À venir</span></div>'
+    + '<p style="margin-top:6px">'+esc(mc)+(beltTxt ? ' · <span class="belt '+beltCls+'">'+esc(beltTxt)+'</span>' : '')+'</p>'
+    + '<p class="modlist"><b style="color:var(--txt)">Modules :</b> '+esc(mods)+'</p>';
+  if(note) h += '<p>'+esc(note)+'</p>';
+  return h + '</div>';
+}
+function dojoFinishLesson(lesson, pct){
+  S.dojo.done[lesson.id] = true;
+  if(pct > (S.dojo.best[lesson.id]||0)) S.dojo.best[lesson.id] = pct;
+  if(pct>=100){ S.xp.soc += 20; S.credits += 10; }
+  save();
+}
+function renderDojo(){
+  var root = $("view-dojo");
+  var html = "";
+  /* ---- écran leçon ---- */
+  if(dojoScreen==="lesson" && dojoLessonId){
+    var li = DOJO_LESSONS.map(function(l, i){ return l.id===dojoLessonId ? i : -1; }).filter(function(i){ return i>=0; })[0];
+    var L = DOJO_LESSONS[li];
+    html += '<div class="ghead"><button class="quit" id="djBack" aria-label="Retour">‹</button><div class="ttl">Start Here — leçon '+(li+1)+' / '+DOJO_LESSONS.length+'</div></div>';
+    html += '<div class="stepct">Module · Using the Dojo'+(S.dojo.done[L.id] ? ' · Terminée — meilleur : '+(S.dojo.best[L.id]||0)+' %' : '')+'</div><div class="progressline"><i style="width:'+Math.round(100*dojoDoneCount()/DOJO_LESSONS.length)+'%"></i></div>';
+    html += '<div class="card lessonread"><span class="tag soc">'+L.id+'</span><h3 style="margin-top:8px">'+esc(L.t)+'</h3>';
+    L.read.forEach(function(p){ html += '<p>'+esc(p)+'</p>'; });
+    html += '</div>';
+    if(L.term) html += '<div class="term">'+L.term+'</div>';
+    html += '<div class="alertcard"><div class="jq" style="margin-top:0">Exercice — '+esc(L.ex.q)+'</div>';
+    if(L.ex.type==="qcm"){
+      if(dojoAnswer===null){
+        html += '<div class="jopts">';
+        L.ex.opts.forEach(function(o, oi){ html += '<button data-djopt="'+oi+'">'+esc(o)+'</button>'; });
+        html += '</div>';
+      } else {
+        var goodQ = dojoAnswer===L.ex.ok;
+        html += '<div class="conseq" style="margin-top:12px"><b>'+(goodQ ? "Bonne réponse." : "Pas celle-là — la bonne réponse était : « "+esc(L.ex.opts[L.ex.ok])+" »")+'</b><br>'+esc(L.why)+'</div>';
+        html += '<div class="reward"><div class="rw"><div class="rv" style="color:var(--cyan)">'+(goodQ?"+20":"0")+'</div><div class="rl">XP SOC</div></div><div class="rw"><div class="rv" style="color:var(--orange)">'+(goodQ?"+10":"0")+'</div><div class="rl">Crédits</div></div></div>';
+        html += '<div class="row" style="gap:9px"><button class="btn" style="flex:1" id="djList">Toutes les leçons</button>'
+          + (li < DOJO_LESSONS.length-1 ? '<button class="btn primary" style="flex:1" id="djNext">Leçon suivante</button>' : '<button class="btn primary" style="flex:1" id="djDone">Terminer le dojo</button>') + '</div>';
+      }
+    } else {
+      if(!dojoOrderDone){
+        L.ex.disp.forEach(function(itemIdx){
+          var pos = dojoOrder.indexOf(itemIdx);
+          html += '<button class="ruleitem" data-djitem="'+itemIdx+'" '+(pos>=0?"disabled":"")+'>'+(pos>=0?'<span class="ord">'+(pos+1)+'</span>':'')+esc(L.ex.items[itemIdx])+'</button>';
+        });
+        html += '<div class="row" style="gap:9px;margin-top:10px"><button class="btn" style="flex:1" id="djReset">Recommencer l’ordre</button><button class="btn primary" style="flex:1" id="djGo" '+(dojoOrder.length>=L.ex.items.length?"":"disabled")+'>Valider</button></div>';
+      } else {
+        var posOk = 0;
+        dojoOrder.forEach(function(itemIdx, pos){ if(itemIdx===pos) posOk++; });
+        var pctO = Math.round(100*posOk/L.ex.items.length), goodO = pctO>=100;
+        html += '<div class="conseq" style="margin-top:12px"><b>'+(goodO ? "Ordre parfait." : "Ordre correct à "+pctO+" %. Le bon ordre : "+L.ex.items.map(function(t, i){ return (i+1)+". "+t; }).join(" · "))+'</b><br>'+esc(L.why)+'</div>';
+        html += '<div class="reward"><div class="rw"><div class="rv" style="color:var(--cyan)">'+(goodO?"+20":"0")+'</div><div class="rl">XP SOC</div></div><div class="rw"><div class="rv" style="color:var(--orange)">'+(goodO?"+10":"0")+'</div><div class="rl">Crédits</div></div></div>';
+        html += '<div class="row" style="gap:9px"><button class="btn" style="flex:1" id="djList">Toutes les leçons</button>'
+          + (li < DOJO_LESSONS.length-1 ? '<button class="btn primary" style="flex:1" id="djNext">Leçon suivante</button>' : '<button class="btn primary" style="flex:1" id="djDone">Terminer le dojo</button>') + '</div>';
+      }
+    }
+    html += '</div>';
+    root.innerHTML = html;
+    $("djBack").addEventListener("click", function(){ dojoScreen="start"; dojoLessonId=null; dojoAnswer=null; dojoOrder=[]; dojoOrderDone=false; renderDojo(); });
+    root.querySelectorAll("[data-djopt]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var oi = +b.getAttribute("data-djopt");
+        dojoAnswer = oi;
+        dojoFinishLesson(L, oi===L.ex.ok ? 100 : 0);
+        if(oi===L.ex.ok) sndOk(); else sndBad();
+        renderDojo();
+      });
+    });
+    root.querySelectorAll("[data-djitem]").forEach(function(b){
+      b.addEventListener("click", function(){ dojoOrder.push(+b.getAttribute("data-djitem")); sndTap(); renderDojo(); });
+    });
+    var rs = $("djReset"); if(rs) rs.addEventListener("click", function(){ dojoOrder = []; renderDojo(); });
+    var go = $("djGo"); if(go) go.addEventListener("click", function(){
+      var posOk2 = 0;
+      dojoOrder.forEach(function(itemIdx, pos){ if(itemIdx===pos) posOk2++; });
+      var pct2 = Math.round(100*posOk2/L.ex.items.length);
+      dojoOrderDone = true;
+      dojoFinishLesson(L, pct2);
+      if(pct2>=100) sndOk(); else sndBad();
+      renderDojo(); window.scrollTo(0,0);
+    });
+    var nx = $("djNext"); if(nx) nx.addEventListener("click", function(){ dojoLessonId = DOJO_LESSONS[li+1].id; dojoAnswer = null; dojoOrder = []; dojoOrderDone = false; sndTap(); renderDojo(); window.scrollTo(0,0); });
+    var dn = $("djDone"); if(dn) dn.addEventListener("click", function(){ dojoScreen="start"; dojoLessonId=null; dojoAnswer=null; dojoOrder=[]; dojoOrderDone=false; renderDojo(); window.scrollTo(0,0); });
+    var ls = $("djList"); if(ls) ls.addEventListener("click", function(){ dojoScreen="start"; dojoLessonId=null; dojoAnswer=null; dojoOrder=[]; dojoOrderDone=false; renderDojo(); });
+    return;
+  }
+  /* ---- écran Start Here : liste des leçons ---- */
+  if(dojoScreen==="start"){
+    html += '<div class="ghead"><button class="quit" id="djBack" aria-label="Retour">‹</button><div class="ttl">Start Here</div></div>';
+    html += '<div class="stepct">Premier dojo du parcours · '+dojoDoneCount()+' / '+DOJO_LESSONS.length+' leçons terminées · Sur le site : 2 modules · 10 challenges</div><div class="progressline"><i style="width:'+Math.round(100*dojoDoneCount()/DOJO_LESSONS.length)+'%"></i></div>';
+    html += '<p class="sub">Prise en main de la plateforme : l’espace de travail, le terminal, le programme /challenge, le fichier /flag, l’aide et les règles du jeu. Chaque leçon : une lecture courte, un exercice, un debrief — 20 XP SOC et 10 crédits par exercice réussi.</p>';
+    html += '<h2>Module · Using the Dojo</h2>';
+    DOJO_LESSONS.forEach(function(l, i){
+      var done = !!S.dojo.done[l.id], best = S.dojo.best[l.id]||0;
+      html += '<div class="card"><div class="row between"><span class="tag soc">'+l.id+' · Leçon '+(i+1)+'</span>'+(done ? '<span class="tag '+(best>=100?"done":"")+'">'+(best>=100?"Réussie":"Terminée · "+best+" %")+'</span>' : '')+'</div><h3 style="margin-top:8px">'+esc(l.t)+'</h3><p>'+esc(l.sub)+'</p><button class="btn primary big" data-djlesson="'+l.id+'">'+(done?"Rejouer la leçon":"Commencer la leçon")+'</button></div>';
+    });
+    html += '<h2>Module · Joining the Discord</h2>';
+    html += '<div class="card"><h3>La communauté, sans exercice</h3><p>Sur le site, ce second module ne contient aucun challenge : il sert à rejoindre le serveur Discord de pwn.college pour poser ses questions et rencontrer les autres apprenants. Ici, la leçon 9 — « Demander de l’aide comme un pro » — t’apprend déjà à formuler la question qui débloque.</p></div>';
+    if(dojoDoneCount()>=DOJO_LESSONS.length){
+      html += '<div class="card"><h3>Start Here terminé</h3><p>Tu sais te servir de l’atelier. Prochain dojo à devenir jouable ici : <b style="color:var(--txt)">Linux Luminarium</b> — le terminal, pour de vrai. En attendant, la carte complète est dans l’écran Dojo.</p><button class="btn primary big" id="djToMap">Voir la carte des dojos</button></div>';
+    }
+    root.innerHTML = html;
+    $("djBack").addEventListener("click", function(){ dojoScreen="map"; renderDojo(); });
+    root.querySelectorAll("[data-djlesson]").forEach(function(b){
+      b.addEventListener("click", function(){ dojoLessonId = b.getAttribute("data-djlesson"); dojoAnswer = null; dojoOrder = []; dojoOrderDone = false; dojoScreen = "lesson"; sndTap(); renderDojo(); window.scrollTo(0,0); });
+    });
+    var tm = $("djToMap"); if(tm) tm.addEventListener("click", function(){ dojoScreen="map"; renderDojo(); window.scrollTo(0,0); });
+    return;
+  }
+  /* ---- écran carte ---- */
+  html += '<h1>Le Dojo</h1>';
+  html += '<p class="sub">Le parcours d’entraînement au hacking de <b style="color:var(--txt)">pwn.college</b>, adapté en leçons jouables en français. Les dojos deviennent jouables un par un, dans l’ordre du parcours : <b style="color:var(--txt)">Start Here est déjà là</b>, les autres sont listés avec leurs modules en attendant leur tour.</p>';
+  html += '<div class="card"><div class="row between"><div><span class="tag soc">Getting Started · Premier dojo</span><h3 style="margin-top:6px">Start Here</h3><p>2 modules · 10 challenges sur le site · Ici : '+dojoDoneCount()+' / '+DOJO_LESSONS.length+' leçons terminées</p></div>'+(dojoDoneCount()>=DOJO_LESSONS.length?'<span class="tag done">Terminé</span>':'')+'</div><div class="progressline"><i style="width:'+Math.round(100*dojoDoneCount()/DOJO_LESSONS.length)+'%"></i></div><button class="btn primary big" id="djStart">Entrer dans Start Here</button></div>';
+  html += '<div class="card"><h3>Le parcours conseillé</h3><p>Le site est conçu pour être suivi dans l’ordre — chaque dojo suppose acquis ce que les précédents enseignent. Pour débuter (et préparer Security+ en pratiquant) : <b style="color:var(--txt)">Start Here → Linux Luminarium → Playing With Programs → Computing 101 → Intro to Cybersecurity</b>, puis Web Security et Cryptographic Exploitation selon ton objectif.</p><p>Petite honnêteté : pwn.college est très orienté offensif et bas niveau. Il ne couvre pas la gouvernance, le risque et la conformité (environ 20 % de l’examen Security+) — c’est le Pack Security+ et les missions qui s’en chargent ici.</p></div>';
+  html += '<h2>Getting Started — les bases</h2><p class="sub">4 dojos · 376 challenges. Start Here est jouable ci-dessus ; voici les trois suivants.</p>';
+  DOJO_GS.forEach(function(d){ html += dojoMapCard(d.name, d.mc, d.mods, d.note, d.belt, d.beltTxt); });
+  html += '<h2>Parcours principal — les ceintures</h2><p class="sub">4 dojos · 525 challenges. Les ceintures se gagnent dans l’ordre : orange, jaune, verte, bleue.</p>';
+  DOJO_CORE.forEach(function(d){ html += dojoMapCard(d.name, d.mc, d.mods, d.note, d.belt, d.beltTxt); });
+  html += '<h2>Matériel communautaire</h2><p class="sub">57 entrées · environ 2 900 challenges (avec quelques doublons signalés). Des dojos créés par la communauté : parcours pédagogiques, archives de CTF et cas particuliers.</p>';
+  html += '<h3 style="margin:16px 0 4px">Dojos pédagogiques</h3>';
+  DOJO_COMM_A.forEach(function(d){ html += dojoMapCard(d[0], d[1], d[2], d[3], "", ""); });
+  html += '<h3 style="margin:16px 0 4px">Archives de CTF</h3><p class="sub">Pas de leçons progressives ici : chaque module est une édition de CTF passé — une banque de défis.</p>';
+  DOJO_COMM_B.forEach(function(d){ html += dojoMapCard(d[0], d[1], d[2], d[3], "", ""); });
+  html += '<h3 style="margin:16px 0 4px">Traductions et cas particuliers</h3>';
+  DOJO_COMM_C.forEach(function(d){ html += dojoMapCard(d[0], d[1], d[2], d[3], "", ""); });
+  html += '<div class="card"><h3>Et aussi : les cours</h3><p>Neuf cours de l’Arizona State University importent ce même matériel (CSE 365, CSE 466, CSE 598…) : ce sont les versions universitaires, notées, des dojos ci-dessus.</p></div>';
+  html += '<div class="card"><h3>Source et règles du jeu</h3><p class="dojonote">Parcours et effectifs relevés sur <a href="https://pwn.college/dojos" target="_blank" rel="noopener">pwn.college/dojos</a> le 18 novembre 2026 — quelques écarts d’effectifs constatés sur le site sont signalés sur les cartes concernées, et les noms de modules non récupérés sont indiqués comme tels. Les leçons jouées ici sont des textes originaux écrits pour Nexus Guardian à partir des sujets du programme : aucun texte du site n’est copié, et aucune solution de challenge n’est publiée (pwn.college demande de ne pas publier de writeups — ses challenges notent de vrais étudiants). Les vrais challenges se jouent là-bas, gratuitement, avec un compte.</p></div>';
+  root.innerHTML = html;
+  $("djStart").addEventListener("click", function(){ dojoScreen="start"; sndTap(); renderDojo(); window.scrollTo(0,0); });
 }
 /* ================= COMPTE (FIREBASE AUTH) ================= */
 var firebaseConfig = {
