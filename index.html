@@ -385,6 +385,43 @@ body.authing main{padding-bottom:24px;}
 .lessonread p:first-child{margin-top:2px;}
 .dojonote{font-size:12.5px;color:var(--mut);line-height:1.5;}
 .dojonote a{color:var(--cyan);}
+/* Dojo en grille 3×3 : tuiles compactes pour gagner en place.
+   Police gérée par une échelle resserrée propre au Dojo : titres et textes
+   plus petits dans les tuiles, lecture des leçons inchangée (15px). */
+#view-dojo h1{font-size:20px;line-height:1.25;margin:8px 0 4px;}
+#view-dojo h2{font-size:16px;line-height:1.3;margin:16px 0 6px;}
+#view-dojo h3{line-height:1.3;}
+#view-dojo .sub{font-size:13px;line-height:1.5;}
+#view-dojo .stepct{font-size:12.5px;line-height:1.45;}
+.djgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 4px;}
+.djtile{width:100%;min-height:118px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 8px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;}
+.djtile .dj-name{font-size:12.5px;font-weight:800;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.djtile .dj-meta{font-size:10.5px;color:var(--mut);line-height:1.35;font-variant-numeric:tabular-nums;}
+.djtile .dj-foot{margin-top:auto;font-size:10px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);}
+.djtile .djbar{display:block;width:100%;height:5px;border-radius:99px;background:var(--panel2);border:1px solid var(--line);overflow:hidden;margin-top:2px;}
+.djtile .djbar>i{display:block;height:100%;background:var(--cyan);}
+.djtile.play{border-color:var(--cyan-d);}
+.djtile.play .dj-foot{color:var(--cyan);}
+.djtile.done{border-color:#14532d;}
+.djtile.done .dj-foot{color:var(--green);}
+.djtile.done .djbar>i{background:var(--green);}
+.djtile.lock{opacity:.8;}
+.djtile .belt{font-size:9.5px;padding:1px 6px;}
+.ljgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 4px;}
+.ljtile{width:100%;min-height:104px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 8px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;}
+.ljtile .lj-top{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.ljtile .lj-id{font-size:10px;font-weight:800;color:var(--cyan);letter-spacing:.03em;font-variant-numeric:tabular-nums;}
+.ljtile .lj-st{font-size:10px;font-weight:800;color:var(--mut);font-variant-numeric:tabular-nums;}
+.ljtile.done{border-color:#14532d;}
+.ljtile.done .lj-st{color:var(--green);}
+.ljtile .lj-t{font-size:12px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.ljtile .lj-b{margin-top:auto;font-size:10px;color:var(--mut);font-weight:600;}
+@media (max-width:360px){
+  .djgrid,.ljgrid{gap:6px;}
+  .djtile,.ljtile{padding:8px 6px;min-height:108px;}
+  .djtile .dj-name{font-size:11.5px;}
+  .ljtile .lj-t{font-size:11px;}
+}
 @media (prefers-reduced-motion:reduce){ .netpacket,.netstep,.netcard{transition:none;} }
 @media (min-width:520px){ .zones{gap:11px;} }
 </style>
@@ -4445,12 +4482,34 @@ var DOJO_COMM_C = [
   ["Cyberguard: Linux Luminarium","17 modules · 128 challenges","Les mêmes 17 modules que Linux Luminarium","Traduction intégrale en portugais du Brésil : pas de contenu nouveau."],
   ["Demo dojo","1 module · 0 challenge annoncé","cse466-demos","Dépôt temporaire d’exemples pour les cours (24 challenges dans les statistiques du site) : pas un parcours pédagogique."]
 ];
+var dojoMapReg = [];
 function dojoMapCard(name, mc, mods, note, beltCls, beltTxt){
-  var h = '<div class="card"><div class="row between"><h3 style="margin:0">'+esc(name)+'</h3><span class="tag lock">À venir</span></div>'
-    + '<p style="margin-top:6px">'+esc(mc)+(beltTxt ? ' · <span class="belt '+beltCls+'">'+esc(beltTxt)+'</span>' : '')+'</p>'
-    + '<p class="modlist"><b style="color:var(--txt)">Modules :</b> '+esc(mods)+'</p>';
-  if(note) h += '<p>'+esc(note)+'</p>';
-  return h + '</div>';
+  var idx = dojoMapReg.length;
+  dojoMapReg.push({name:name, mc:mc, mods:mods, note:note, beltCls:beltCls, beltTxt:beltTxt});
+  return '<button class="djtile lock" data-djmap="'+idx+'"><span class="dj-name">'+esc(name)+'</span>'
+    + '<span class="dj-meta">'+esc(mc)+'</span>'
+    + (beltTxt ? '<span class="belt '+beltCls+'">'+esc(beltTxt)+'</span>' : '')
+    + '<span class="dj-foot">À venir · Détails</span></button>';
+}
+function dojoMapSheet(idx){
+  var d = dojoMapReg[idx]; if(!d) return;
+  sheet('<h3>'+esc(d.name)+'</h3><p>'+esc(d.mc)+(d.beltTxt ? ' · '+esc(d.beltTxt) : '')+' · <b style="color:var(--txt)">À venir</b></p><p><b style="color:var(--txt)">Modules :</b> '+esc(d.mods)+'</p>'+(d.note ? '<p>'+esc(d.note)+'</p>' : '')+'<div class="sbtns"><button class="btn primary big" onclick="closeSheet()">Compris</button></div>');
+}
+function dojoPlayTile(id, name, meta, done, total, extra){
+  var pct = total ? Math.round(100*done/total) : 0, fin = done>=total;
+  return '<button class="djtile play'+(fin ? " done" : "")+'" id="'+id+'"><span class="dj-name">'+esc(name)+'</span>'
+    + '<span class="dj-meta">'+esc(meta)+'</span>'
+    + '<span class="dj-meta">Ici : '+done+' / '+total+' leçons</span>'
+    + (extra ? '<span class="dj-meta">'+esc(extra)+'</span>' : '')
+    + '<span class="djbar"><i style="width:'+pct+'%"></i></span>'
+    + '<span class="dj-foot">'+(fin ? "Terminé ✓" : "Entrer ›")+'</span></button>';
+}
+function dojoLessonTile(l, i){
+  var done = !!S.dojo.done[l.id], best = S.dojo.best[l.id]||0;
+  return '<button class="ljtile'+(done ? " done" : "")+'" data-djlesson="'+l.id+'">'
+    + '<span class="lj-top"><span class="lj-id">'+esc(l.id)+'</span><span class="lj-st">'+(done ? (best>=100 ? "✓ 100 %" : best+" %") : "")+'</span></span>'
+    + '<span class="lj-t">'+esc(l.t)+'</span>'
+    + '<span class="lj-b">Leçon '+(i+1)+(done ? (best>=100 ? " · Réussie" : " · Terminée") : "")+'</span></button>';
 }
 function dojoFinishLesson(lesson, pct){
   S.dojo.done[lesson.id] = true;
@@ -4538,10 +4597,9 @@ function renderDojo(){
     html += '<div class="stepct">Premier dojo du parcours · '+dojoDoneCount()+' / '+DOJO_LESSONS.length+' leçons terminées · Sur le site : 2 modules · 10 challenges</div><div class="progressline"><i style="width:'+Math.round(100*dojoDoneCount()/DOJO_LESSONS.length)+'%"></i></div>';
     html += '<p class="sub">Prise en main de la plateforme : l’espace de travail, le terminal, le programme /challenge, le fichier /flag, l’aide et les règles du jeu. Chaque leçon : une lecture courte, un exercice, un debrief — 20 XP SOC et 10 crédits par exercice réussi.</p>';
     html += '<h2>Module · Using the Dojo</h2>';
-    DOJO_LESSONS.forEach(function(l, i){
-      var done = !!S.dojo.done[l.id], best = S.dojo.best[l.id]||0;
-      html += '<div class="card"><div class="row between"><span class="tag soc">'+l.id+' · Leçon '+(i+1)+'</span>'+(done ? '<span class="tag '+(best>=100?"done":"")+'">'+(best>=100?"Réussie":"Terminée · "+best+" %")+'</span>' : '')+'</div><h3 style="margin-top:8px">'+esc(l.t)+'</h3><p>'+esc(l.sub)+'</p><button class="btn primary big" data-djlesson="'+l.id+'">'+(done?"Rejouer la leçon":"Commencer la leçon")+'</button></div>';
-    });
+    html += '<div class="ljgrid">';
+    DOJO_LESSONS.forEach(function(l, i){ html += dojoLessonTile(l, i); });
+    html += '</div>';
     html += '<h2>Module · Joining the Discord</h2>';
     html += '<div class="card"><h3>La communauté, sans exercice</h3><p>Sur le site, ce second module ne contient aucun challenge : il sert à rejoindre le serveur Discord de pwn.college pour poser ses questions et rencontrer les autres apprenants. Ici, la leçon 9 — « Demander de l’aide comme un pro » — t’apprend déjà à formuler la question qui débloque.</p></div>';
     if(dojoDoneCount()>=DOJO_LESSONS.length){
@@ -4560,10 +4618,9 @@ function renderDojo(){
     html += '<div class="ghead"><button class="quit" id="djBack" aria-label="Retour">‹</button><div class="ttl">Linux Luminarium</div></div>';
     html += '<div class="stepct">Deuxième dojo du parcours · '+dojoLLCount()+' / '+DOJO_LL_LESSONS.length+' leçons terminées · Sur le site : 17 modules · 128 challenges · Récompense : Pingouin blanc</div><div class="progressline"><i style="width:'+Math.round(100*dojoLLCount()/DOJO_LL_LESSONS.length)+'%"></i></div>';
     html += '<p class="sub">La fondation : maîtriser la ligne de commande Linux en partant de zéro. Une leçon par module du dojo — lecture courte, terminal simulé, exercice, debrief — 20 XP SOC et 10 crédits par exercice réussi. Les modules les plus sensibles (pièges et destructions) sont abordés côté défense : comprendre le danger pour savoir s’en protéger.</p>';
-    DOJO_LL_LESSONS.forEach(function(l, i){
-      var done = !!S.dojo.done[l.id], best = S.dojo.best[l.id]||0;
-      html += '<div class="card"><div class="row between"><span class="tag soc">'+l.id+' · Module · '+esc(l.mod)+'</span>'+(done ? '<span class="tag '+(best>=100?"done":"")+'">'+(best>=100?"Réussie":"Terminée · "+best+" %")+'</span>' : '')+'</div><h3 style="margin-top:8px">'+esc(l.t)+'</h3><p>'+esc(l.sub)+'</p><button class="btn primary big" data-djlesson="'+l.id+'">'+(done?"Rejouer la leçon":"Commencer la leçon")+'</button></div>';
-    });
+    html += '<div class="ljgrid">';
+    DOJO_LL_LESSONS.forEach(function(l, i){ html += dojoLessonTile(l, i); });
+    html += '</div>';
     if(dojoLLCount()>=DOJO_LL_LESSONS.length){
       html += '<div class="card"><h3>Linux Luminarium terminé</h3><p>La ligne de commande est ton terrain maintenant : chemins, tuyaux, permissions, scripts — et les réflexes de défense qui vont avec. Le dojo suivant, <b style="color:var(--txt)">Playing With Programs</b>, est déjà jouable ici : 17 leçons pour apprendre à parler aux programmes, au web et aux bases de données.</p><button class="btn primary big" id="djToPwp">Entrer dans Playing With Programs</button></div>';
     }
@@ -4582,10 +4639,10 @@ function renderDojo(){
     html += '<p class="sub">Les programmes sont les protocoles du cyberespace : apprendre à interagir avec eux en respectant leur but, puis à leur faire faire ce qu’on veut — et comprendre comment on leur fait faire ce qu’ils ne devraient pas. Quatre modules : les données et leurs encodages, le protocole HTTP parlé à la main, le détournement de programmes SUID, et SQL. Une leçon par thème — lecture courte, terminal simulé, exercice, debrief — 20 XP SOC et 10 crédits par exercice réussi. L’outil fil rouge du dojo sur le site : pwntools, la bibliothèque Python pour dialoguer avec programmes locaux et services distants.</p>';
     var lastMod = "";
     DOJO_PWP_LESSONS.forEach(function(l, i){
-      if(l.mod !== lastMod){ lastMod = l.mod; html += '<h2>Module · '+esc(l.mod)+'</h2>'; }
-      var done = !!S.dojo.done[l.id], best = S.dojo.best[l.id]||0;
-      html += '<div class="card"><div class="row between"><span class="tag soc">'+l.id+' · Module · '+esc(l.mod)+'</span>'+(done ? '<span class="tag '+(best>=100?"done":"")+'">'+(best>=100?"Réussie":"Terminée · "+best+" %")+'</span>' : '')+'</div><h3 style="margin-top:8px">'+esc(l.t)+'</h3><p>'+esc(l.sub)+'</p><button class="btn primary big" data-djlesson="'+l.id+'">'+(done?"Rejouer la leçon":"Commencer la leçon")+'</button></div>';
+      if(l.mod !== lastMod){ if(lastMod) html += '</div>'; lastMod = l.mod; html += '<h2>Module · '+esc(l.mod)+'</h2><div class="ljgrid">'; }
+      html += dojoLessonTile(l, i);
     });
+    if(lastMod) html += '</div>';
     if(dojoPWPCount()>=DOJO_PWP_LESSONS.length){
       html += '<div class="card"><h3>Playing With Programs terminé</h3><p>Tu sais parler aux programmes : encodages, HTTP à la main, détournements SUID compris côté attaque comme côté audit, et SQL jusqu’aux métadonnées. Le dojo suivant, <b style="color:var(--txt)">Computing 101</b>, est déjà jouable ici : 27 leçons pour descendre au niveau du processeur — assembleur, mémoire, pile, débogage — jusqu’à construire un serveur web à la main.</p><button class="btn primary big" id="djToC101">Entrer dans Computing 101</button></div>';
     }
@@ -4604,10 +4661,10 @@ function renderDojo(){
     html += '<p class="sub">L’informatique bas niveau depuis zéro : écrire tes premiers programmes en assembleur x86-64, comprendre la mémoire et la pile, encoder les nombres, déboguer avec GDB, comparer et boucler, convertir texte et nombres — et finir en construisant un serveur web à la main, appel système par appel système. Une leçon par thème, les gros modules découpés (Software Introspection en 3 leçons, Control Flow en 3, Numbers as Strings en 4) — lecture courte, terminal simulé, exercice, debrief — 20 XP SOC et 10 crédits par exercice réussi. Les cours du site sont des vidéos, non transcrites : ces leçons sont construites à partir des sujets des défis.</p>';
     var lastModC = "";
     DOJO_C101_LESSONS.forEach(function(l, i){
-      if(l.mod !== lastModC){ lastModC = l.mod; html += '<h2>Module · '+esc(l.mod)+'</h2>'; }
-      var done = !!S.dojo.done[l.id], best = S.dojo.best[l.id]||0;
-      html += '<div class="card"><div class="row between"><span class="tag soc">'+l.id+' · Module · '+esc(l.mod)+'</span>'+(done ? '<span class="tag '+(best>=100?"done":"")+'">'+(best>=100?"Réussie":"Terminée · "+best+" %")+'</span>' : '')+'</div><h3 style="margin-top:8px">'+esc(l.t)+'</h3><p>'+esc(l.sub)+'</p><button class="btn primary big" data-djlesson="'+l.id+'">'+(done?"Rejouer la leçon":"Commencer la leçon")+'</button></div>';
+      if(l.mod !== lastModC){ if(lastModC) html += '</div>'; lastModC = l.mod; html += '<h2>Module · '+esc(l.mod)+'</h2><div class="ljgrid">'; }
+      html += dojoLessonTile(l, i);
     });
+    if(lastModC) html += '</div>';
     html += '<div class="card"><h3>Deux défis non disponibles</h3><p>Le module Debugging Refresher compte 8 défis sur le site, mais les deux derniers — annoncés sous les titres « Modifying Execution » et « Broken Functions » — sont verrouillés tant que leurs prérequis ne sont pas résolus là-bas. Leur contenu n’a pas pu être récupéré : la leçon C101-25 couvre les 6 défis lisibles et signale les deux autres, sans rien inventer à leur place.</p></div>';
     if(dojoC101Count()>=DOJO_C101_LESSONS.length){
       html += '<div class="card"><h3>Computing 101 terminé</h3><p>Tu as traversé la machine de bas en haut : registres, mémoire, pile, nombres, débogage, flux de contrôle, conversions — et un serveur web construit appel système par appel système. Le dojo suivant du parcours, <b style="color:var(--txt)">Intro to Cybersecurity</b>, est déjà jouable ici : 29 leçons pour attaquer — et comprendre — le web, les réseaux, la crypto, les accès, les binaires.</p><button class="btn primary big" id="djToIcs">Entrer dans Intro to Cybersecurity</button></div>';
@@ -4627,10 +4684,10 @@ function renderDojo(){
     html += '<p class="sub">Le cœur du parcours — c’est aussi le cours CSE 365 de l’Arizona State University. Sept modules : la sécurité web (traversée, injections, XSS, CSRF), l’interception des communications (scan, paquets fabriqués, usurpation, homme du milieu), la cryptographie (XOR, AES, Diffie-Hellman, RSA, TLS), le contrôle d’accès POSIX et MAC, la rétro-ingénierie d’un format de fichier, l’exploitation binaire, et des défis intégrés qui mélangent tout. Les gros modules sont découpés en plusieurs leçons — lecture courte, terminal simulé sur certaines, exercice, debrief — 20 XP SOC et 10 crédits par exercice réussi. Les cours du site sont des vidéos, non transcrites : ces leçons sont construites à partir des sujets des défis.</p>';
     var lastModI = "";
     DOJO_ICS_LESSONS.forEach(function(l, i){
-      if(l.mod !== lastModI){ lastModI = l.mod; html += '<h2>Module · '+esc(l.mod)+'</h2>'; }
-      var done = !!S.dojo.done[l.id], best = S.dojo.best[l.id]||0;
-      html += '<div class="card"><div class="row between"><span class="tag soc">'+l.id+' · Module · '+esc(l.mod)+'</span>'+(done ? '<span class="tag '+(best>=100?"done":"")+'">'+(best>=100?"Réussie":"Terminée · "+best+" %")+'</span>' : '')+'</div><h3 style="margin-top:8px">'+esc(l.t)+'</h3><p>'+esc(l.sub)+'</p><button class="btn primary big" data-djlesson="'+l.id+'">'+(done?"Rejouer la leçon":"Commencer la leçon")+'</button></div>';
+      if(l.mod !== lastModI){ if(lastModI) html += '</div>'; lastModI = l.mod; html += '<h2>Module · '+esc(l.mod)+'</h2><div class="ljgrid">'; }
+      html += dojoLessonTile(l, i);
     });
+    if(lastModI) html += '</div>';
     html += '<div class="card"><h3>Cinq défis non disponibles : Secure Chat 1 à 5</h3><p>Le module Integrated Security compte 13 défis sur le site, dont la série Secure Chat 1–5. Ces cinq défis n’ont <b style="color:var(--txt)">aucun texte de description</b> sur leurs pages — seulement les contrôles de lancement : leur contenu vit dans l’espace de travail du site et n’a pas pu être récupéré en lecture. Ils sont donc signalés ici comme non disponibles, sans rien inventer à leur place ; les huit autres défis du module sont couverts par la leçon ICS-29.</p></div>';
     if(dojoICSCount()>=DOJO_ICS_LESSONS.length){
       html += '<div class="card"><h3>Intro to Cybersecurity terminé</h3><p>Web, réseaux, crypto, contrôle d’accès, rétro-ingénierie, exploitation binaire — et la capacité de les combiner : c’est le socle de la ceinture orange. Le dojo suivant du parcours principal, <b style="color:var(--txt)">Program Security</b> (ceinture jaune), est sur la carte en attendant sa version jouable ici.</p><button class="btn primary big" id="djToMap3">Voir la carte des dojos</button></div>';
@@ -4644,25 +4701,38 @@ function renderDojo(){
     return;
   }
   /* ---- écran carte ---- */
+  dojoMapReg = [];
   html += '<h1>Le Dojo</h1>';
   html += '<p class="sub">Le parcours d’entraînement au hacking de <b style="color:var(--txt)">pwn.college</b>, adapté en leçons jouables en français. Les dojos deviennent jouables un par un, dans l’ordre du parcours : <b style="color:var(--txt)">Start Here, Linux Luminarium, Playing With Programs, Computing 101 et Intro to Cybersecurity sont déjà là</b>, les autres sont listés avec leurs modules en attendant leur tour.</p>';
-  html += '<div class="card"><div class="row between"><div><span class="tag soc">Getting Started · Premier dojo</span><h3 style="margin-top:6px">Start Here</h3><p>2 modules · 10 challenges sur le site · Ici : '+dojoDoneCount()+' / '+DOJO_LESSONS.length+' leçons terminées</p></div>'+(dojoDoneCount()>=DOJO_LESSONS.length?'<span class="tag done">Terminé</span>':'')+'</div><div class="progressline"><i style="width:'+Math.round(100*dojoDoneCount()/DOJO_LESSONS.length)+'%"></i></div><button class="btn primary big" id="djStart">Entrer dans Start Here</button></div>';
-  html += '<div class="card"><div class="row between"><div><span class="tag soc">Getting Started · Deuxième dojo</span><h3 style="margin-top:6px">Linux Luminarium</h3><p>17 modules · 128 challenges sur le site · Ici : '+dojoLLCount()+' / '+DOJO_LL_LESSONS.length+' leçons terminées · <span class="belt blanc">Récompense : Pingouin blanc</span></p></div>'+(dojoLLCount()>=DOJO_LL_LESSONS.length?'<span class="tag done">Terminé</span>':'')+'</div><div class="progressline"><i style="width:'+Math.round(100*dojoLLCount()/DOJO_LL_LESSONS.length)+'%"></i></div><button class="btn primary big" id="djLum">Entrer dans Linux Luminarium</button></div>';
-  html += '<div class="card"><div class="row between"><div><span class="tag soc">Getting Started · Troisième dojo</span><h3 style="margin-top:6px">Playing With Programs</h3><p>4 modules · 116 challenges sur le site · Ici : '+dojoPWPCount()+' / '+DOJO_PWP_LESSONS.length+' leçons terminées</p></div>'+(dojoPWPCount()>=DOJO_PWP_LESSONS.length?'<span class="tag done">Terminé</span>':'')+'</div><div class="progressline"><i style="width:'+Math.round(100*dojoPWPCount()/DOJO_PWP_LESSONS.length)+'%"></i></div><button class="btn primary big" id="djPwp">Entrer dans Playing With Programs</button></div>';
-  html += '<div class="card"><div class="row between"><div><span class="tag soc">Getting Started · Quatrième dojo</span><h3 style="margin-top:6px">Computing 101</h3><p>13 modules · 132 challenges sur le site · Ici : '+dojoC101Count()+' / '+DOJO_C101_LESSONS.length+' leçons terminées</p></div>'+(dojoC101Count()>=DOJO_C101_LESSONS.length?'<span class="tag done">Terminé</span>':'')+'</div><div class="progressline"><i style="width:'+Math.round(100*dojoC101Count()/DOJO_C101_LESSONS.length)+'%"></i></div><button class="btn primary big" id="djC101">Entrer dans Computing 101</button></div>';
-  html += '<div class="card"><div class="row between"><div><span class="tag soc">Parcours principal · Cinquième dojo</span><h3 style="margin-top:6px">Intro to Cybersecurity</h3><p>7 modules · 183 challenges sur le site · Ici : '+dojoICSCount()+' / '+DOJO_ICS_LESSONS.length+' leçons terminées · <span class="belt orange">Ceinture orange</span></p></div>'+(dojoICSCount()>=DOJO_ICS_LESSONS.length?'<span class="tag done">Terminé</span>':'')+'</div><div class="progressline"><i style="width:'+Math.round(100*dojoICSCount()/DOJO_ICS_LESSONS.length)+'%"></i></div><button class="btn primary big" id="djIcs">Entrer dans Intro to Cybersecurity</button></div>';
+  html += '<div class="djgrid">'
+    + dojoPlayTile("djStart", "Start Here", "2 modules · 10 challenges", dojoDoneCount(), DOJO_LESSONS.length, "Premier dojo")
+    + dojoPlayTile("djLum", "Linux Luminarium", "17 modules · 128 challenges", dojoLLCount(), DOJO_LL_LESSONS.length, "Récompense : Pingouin blanc")
+    + dojoPlayTile("djPwp", "Playing With Programs", "4 modules · 116 challenges", dojoPWPCount(), DOJO_PWP_LESSONS.length, "")
+    + dojoPlayTile("djC101", "Computing 101", "13 modules · 132 challenges", dojoC101Count(), DOJO_C101_LESSONS.length, "")
+    + dojoPlayTile("djIcs", "Intro to Cybersecurity", "7 modules · 183 challenges", dojoICSCount(), DOJO_ICS_LESSONS.length, "Ceinture orange")
+    + '</div>';
   html += '<div class="card"><h3>Le parcours conseillé</h3><p>Le site est conçu pour être suivi dans l’ordre — chaque dojo suppose acquis ce que les précédents enseignent. Pour débuter (et préparer Security+ en pratiquant) : <b style="color:var(--txt)">Start Here → Linux Luminarium → Playing With Programs → Computing 101 → Intro to Cybersecurity</b>, puis Web Security et Cryptographic Exploitation selon ton objectif.</p><p>Petite honnêteté : pwn.college est très orienté offensif et bas niveau. Il ne couvre pas la gouvernance, le risque et la conformité (environ 20 % de l’examen Security+) — c’est le Pack Security+ et les missions qui s’en chargent ici.</p></div>';
   html += '<h2>Getting Started — les bases</h2><p class="sub">4 dojos · 376 challenges. Les quatre sont jouables ci-dessus : Start Here, Linux Luminarium, Playing With Programs et Computing 101.</p>';
+  html += '<div class="djgrid">';
   DOJO_GS.forEach(function(d){ html += dojoMapCard(d.name, d.mc, d.mods, d.note, d.belt, d.beltTxt); });
+  html += '</div>';
   html += '<h2>Parcours principal — les ceintures</h2><p class="sub">4 dojos · 525 challenges. Les ceintures se gagnent dans l’ordre : orange, jaune, verte, bleue. Intro to Cybersecurity (orange) est jouable ci-dessus ; les trois autres arrivent un par un.</p>';
+  html += '<div class="djgrid">';
   DOJO_CORE.forEach(function(d){ html += dojoMapCard(d.name, d.mc, d.mods, d.note, d.belt, d.beltTxt); });
+  html += '</div>';
   html += '<h2>Matériel communautaire</h2><p class="sub">57 entrées · environ 2 900 challenges (avec quelques doublons signalés). Des dojos créés par la communauté : parcours pédagogiques, archives de CTF et cas particuliers.</p>';
   html += '<h3 style="margin:16px 0 4px">Dojos pédagogiques</h3>';
+  html += '<div class="djgrid">';
   DOJO_COMM_A.forEach(function(d){ html += dojoMapCard(d[0], d[1], d[2], d[3], "", ""); });
+  html += '</div>';
   html += '<h3 style="margin:16px 0 4px">Archives de CTF</h3><p class="sub">Pas de leçons progressives ici : chaque module est une édition de CTF passé — une banque de défis.</p>';
+  html += '<div class="djgrid">';
   DOJO_COMM_B.forEach(function(d){ html += dojoMapCard(d[0], d[1], d[2], d[3], "", ""); });
+  html += '</div>';
   html += '<h3 style="margin:16px 0 4px">Traductions et cas particuliers</h3>';
+  html += '<div class="djgrid">';
   DOJO_COMM_C.forEach(function(d){ html += dojoMapCard(d[0], d[1], d[2], d[3], "", ""); });
+  html += '</div>';
   html += '<div class="card"><h3>Et aussi : les cours</h3><p>Neuf cours de l’Arizona State University importent ce même matériel (CSE 365, CSE 466, CSE 598…) : ce sont les versions universitaires, notées, des dojos ci-dessus.</p></div>';
   html += '<div class="card"><h3>Source et règles du jeu</h3><p class="dojonote">Parcours et effectifs relevés sur <a href="https://pwn.college/dojos" target="_blank" rel="noopener">pwn.college/dojos</a> le 18 novembre 2026 — quelques écarts d’effectifs constatés sur le site sont signalés sur les cartes concernées, et les noms de modules non récupérés sont indiqués comme tels. Les leçons jouées ici sont des textes originaux écrits pour Nexus Guardian à partir des sujets du programme : aucun texte du site n’est copié, et aucune solution de challenge n’est publiée (pwn.college demande de ne pas publier de writeups — ses challenges notent de vrais étudiants). Les vrais challenges se jouent là-bas, gratuitement, avec un compte.</p></div>';
   root.innerHTML = html;
@@ -4671,6 +4741,7 @@ function renderDojo(){
   $("djPwp").addEventListener("click", function(){ dojoScreen="pwp"; sndTap(); renderDojo(); window.scrollTo(0,0); });
   $("djC101").addEventListener("click", function(){ dojoScreen="c101"; sndTap(); renderDojo(); window.scrollTo(0,0); });
   $("djIcs").addEventListener("click", function(){ dojoScreen="ics"; sndTap(); renderDojo(); window.scrollTo(0,0); });
+  root.querySelectorAll("[data-djmap]").forEach(function(b){ b.addEventListener("click", function(){ sndTap(); dojoMapSheet(+b.getAttribute("data-djmap")); }); });
 }
 /* ================= COMPTE (FIREBASE AUTH) ================= */
 var firebaseConfig = {
