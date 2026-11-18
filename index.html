@@ -343,6 +343,35 @@ body.authing main{padding-bottom:24px;}
 .simitem.sel{border-color:var(--cyan);background:rgba(0,209,255,.10);}
 .simitem .given{margin-left:auto;flex:none;font-size:12.5px;font-weight:800;color:var(--cyan);}
 .savewarn{background:rgba(224,49,49,.12);border:1px solid #7a2430;border-radius:12px;padding:11px 13px;font-size:14px;margin:10px 0;}
+/* ---------- concepts réseau animés ---------- */
+.netgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.netcard{background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:10px 9px 11px;text-align:left;width:100%;display:flex;flex-direction:column;gap:7px;transition:opacity .35s,border-color .3s,box-shadow .3s;min-height:0;}
+.netcard.dim{opacity:.36;}
+.netcard.active{border-color:#9775fa;box-shadow:0 0 0 1px #9775fa,0 0 18px rgba(151,117,250,.35);}
+.netcard .nhead{display:flex;align-items:baseline;gap:6px;}
+.netcard .nnum{font-size:11px;font-weight:900;color:#9775fa;font-variant-numeric:tabular-nums;letter-spacing:.04em;}
+.netcard .ntitle{font-size:14.5px;font-weight:900;letter-spacing:.02em;}
+.netcard .nplay{margin-left:auto;flex:none;font-size:10.5px;font-weight:800;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:2px 7px;}
+.netcard.active .nplay{color:#d0bfff;border-color:#9775fa;}
+.netdiag{position:relative;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 6px 8px;min-height:64px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
+.netnodes{display:flex;align-items:center;gap:3px;position:relative;z-index:2;}
+.netnode{flex:1 1 0;min-width:0;background:#16223f;border:1px solid var(--line);border-radius:7px;padding:4px 3px;font-size:9.5px;font-weight:700;line-height:1.15;text-align:center;color:var(--txt);word-break:break-word;}
+.netnode.wide{font-size:9px;font-family:ui-monospace,Menlo,monospace;}
+.nettrack{flex:none;width:9px;height:2px;background:var(--line);position:relative;border-radius:99px;}
+.netpacket{position:absolute;left:6%;top:50%;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;background:#9775fa;box-shadow:0 0 8px #9775fa;opacity:0;transition:left .55s ease,opacity .25s;z-index:3;}
+.netcard.active .netpacket{opacity:1;}
+.netsteps{min-height:52px;display:flex;flex-direction:column;gap:4px;}
+.netstep{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;line-height:1.3;background:rgba(112,72,232,.14);border:1px solid rgba(151,117,250,.35);color:#e5dbff;border-radius:7px;padding:3px 6px;opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;word-break:break-word;}
+.netstep.on{opacity:1;transform:none;}
+.netstep.ok{border-color:rgba(18,184,134,.55);background:rgba(18,184,134,.12);color:#c3fae8;}
+.netstep.ko{border-color:rgba(224,49,49,.55);background:rgba(224,49,49,.12);color:#ffe3e3;}
+.netphrase{font-size:12px;line-height:1.35;color:var(--mut);margin:0;}
+.netcard.active .netphrase{color:var(--txt);}
+.netexplain{grid-column:1/-1;display:none;background:rgba(112,72,232,.10);border:1.5px solid #9775fa;border-radius:12px;padding:12px 13px;}
+.netexplain.on{display:block;}
+.netexplain .netexp-t{font-size:12.5px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:#d0bfff;margin-bottom:5px;}
+.netexplain p{margin:0;font-size:13.5px;line-height:1.55;color:var(--txt);}
+@media (prefers-reduced-motion:reduce){ .netpacket,.netstep,.netcard{transition:none;} }
 @media (min-width:520px){ .zones{gap:11px;} }
 </style>
 </head>
@@ -527,6 +556,7 @@ $("soundBtn").addEventListener("click", function(){ S.sound=!S.sound; save(); if
 /* ================= NAVIGATION ================= */
 var curView="hub";
 function show(view){
+  if(view!=="pack" && typeof stopNetAnim==="function") stopNetAnim();
   curView=view;
   document.querySelectorAll(".view").forEach(function(v){ v.classList.remove("on"); });
   $("view-"+view).classList.add("on");
@@ -2048,7 +2078,7 @@ function renderHelp(){
   html += '<h3>Mission 1 — « Alerte à 03h12 » (prologue)</h3><p>La Mission 1 est l\'ouverture du jeu : elle remplace l\'ancien cold open et constitue aussi l\'<b>épisode 1 Atlas</b> de la mini-campagne — un seul contenu, pas de doublon. Le mini-jeu de tri d\'alertes reste, lui, l\'outil d\'entraînement au tri. Dans l\'histoire, tu as <b>45 minutes de temps de jeu (accéléré)</b> avant la relève de <b>04h00</b> ; en vrai, la mission dure environ <b>12 minutes</b>. Modes : <b>guidé</b> la première fois, <b>normal</b> ensuite — en normal, aucune couleur de verdict avant le debrief.</p><p>Elle se déroule en <b>sept phases</b> :</p><ul><li><b>1 · Briefing et tri</b> : trois alertes au format neutre (sauvegarde nocturne, PowerShell encodé, scan de ports). Tu les classes — faux positif, à surveiller, escalader — et tu choisis laquelle ouvrir en premier.</li><li><b>2 · Corrélation</b> : le détail de l\'alerte PowerShell montre son processus parent (WINWORD.EXE) ; le journal de la nuit et la boîte mail permettent de relier l\'e-mail de paie de 22:41 à l\'alerte de 03:09, en citant l\'indice qui le prouve.</li><li><b>3 · Décision n°1</b> : 60 secondes pour choisir — isoler CE-07, observer dix minutes, ou bloquer seulement le domaine. Chaque choix a sa conséquence, racontée tout de suite, puis tu cites l\'indice qui défend ta décision et ce qui te ferait changer d\'avis.</li><li><b>4 · Enquête</b> : le journal élargi révèle le transfert du document et un second poste, CE-03. Élargir ou non change la suite.</li><li><b>5 · Éradication</b> : tu ordonnes toi-même les actions — réinitialiser le compte de service, bloquer le domaine, supprimer la tâche planifiée « MajService », et restaurer seulement à la fin.</li><li><b>6 · Communication</b> : Inès demande cinq lignes à la direction. Tu composes le message en choisissant cinq phrases parmi huit ; elles sont jugées sur le fond — faits vérifiés, impact métier, transparence, demande claire — jamais sur le style. La spéculation, le blâme et les promesses non fondées coûtent des points.</li><li><b>7 · Debrief</b> : score sur <b>cinq axes</b> (voir ci-dessous), retour personnalisé selon ce que tu as réellement fait, et <b>cartes de révision générées</b> ajoutées au Cyberdex (C2-01, C2-03, C4-01, C4-02, C4-03, C4-04, C5-07) quand une erreur précise appelle une fiche précise.</li></ul><p><b>Le score sur 100 — cinq axes :</b> Détection 25 (classer les trois alertes, ouvrir la bonne en premier, retrouver l\'e-mail d\'origine) · Réaction 25 (décision n°1 défendable, enquête élargie jusqu\'à CE-03, éradication avant restauration) · Raisonnement 20 (indice cité, ce qui te ferait changer d\'avis, vérifications avant de conclure) · Communication 15 (message de cinq lignes pertinent, ton factuel) · Précision 15 (aucune action inutile, aucun faux positif escaladé, budget d\'actions respecté). <b>Paliers :</b> 85 et plus, excellent · 70 à 84, solide · 50 à 69, à consolider · moins de 50, à retenter. Une réussite avec plusieurs aides fait avancer l\'histoire mais ne compte pas comme preuve de maîtrise, et les aides utilisées sont affichées au debrief. L\'aide essentielle d\'Amara reste gratuite ; en Mode Examen, aucun indice, comme partout.</p><p><b>Les trois variantes</b> rejouent la même nuit avec d\'autres points d\'entrée : <b>A · Le chef d\'équipe</b> (le faux e-mail de paie, objectifs Security+ 2.2, 2.4, 4.4, 4.8, 4.9) ; <b>B · Le faux fournisseur</b> (Nadia Perrin à la comptabilité, une fausse page de connexion, une règle de transfert et un virement de 48 000 € programmé à 8 h — décision clé : révoquer sessions et règle, pas seulement le mot de passe, puis suspendre le virement et vérifier hors canal ; objectifs 2.2, 2.4, 4.4, 4.6, 4.8) ; <b>C · La clé du parking</b> (Kevin et la clé USB « Salaires 2026 » — double extension, tentatives SMB vers douze postes, décision d\'isolation proportionnée et culture du signalement ; objectifs 2.2, 2.4, 3.2, 4.8). Rejouer n\'importe quelle variante rapporte <b>plein pot</b> : pas de récompense dégressive, ce sont les situations qui changent.</p>';
   html += '<h3>Mini-campagne — La nuit d\'ÉCLIPSE</h3><p>Depuis l\'accueil, le bouton <b>Ouvrir la campagne</b> mène à l\'écran de campagne : quatre chapitres, une barre de progression, et l\'état de chacun — terminé, disponible ou verrouillé.</p><ul><li><b>Épisode 1 — Atlas Logistics</b> : la Mission 1 « Alerte à 03h12 », variante A, dans son déroulé complet (voir la section Mission 1 ci-dessus). Dans l\'histoire, tu as <b>45 minutes de temps de jeu (accéléré)</b> avant la relève de <b>04h00</b> — en vrai, la mission dure environ <b>12 minutes</b>. L\'horloge est celle du récit, pas un minuteur de plus : le chrono de jeu reste celui affiché en mission.</li><li><b>Épisode 2 — Clinique Saint-Roch</b> : mêmes réflexes, autre contrainte — les urgences et les dossiers patients ne peuvent pas s\'arrêter. Chaque décision de confinement affiche son <b>impact métier</b> avant de choisir : protéger ne veut jamais dire tout bloquer. Le debrief parle continuité des soins, sauvegardes testées et confidentialité des données de santé. Attention : l\'épreuve différée se déroule aussi à Saint-Roch, mais c\'est un autre scénario, court — un retest des notions, pas une redite de l\'épisode.</li><li><b>Épisode 3 — Mairie de Nexus City</b> : les services aux habitants sont frappés et informer les habitants est obligatoire. Le compteur <b>Confiance des habitants</b> reste visible pendant tout l\'épisode et bouge à chaque décision : chaque heure de retard et chaque message maladroit coûtent, la transparence mesurée rapporte. En cours d\'épisode, un journaliste demande un point de situation : à toi de choisir quoi répondre, avec les seuls faits vérifiés. Le debrief parle communication de crise, notification des autorités et continuité des services publics.</li><li><b>Finale — Le retour d\'ÉCLIPSE</b> : verrouillée tant que les épisodes 1 à 3 ne sont pas terminés. La même nuit, les trois organisations sont frappées ensemble : diversion, force brute, chiffrement, revendication publique. Tu y réutilises tout — tri, phishing, confinement, communication. Le debrief final est un <b>debrief de campagne complet</b> : la mémoire de la ville, le bilan des quatre chapitres, les décisions qui ont compté et la préparation estimée mise à jour.</li></ul><p>Chaque épisode rapporte XP et crédits comme une mission, bonus de première fois compris. Un épisode terminé peut toujours être rejoué — la campagne entière aussi, une fois la finale bouclée.</p>';
   html += '<h3>La ville se souvient : améliorations, confiance, faiblesses</h3><p>La mini-campagne a une mémoire, affichée sur l\'écran de campagne :</p><ul><li><b>Améliorations durables</b> (40 crédits chacune, installables depuis l\'écran de campagne, l\'écran Missions ou le debrief d\'un épisode) : <b>Journalisation renforcée</b> — un indice supplémentaire apparaît dans un épisode ultérieur et en finale ; <b>MFA généralisée</b> — la force brute bute sur le second facteur, un compte compromis de moins à gérer ; <b>Sauvegardes 3-2-1 vérifiées</b> — la restauration devient une procédure testée, plus rapide, avec moins de dégâts. Quand un effet s\'applique pendant un épisode, le jeu le dit explicitement, au moment où il sert.</li><li><b>Confiance par organisation</b> (Atlas, Clinique, Mairie) : elle monte ou baisse selon tes décisions et reste affichée sur l\'écran de campagne. En finale, une confiance haute fait partager les journaux volontiers — un indice de plus ; une confiance basse ajoute une étape de persuasion.</li><li><b>Faiblesses connues</b> : la finale lit ce qui n\'a <b>pas</b> été installé et construit le chemin d\'attaque d\'ÉCLIPSE à partir de ces manques — pas de journalisation, il revient par les angles morts ; pas de MFA, par un mot de passe ; pas de sauvegardes testées, la restauration devient une découverte en pleine nuit. L\'écran d\'introduction de la finale te montre ce chemin avant de commencer.</li></ul><p><b>Le garde-fou, absolu :</b> aucune ancienne décision ne peut rendre la campagne impossible. Sans aucune amélioration et avec une confiance basse, chaque épisode et la finale restent terminables par un autre chemin — plus lent, plus pénible, jamais bloqué. Les conséquences créent des histoires différentes, elles ne condamnent pas le joueur. En finale, les améliorations installées ajoutent jusqu\'à 12 points de « mémoire de la ville » au barème : un bonus, jamais une condition.</p>';
-  html += '<h3>Pack Security+</h3><p>Le Pack Security+ est l\'espace d\'entraînement hors mission, accessible depuis l\'accueil, l\'écran Missions ou le Menu. Cinq sections :</p><ul><li><b>Scénarios éclair</b> : 18 situations courtes (3 à 5 minutes), une décision à prendre, puis un debrief avec le « pourquoi » et la carte de révision liée. Ils couvrent les cinq domaines Security+ et renvoient aux notions des missions (l\'objectif, par exemple 2.2 ou 4.8, est affiché sur chaque scénario). Une bonne décision rapporte 20 XP dans le domaine concerné et 10 crédits ; une erreur fait revenir la carte liée tout de suite dans la file de révision. Rejouer rapporte plein pot, comme partout : aucune récompense dégressive.</li><li><b>Cartes de révision</b> : les 40 cartes C1-01 à C5-08, question d\'un côté, réponse de l\'autre — touche la carte pour la retourner, puis dis honnêtement « Je sais » ou « À revoir ». Les cartes reviennent à <b>intervalles espacés : 1, 3, 7, 14 puis 30 jours</b> quand tu les sais, et dès le lendemain quand tu hésites. C\'est la répétition espacée : revoir juste avant d\'oublier ancre bien mieux que tout relire la veille. Les 7 cartes générées par la Mission 1 (C2-01, C2-03, C4-01, C4-02, C4-03, C4-04, C5-07) font partie de ce même jeu de 40 — pas de doublon : une erreur en mission rend la carte correspondante due ici, et les scénarios renvoient vers leur carte liée. Le filtre « À revoir » ne montre que les cartes dues ; « Toutes » permet de réviser en avance, par domaine si tu veux.</li><li><b>Mini-examen blanc</b> : 10 questions à choix unique, une par thème, suivies d\'une <b>simulation pare-feu</b> (une PBQ : placer quatre règles dans le bon ordre — web vers la DMZ autorisé, RDP depuis Internet refusé, navigation des employés autorisée, refus par défaut en dernier). Aucune correction pendant l\'épreuve : tout arrive à la fin, question par question, avec un bouton vers la carte à revoir. Barème : 10 points de questions + 5 points de simulation (1 par règle bien placée, 1 pour la règle par défaut en dernier). <b>Seuil d\'entraînement : plus de 80 %</b> — en dessous, continue les examens blancs avant de passer aux examens complets du jeu. Chaque tentative rapporte 30 XP SOC et 15 crédits, quel que soit le score.</li><li><b>Simulations PBQ</b> : trois mini-simulations en plus de la simulation pare-feu du mini-examen — remettre les <b>étapes d\'une réponse à incident</b> dans l\'ordre (préparation, détection, analyse, confinement, éradication, récupération, retour d\'expérience), <b>classer des contrôles</b> par type (préventif, détectif, correctif, directif), et <b>associer des menaces à leur nom</b> (phishing, spear phishing, whaling, vishing, smishing, password spraying, credential stuffing). Même présentation que le mini-examen : score en pourcentage, <b>seuil d\'entraînement de 80 %</b>, corrections une par une et bouton vers la carte à revoir (C4-03 et C4-04, C1-02, ou C2-01, C2-02 et C2-04 selon la simulation). Chaque simulation rapporte 15 XP SOC et 10 crédits.</li><li><b>Parcours 12 semaines</b> : le plan de préparation complet — fondations (semaines 1–2), menaces (3–4), architecture (5–6), opérations (7–8), gouvernance (9), points faibles (10), examens blancs (11), dernière ligne droite (12). La progression de chaque bloc se remplit toute seule à mesure que tu termines ses scénarios et revois ses cartes. Rythme conseillé : 5 cartes par jour en session éclair, 2 à 3 scénarios par semaine, une mission du jeu le week-end.</li></ul><p>Précision honnête : les questions du mini-examen et des scénarios sont des <b>exemples d\'entraînement écrits pour ce jeu</b>, dans l\'esprit de l\'examen Security+ — ce ne sont pas des questions officielles CompTIA.</p>';
+  html += '<h3>Pack Security+</h3><p>Le Pack Security+ est l\'espace d\'entraînement hors mission, accessible depuis l\'accueil, l\'écran Missions ou le Menu. Six sections :</p><ul><li><b>Scénarios éclair</b> : 18 situations courtes (3 à 5 minutes), une décision à prendre, puis un debrief avec le « pourquoi » et la carte de révision liée. Ils couvrent les cinq domaines Security+ et renvoient aux notions des missions (l\'objectif, par exemple 2.2 ou 4.8, est affiché sur chaque scénario). Une bonne décision rapporte 20 XP dans le domaine concerné et 10 crédits ; une erreur fait revenir la carte liée tout de suite dans la file de révision. Rejouer rapporte plein pot, comme partout : aucune récompense dégressive.</li><li><b>Cartes de révision</b> : les 40 cartes C1-01 à C5-08, question d\'un côté, réponse de l\'autre — touche la carte pour la retourner, puis dis honnêtement « Je sais » ou « À revoir ». Les cartes reviennent à <b>intervalles espacés : 1, 3, 7, 14 puis 30 jours</b> quand tu les sais, et dès le lendemain quand tu hésites. C\'est la répétition espacée : revoir juste avant d\'oublier ancre bien mieux que tout relire la veille. Les 7 cartes générées par la Mission 1 (C2-01, C2-03, C4-01, C4-02, C4-03, C4-04, C5-07) font partie de ce même jeu de 40 — pas de doublon : une erreur en mission rend la carte correspondante due ici, et les scénarios renvoient vers leur carte liée. Le filtre « À revoir » ne montre que les cartes dues ; « Toutes » permet de réviser en avance, par domaine si tu veux.</li><li><b>Mini-examen blanc</b> : 10 questions à choix unique, une par thème, suivies d\'une <b>simulation pare-feu</b> (une PBQ : placer quatre règles dans le bon ordre — web vers la DMZ autorisé, RDP depuis Internet refusé, navigation des employés autorisée, refus par défaut en dernier). Aucune correction pendant l\'épreuve : tout arrive à la fin, question par question, avec un bouton vers la carte à revoir. Barème : 10 points de questions + 5 points de simulation (1 par règle bien placée, 1 pour la règle par défaut en dernier). <b>Seuil d\'entraînement : plus de 80 %</b> — en dessous, continue les examens blancs avant de passer aux examens complets du jeu. Chaque tentative rapporte 30 XP SOC et 15 crédits, quel que soit le score.</li><li><b>Simulations PBQ</b> : trois mini-simulations en plus de la simulation pare-feu du mini-examen — remettre les <b>étapes d\'une réponse à incident</b> dans l\'ordre (préparation, détection, analyse, confinement, éradication, récupération, retour d\'expérience), <b>classer des contrôles</b> par type (préventif, détectif, correctif, directif), et <b>associer des menaces à leur nom</b> (phishing, spear phishing, whaling, vishing, smishing, password spraying, credential stuffing). Même présentation que le mini-examen : score en pourcentage, <b>seuil d\'entraînement de 80 %</b>, corrections une par une et bouton vers la carte à revoir (C4-03 et C4-04, C1-02, ou C2-01, C2-02 et C2-04 selon la simulation). Chaque simulation rapporte 15 XP SOC et 10 crédits.</li><li><b>Parcours 12 semaines</b> : le plan de préparation complet — fondations (semaines 1–2), menaces (3–4), architecture (5–6), opérations (7–8), gouvernance (9), points faibles (10), examens blancs (11), dernière ligne droite (12). La progression de chaque bloc se remplit toute seule à mesure que tu termines ses scénarios et revois ses cartes. Rythme conseillé : 5 cartes par jour en session éclair, 2 à 3 scénarios par semaine, une mission du jeu le week-end.</li><li><b>Les 10 concepts réseau animés</b> : une grille de 10 cartes (DHCP, DNS, ARP, switch, routeur, NAT/PAT, TCP, HTTPS, pare-feu, ICMP), chacune avec un mini schéma réseau. Touche une carte : elle s’illumine en violet, son animation se joue étape par étape (points et étiquettes qui apparaissent dans l’ordre) pendant que les autres cartes s’assombrissent. Le bouton « Tout lire » joue les 10 animations dans l’ordre, de 01 à 10. En plus de l’animation, chaque carte affiche juste en dessous l’explication détaillée « Comment ça fonctionne » du concept ; elle reste affichée tant que tu ne touches pas une autre carte.</li></ul><p>Précision honnête : les questions du mini-examen et des scénarios sont des <b>exemples d\'entraînement écrits pour ce jeu</b>, dans l\'esprit de l\'examen Security+ — ce ne sont pas des questions officielles CompTIA.</p>';
   html += '<h3>Glossaire</h3><p>Les termes officiels en anglais sont affichés à côté des termes français. Un toucher sur un terme ne mène nulle part — c\'est une page à lire, pas un piège.</p><dl class="gloss">'
     + '<dt>SOC <span>· Security Operations Center</span></dt><dd>Centre d\'opérations de sécurité : l\'équipe qui surveille, trie les alertes et répond aux incidents.</dd>'
     + '<dt>SIEM <span>· Security Information and Event Management</span></dt><dd>Outil qui collecte et corrèle les journaux de plusieurs sources pour alerter et enquêter.</dd>'
@@ -3049,9 +3079,153 @@ function openCardInPack(cardId){
   packCardFlipped = false;
   show("pack");
 }
+/* ---------- Les 10 concepts réseau animés ---------- */
+var NET_CONCEPTS = [
+  { id:"dhcp", num:"01", title:"DHCP", nodes:["Ordinateur","Serveur DHCP"], wide:[false,false], steps:["OFFER","IP 192.168.1.10"], phrase:"Attribue automatiquement les paramètres IP",
+    explain:"Quand un appareil arrive sur le réseau, il ne connaît ni son adresse IP ni celle de la passerelle : il envoie donc une demande DHCP en diffusion (DISCOVER) à tout le réseau local. Le serveur DHCP lui répond avec une proposition (OFFER) contenant une adresse libre, le masque, la passerelle et les serveurs DNS. L’appareil accepte (REQUEST), puis le serveur confirme (ACK) : l’adresse est louée pour une durée limitée, c’est le bail. À l’approche de la fin du bail, l’appareil renouvelle sa demande pour garder la même adresse." },
+  { id:"dns", num:"02", title:"DNS", nodes:["Ordinateur","Résolveur DNS"], wide:[false,false], steps:["example.com → 93.184.216.34"], phrase:"Convertit les noms de domaine en adresses IP",
+    explain:"Quand tu tapes example.com, ton ordinateur ne sait pas à quelle adresse IP écrire : il interroge le résolveur DNS configuré sur la machine. Le résolveur cherche d’abord la réponse dans son cache ; s’il ne l’a pas, il remonte la hiérarchie — serveurs racine, domaine de premier niveau (.com), puis serveur faisant autorité pour example.com. Il renvoie alors l’adresse IP associée, ici 93.184.216.34, et la garde en cache pendant la durée indiquée par le TTL. L’ordinateur peut enfin contacter directement le serveur avec cette adresse IP." },
+  { id:"arp", num:"03", title:"ARP", nodes:["Ordinateur","Switch","PC B · Passerelle"], wide:[false,false,true], steps:["Who has 192.168.1.1 ?","Réponse : adresse MAC de 192.168.1.1"], phrase:"Trouve les adresses MAC sur le réseau local",
+    explain:"Sur le réseau local, les trames circulent grâce aux adresses MAC, pas aux adresses IP. Pour joindre 192.168.1.1, l’ordinateur diffuse donc une requête ARP « Who has 192.168.1.1 ? » que toutes les machines du réseau reçoivent. Seule la machine qui possède cette adresse IP répond, en donnant son adresse MAC. L’ordinateur note alors le couple IP ↔ MAC dans son cache ARP, pour ne pas avoir à redemander à chaque envoi." },
+  { id:"switch", num:"04", title:"SWITCH", nodes:["PC A","Switch","PC C"], wide:[false,false,false], steps:["MAC table: PC C → Port 3","Trame envoyée vers le port 3"], phrase:"Transmet les trames grâce aux adresses MAC",
+    explain:"Le switch apprend en permanence : chaque fois qu’une trame arrive sur un port, il note l’adresse MAC source dans sa table MAC, en face de ce port. Quand une trame arrive pour PC C, il consulte sa table, voit que PC C se trouve sur le port 3, et envoie la trame uniquement sur ce port. Les autres machines ne voient donc pas passer un trafic qui ne les concerne pas. Si l’adresse MAC de destination est inconnue, le switch diffuse la trame sur tous ses ports, sauf celui d’arrivée." },
+  { id:"router", num:"05", title:"ROUTER", nodes:["10.0.1.0/24","Routeur","10.0.2.0/24"], wide:[true,false,true], steps:["IP packet","10.0.2.5 next hop Fa0/1"], phrase:"Transmet les paquets entre les réseaux",
+    explain:"Le routeur relie des réseaux différents : il reçoit un paquet, lit son adresse IP de destination et consulte sa table de routage pour choisir la meilleure sortie. Ici, un paquet parti du réseau 10.0.1.0/24 et destiné à 10.0.2.5 repart par l’interface Fa0/1, le prochain saut (next hop) vers le réseau 10.0.2.0/24. À chaque traversée d’un routeur, le champ TTL du paquet est décrémenté pour éviter les boucles infinies. Contrairement au switch, le routeur travaille sur les adresses IP (couche 3), pas sur les adresses MAC." },
+  { id:"nat", num:"06", title:"NAT / PAT", nodes:["Ordinateur","Routeur","Internet"], wide:[false,false,false], steps:["192.168.1.10:5000 → 203.0.113.10:4000"], phrase:"Associe les connexions privées à une IP publique",
+    explain:"Les adresses privées comme 192.168.1.10 ne circulent pas sur Internet : le routeur NAT les traduit en sa propre adresse publique, ici 203.0.113.10. Avec le PAT, il change aussi le port source (5000 devient 4000) et note cette association dans sa table NAT. Quand la réponse revient sur ce port, le routeur sait à quelle machine interne la renvoyer. C’est ce mécanisme qui permet à tout un foyer ou à toute une entreprise de partager une seule adresse IP publique." },
+  { id:"tcp", num:"07", title:"TCP", nodes:["Ordinateur","Serveur"], wide:[false,false], steps:["SYN","ACK","3-way handshake, then data"], phrase:"Livraison fiable et ordonnée des données",
+    explain:"Avant d’envoyer la moindre donnée, TCP ouvre la connexion par une poignée de main en trois temps : l’ordinateur envoie SYN, le serveur répond SYN-ACK, et l’ordinateur confirme par ACK. Chaque segment envoyé est ensuite numéroté et acquitté par le destinataire : si un accusé de réception manque, l’émetteur renvoie le segment perdu. Les données arrivent donc complètes et dans l’ordre, contrairement à UDP qui n’offre aucune de ces garanties. À la fin de l’échange, la connexion se ferme proprement par un échange FIN/ACK." },
+  { id:"https", num:"08", title:"HTTPS", nodes:["Ordinateur","Serveur sécurisé"], wide:[false,false], steps:["Server cert","Certificate valid","TLS record","HTTP data → encrypted TLS"], phrase:"Protège les échanges web avec TLS",
+    explain:"HTTPS, c’est HTTP transporté dans un tunnel chiffré par TLS. Au début de la connexion, le serveur présente son certificat : le navigateur vérifie qu’il est signé par une autorité de confiance, qu’il correspond bien au nom du site visité et qu’il n’est pas expiré. Les deux côtés s’accordent ensuite sur des clés de session éphémères, sans jamais les transmettre en clair sur le réseau. Tout l’échange HTTP qui suit est chiffré et protégé contre les modifications : un espion placé sur le réseau ne voit que du trafic illisible." },
+  { id:"firewall", num:"09", title:"FIREWALL", nodes:["Entrant","Pare-feu","Serveur"], wide:[false,false,false], steps:["TCP 443 ALLOW","TCP 445 BLOCK"], stepCls:["ok","ko"], phrase:"Autorise ou bloque le trafic selon les règles",
+    explain:"Le pare-feu examine chaque paquet qui le traverse et le compare, dans l’ordre, à sa liste de règles. Ici, le trafic TCP vers le port 443 (HTTPS) correspond à la règle ALLOW et passe ; le trafic vers le port 445 (SMB) tombe sur la règle BLOCK et est jeté. La première règle qui correspond décide du sort du paquet : l’ordre des règles est donc crucial. En fin de liste, une règle de refus par défaut bloque tout ce qui n’a pas été explicitement autorisé." },
+  { id:"icmp", num:"10", title:"ICMP", nodes:["Ordinateur","8.8.8.8"], wide:[false,true], steps:["Echo Request","Echo Reply","time=12 ms (example)"], phrase:"Teste la joignabilité IP avec ping",
+    explain:"ICMP sert aux messages de contrôle et d’erreur du protocole IP ; son usage le plus connu est la commande ping. L’ordinateur envoie un message Echo Request vers 8.8.8.8 ; si la machine distante répond par un Echo Reply, elle est joignable. Le temps aller-retour mesuré (ici 12 ms dans l’exemple) donne une idée de la latence de la liaison. Si aucune réponse n’arrive, ping signale un délai dépassé ou un hôte injoignable : c’est le premier réflexe de diagnostic réseau." }
+];
+var netTimers = [], netToken = 0, netActiveId = null, netPlayingAll = false, netExplainId = null;
+function netClearTimers(){ netTimers.forEach(function(t){ clearTimeout(t); }); netTimers = []; }
+function netLater(fn, ms){ var tok = netToken; netTimers.push(setTimeout(function(){ if(tok===netToken) fn(); }, ms)); }
+function stopNetAnim(){
+  netToken++; netClearTimers(); netActiveId = null; netPlayingAll = false; netExplainId = null;
+  var root = $("view-pack"); if(!root) return;
+  root.querySelectorAll(".netcard").forEach(function(c){ c.classList.remove("active","dim"); var p=c.querySelector(".nplay"); if(p) p.textContent="▶ Lire"; });
+  root.querySelectorAll(".netstep").forEach(function(s){ s.classList.remove("on"); });
+  var ex = $("pkNetExplain"); if(ex){ ex.classList.remove("on"); ex.innerHTML = ""; }
+  var all = $("pkNetAll"); if(all) all.textContent = "Tout lire";
+}
+function showNetExplain(id){
+  var root = $("view-pack"); if(!root) return;
+  var concept = NET_CONCEPTS.filter(function(c){ return c.id===id; })[0]; if(!concept) return;
+  var panel = $("pkNetExplain"); if(!panel) return;
+  netExplainId = id;
+  panel.innerHTML = '<div class="netexp-t">Comment ça fonctionne — '+esc(concept.title)+'</div><p>'+esc(concept.explain)+'</p>';
+  /* Le panneau se place juste sous la rangée de la carte touchée, en pleine largeur. */
+  var cards = root.querySelectorAll(".netcard");
+  var idx = -1;
+  cards.forEach(function(c, i){ if(c.getAttribute("data-net")===id) idx = i; });
+  if(idx>=0){
+    var rowEnd = (idx % 2 === 0) ? Math.min(idx+1, cards.length-1) : idx;
+    var anchor = cards[rowEnd];
+    if(anchor && anchor.parentNode) anchor.parentNode.insertBefore(panel, anchor.nextSibling);
+  }
+  panel.classList.add("on");
+}
+function playNetConcept(id, onDone){
+  var root = $("view-pack"); if(!root) return;
+  var concept = NET_CONCEPTS.filter(function(c){ return c.id===id; })[0]; if(!concept) return;
+  netClearTimers(); netToken++; netActiveId = id;
+  root.querySelectorAll(".netcard").forEach(function(c){
+    var isMe = c.getAttribute("data-net")===id;
+    c.classList.toggle("active", isMe); c.classList.toggle("dim", !isMe);
+    var p = c.querySelector(".nplay"); if(p) p.textContent = isMe ? "En cours…" : "▶ Lire";
+    if(isMe) c.querySelectorAll(".netstep").forEach(function(s){ s.classList.remove("on"); });
+  });
+  var card = root.querySelector('[data-net="'+id+'"]'); if(!card){ if(onDone) onDone(); return; }
+  showNetExplain(id);
+  var packet = card.querySelector(".netpacket");
+  var stepEls = card.querySelectorAll(".netstep");
+  var STEP_MS = 900;
+  concept.steps.forEach(function(st, i){
+    netLater(function(){
+      if(stepEls[i]) stepEls[i].classList.add("on");
+      if(packet){
+        var pct = concept.steps.length<=1 ? 50 : Math.round(8 + (84 * (i/(concept.steps.length-1))));
+        /* Aller-retour pour les échanges bidirectionnels (DHCP, TCP, HTTPS, ICMP) */
+        if((id==="dhcp"||id==="tcp"||id==="https"||id==="icmp") && i%2===1) pct = 100 - pct + 16;
+        packet.style.left = Math.max(4, Math.min(88, pct)) + "%";
+      }
+      sndTap();
+    }, 250 + i*STEP_MS);
+  });
+  var total = 250 + concept.steps.length*STEP_MS + 750;
+  netLater(function(){
+    if(onDone){ onDone(); }
+    else {
+      netActiveId = null;
+      root.querySelectorAll(".netcard").forEach(function(c){ c.classList.remove("active","dim"); var p=c.querySelector(".nplay"); if(p) p.textContent="▶ Lire"; });
+    }
+  }, total);
+}
+function playAllNet(){
+  stopNetAnim(); netPlayingAll = true;
+  var btn = $("pkNetAll"); if(btn) btn.textContent = "Lecture en cours… (touche pour arrêter)";
+  var idx = 0;
+  var next = function(){
+    if(!netPlayingAll) return;
+    if(idx >= NET_CONCEPTS.length){
+      netPlayingAll = false; netActiveId = null;
+      var root = $("view-pack");
+      root.querySelectorAll(".netcard").forEach(function(c){ c.classList.remove("active","dim"); var p=c.querySelector(".nplay"); if(p) p.textContent="▶ Lire"; });
+      var b = $("pkNetAll"); if(b) b.textContent = "Tout lire";
+      return;
+    }
+    var c = NET_CONCEPTS[idx]; idx++;
+    var cardEl = document.querySelector('[data-net="'+c.id+'"]'); if(cardEl) cardEl.scrollIntoView({ block:"nearest", behavior:"smooth" });
+    playNetConcept(c.id, next);
+  };
+  next();
+}
+function renderNetConcepts(root){
+  var html = "";
+  html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Retour">‹</button><div class="ttl">Les 10 concepts réseau animés</div></div>';
+  html += '<div class="stepct">Touche une carte : elle s’illumine en violet, son schéma se joue étape par étape, et l’explication « Comment ça fonctionne » s’affiche juste en dessous. Elle reste affichée tant que tu ne touches pas une autre carte.</div>';
+  html += '<button class="btn primary big" id="pkNetAll" style="margin-top:10px">Tout lire</button>';
+  html += '<div class="netgrid">';
+  NET_CONCEPTS.forEach(function(c){
+    html += '<button type="button" class="netcard" data-net="'+c.id+'" aria-label="Lire l’animation et l’explication '+esc(c.title)+'">'
+      + '<span class="nhead"><span class="nnum">'+c.num+'</span><span class="ntitle">'+esc(c.title)+'</span><span class="nplay">▶ Lire</span></span>'
+      + '<span class="netdiag"><span class="netpacket"></span><span class="netnodes">';
+    c.nodes.forEach(function(n, ni){
+      if(ni>0) html += '<span class="nettrack"></span>';
+      html += '<span class="netnode'+(c.wide && c.wide[ni] ? " wide" : "")+'">'+esc(n)+'</span>';
+    });
+    html += '</span></span><span class="netsteps">';
+    c.steps.forEach(function(s, si){ html += '<span class="netstep'+(c.stepCls && c.stepCls[si] ? " "+c.stepCls[si] : "")+'">'+esc(s)+'</span>'; });
+    html += '</span><span class="netphrase">'+esc(c.phrase)+'</span></button>';
+  });
+  html += '<div class="netexplain" id="pkNetExplain" aria-live="polite"></div>';
+  html += '</div>';
+  root.innerHTML = html;
+  $("pkBack").addEventListener("click", function(){ stopNetAnim(); packTab="home"; renderPack(); });
+  $("pkNetAll").addEventListener("click", function(){
+    sndTap();
+    if(netPlayingAll){ stopNetAnim(); return; }
+    playAllNet();
+  });
+  root.querySelectorAll("[data-net]").forEach(function(b){
+    b.addEventListener("click", function(){
+      sndTap();
+      var id = b.getAttribute("data-net");
+      /* Retoucher la même carte rejoue son animation ; son explication reste affichée. */
+      netPlayingAll = false; var ab = $("pkNetAll"); if(ab) ab.textContent = "Tout lire";
+      playNetConcept(id, null);
+    });
+  });
+}
 function renderPack(){
   var root = $("view-pack");
   var html = "";
+  if(packTab!=="net") stopNetAnim();
   if(packTab==="home"){
     html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Retour">‹</button><div class="ttl">Pack Security+</div></div>';
     html += '<div class="stepct">Scénarios : '+scenDoneCount()+' / 18 · Cartes revues : '+cardsReviewedCount()+' / 40 · Cartes à revoir : '+cardDueList().length+'</div><div class="progressline"><i style="width:'+Math.round(100*(scenDoneCount()+cardsReviewedCount())/58)+'%"></i></div>';
@@ -3062,6 +3236,7 @@ function renderPack(){
       + '<button class="packtab" data-pk="exam"><b>Mini-examen blanc</b><span>10 questions + 1 simulation pare-feu'+(S.pack.examPlays ? ' · meilleur : '+S.pack.examBest+' %' : '')+'</span></button>'
       + '<button class="packtab" data-pk="sims"><b>Simulations PBQ</b><span>Réponse à incident, contrôles, menaces — 3 mini-simulations</span></button>'
       + '<button class="packtab" data-pk="parcours"><b>Parcours 12 semaines</b><span>Le plan complet, suivi au fil de tes parties</span></button>'
+      + '<button class="packtab" data-pk="net"><b>Les 10 concepts réseau animés</b><span>DHCP, DNS, ARP, switch, routeur, NAT, TCP, HTTPS, pare-feu, ICMP — touche une carte pour voir le schéma s’animer et lire comment ça fonctionne</span></button>'
       + '</div>';
     html += '<button class="btn big" id="pkGloss" style="width:100%;margin-top:12px">Glossaire — Fonctionnement du jeu</button>';
     root.innerHTML = html;
@@ -3186,6 +3361,7 @@ function renderPack(){
     if(koB) koB.addEventListener("click", function(){ gradeCard(false); });
     return;
   }
+  if(packTab==="net"){ renderNetConcepts(root); return; }
   if(packTab==="sims"){ renderPackSims(root); return; }
   if(packTab==="exam"){ renderPackExam(root); return; }
   if(packTab==="parcours"){
