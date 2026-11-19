@@ -119,7 +119,7 @@ h2{font-size:17px;margin:20px 0 8px;}
 #bottomnav button svg{width:22px;height:22px;}
 #bottomnav button.on{color:var(--cyan);}
 #bottomnav button.on svg{filter:drop-shadow(0 0 6px rgba(0,209,255,.75));}
-#navlamp{position:absolute;top:-6px;left:0;width:30px;height:5px;border-radius:999px;background:var(--cyan);box-shadow:0 0 8px rgba(0,209,255,.9),0 0 18px rgba(0,209,255,.55);transform:translateX(0);transition:transform .18s cubic-bezier(.34,1.45,.64,1);will-change:transform;pointer-events:none;}
+#navlamp{position:absolute;top:-6px;left:0;width:30px;height:5px;border-radius:999px;background:var(--cyan);box-shadow:0 0 8px rgba(0,209,255,.9),0 0 18px rgba(0,209,255,.55);transform:translateX(0);transition:transform .18s cubic-bezier(.34,1.45,.64,1);will-change:transform;touch-action:none;cursor:grab;}
 #navlamp .navcone{position:absolute;left:50%;transform:translateX(-50%);top:2px;width:64px;height:44px;background:linear-gradient(to bottom,rgba(0,209,255,.34),rgba(0,209,255,0));clip-path:polygon(38% 0,62% 0,100% 100%,0 100%);pointer-events:none;}
 body.gaming #bottomnav, body.gaming #topbar{display:none;}
 body.gaming main{padding-bottom:20px;}
@@ -739,7 +739,9 @@ function renderTop(){
 $("soundBtn").addEventListener("click", function(){ S.sound=!S.sound; save(); if(S.sound) sndTap(); toast(S.sound ? "Son activé" : "Son coupé"); });
 /* ================= NAVIGATION ================= */
 var curView="hub";
+var lampDragActive=false;
 function moveNavLamp(){
+  if(lampDragActive) return;
   if(document.body.classList.contains("gaming") || document.body.classList.contains("authing")) return;
   var nav=document.getElementById("bottomnav"), lamp=document.getElementById("navlamp");
   if(!nav || !lamp) return;
@@ -772,6 +774,55 @@ document.querySelectorAll("#bottomnav button").forEach(function(b){
 });
 window.addEventListener("resize", moveNavLamp);
 window.addEventListener("orientationchange", moveNavLamp);
+/* ---- Lampe déplaçable au doigt : maintenir et glisser d'un onglet à l'autre ---- */
+(function(){
+  var nav=document.getElementById("bottomnav"), lamp=document.getElementById("navlamp");
+  if(!nav || !lamp) return;
+  var pid=null, startX=0, startTx=0;
+  function tabCenters(){
+    var nr=nav.getBoundingClientRect(), out=[];
+    nav.querySelectorAll("button").forEach(function(b){
+      var br=b.getBoundingClientRect();
+      out.push({ view:b.getAttribute("data-nav"), x:(br.left-nr.left)+br.width/2 });
+    });
+    return out;
+  }
+  function lampTx(){
+    var m=/translateX\((-?[\d.]+)px\)/.exec(lamp.style.transform||"");
+    return m ? parseFloat(m[1]) : 0;
+  }
+  lamp.addEventListener("pointerdown", function(e){
+    if(pid!==null) return;
+    pid=e.pointerId; startX=e.clientX; startTx=lampTx();
+    lampDragActive=true;
+    lamp.style.transition="none";
+    try{ lamp.setPointerCapture(e.pointerId); }catch(err){}
+    e.preventDefault();
+  });
+  lamp.addEventListener("pointermove", function(e){
+    if(pid===null || e.pointerId!==pid) return;
+    var cs=tabCenters();
+    if(!cs.length) return;
+    var half=lamp.offsetWidth/2;
+    var tx=startTx+(e.clientX-startX);
+    var min=cs[0].x-half, max=cs[cs.length-1].x-half;
+    if(tx<min) tx=min;
+    if(tx>max) tx=max;
+    lamp.style.transform="translateX("+tx+"px)";
+    var cx=tx+half, best=cs[0];
+    cs.forEach(function(c){ if(Math.abs(c.x-cx)<Math.abs(best.x-cx)) best=c; });
+    if(best.view!==curView) show(best.view);
+  });
+  function endDrag(e){
+    if(pid===null || (e && e.pointerId!==pid)) return;
+    pid=null;
+    lampDragActive=false;
+    lamp.style.transition="";
+    moveNavLamp();
+  }
+  lamp.addEventListener("pointerup", endDrag);
+  lamp.addEventListener("pointercancel", endDrag);
+})();
 /* ================= DONNEES JEUX ================= */
 var GAMES = {
   tri:{ name:"Tri d'alertes", lieu:"Le SOC", domaine:"soc", domLabel:"SOC", xpBase:150,
