@@ -114,12 +114,13 @@ h2{font-size:17px;margin:20px 0 8px;}
 .kevin{border-color:#7c2d12;background:linear-gradient(180deg,#1c1430,var(--panel));}
 .kevin .kt{color:var(--orange);font-weight:800;}
 /* ---------- bottom nav ---------- */
-#bottomnav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:calc(100% - 24px);max-width:456px;background:rgba(13,18,36,.55);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.10);border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.55);display:flex;padding:6px;z-index:40;}
-#bottomnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:600;color:var(--mut);border-radius:10px;padding:6px 2px;min-height:52px;}
-#bottomnav button svg{width:22px;height:22px;}
+#bottomnav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:calc(100% - 24px);max-width:456px;background:rgba(255,255,255,.10);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.25);border-radius:999px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 0 rgba(0,0,0,.15),0 10px 30px rgba(0,0,0,.35);display:flex;padding:6px;z-index:40;touch-action:none;}
+#bottomnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:600;color:var(--mut);border-radius:10px;padding:6px 2px;min-height:52px;text-shadow:0 1px 3px rgba(0,0,0,.6),0 0 8px rgba(0,0,0,.35);}
+#bottomnav button svg{width:22px;height:22px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.65));}
 #bottomnav button.on{color:var(--cyan);}
 #bottomnav button.on svg{filter:drop-shadow(0 0 6px rgba(0,209,255,.75));}
 #navlamp{position:absolute;top:-6px;left:0;width:30px;height:5px;border-radius:999px;background:var(--cyan);box-shadow:0 0 8px rgba(0,209,255,.9),0 0 18px rgba(0,209,255,.55);transform:translateX(0);transition:transform .18s cubic-bezier(.34,1.45,.64,1);will-change:transform;touch-action:none;cursor:grab;}
+#navlamp::before{content:"";position:absolute;left:50%;transform:translateX(-50%);top:-13px;width:64px;height:44px;}
 #navlamp .navcone{position:absolute;left:50%;transform:translateX(-50%);top:2px;width:64px;height:44px;background:linear-gradient(to bottom,rgba(0,209,255,.34),rgba(0,209,255,0));clip-path:polygon(38% 0,62% 0,100% 100%,0 100%);pointer-events:none;}
 body.gaming #bottomnav, body.gaming #topbar{display:none;}
 body.gaming main{padding-bottom:20px;}
@@ -774,11 +775,20 @@ document.querySelectorAll("#bottomnav button").forEach(function(b){
 });
 window.addEventListener("resize", moveNavLamp);
 window.addEventListener("orientationchange", moveNavLamp);
-/* ---- Lampe déplaçable au doigt : maintenir et glisser d'un onglet à l'autre ---- */
+/* ---- Lampe déplaçable au doigt : maintenir et glisser depuis n'importe quel point de la pilule ----
+   Tap (doigt levé sans bouger) = clic normal sur l'onglet. Au-delà de ~8 px horizontaux, c'est un
+   drag : la lampe suit le doigt, l'onglet sous la lampe s'active au passage, snap au relâchement,
+   et le clic de fin de geste est supprimé pour ne pas déclencher un tap par accident. */
 (function(){
   var nav=document.getElementById("bottomnav"), lamp=document.getElementById("navlamp");
   if(!nav || !lamp) return;
-  var pid=null, startX=0, startTx=0;
+  var THRESH=8;
+  var pid=null, startX=0, startTx=0, dragging=false, downOnLamp=false, suppressClick=false, suppressT=null;
+  function armSuppress(){
+    suppressClick=true;
+    clearTimeout(suppressT);
+    suppressT=setTimeout(function(){ suppressClick=false; }, 350);
+  }
   function tabCenters(){
     var nr=nav.getBoundingClientRect(), out=[];
     nav.querySelectorAll("button").forEach(function(b){
@@ -791,20 +801,33 @@ window.addEventListener("orientationchange", moveNavLamp);
     var m=/translateX\((-?[\d.]+)px\)/.exec(lamp.style.transform||"");
     return m ? parseFloat(m[1]) : 0;
   }
-  lamp.addEventListener("pointerdown", function(e){
+  function nearestTab(x){
+    var cs=tabCenters();
+    if(!cs.length) return null;
+    var best=cs[0];
+    cs.forEach(function(c){ if(Math.abs(c.x-x)<Math.abs(best.x-x)) best=c; });
+    return best;
+  }
+  nav.addEventListener("pointerdown", function(e){
     if(pid!==null) return;
+    if(e.button!==undefined && e.button!==0) return;
     pid=e.pointerId; startX=e.clientX; startTx=lampTx();
-    lampDragActive=true;
-    lamp.style.transition="none";
-    try{ lamp.setPointerCapture(e.pointerId); }catch(err){}
-    e.preventDefault();
+    dragging=false;
+    downOnLamp = (e.target===lamp) || lamp.contains(e.target);
   });
-  lamp.addEventListener("pointermove", function(e){
+  nav.addEventListener("pointermove", function(e){
     if(pid===null || e.pointerId!==pid) return;
+    var dx=e.clientX-startX;
+    if(!dragging){
+      if(Math.abs(dx)<=THRESH) return;
+      dragging=true;
+      lampDragActive=true;
+      lamp.style.transition="none";
+    }
     var cs=tabCenters();
     if(!cs.length) return;
     var half=lamp.offsetWidth/2;
-    var tx=startTx+(e.clientX-startX);
+    var tx=startTx+dx;
     var min=cs[0].x-half, max=cs[cs.length-1].x-half;
     if(tx<min) tx=min;
     if(tx>max) tx=max;
@@ -813,15 +836,43 @@ window.addEventListener("orientationchange", moveNavLamp);
     cs.forEach(function(c){ if(Math.abs(c.x-cx)<Math.abs(best.x-cx)) best=c; });
     if(best.view!==curView) show(best.view);
   });
-  function endDrag(e){
-    if(pid===null || (e && e.pointerId!==pid)) return;
+  function finishDrag(){
     pid=null;
+    dragging=false;
+    downOnLamp=false;
     lampDragActive=false;
     lamp.style.transition="";
+    armSuppress();
     moveNavLamp();
   }
-  lamp.addEventListener("pointerup", endDrag);
-  lamp.addEventListener("pointercancel", endDrag);
+  function endDrag(e){
+    if(pid===null || (e && e.pointerId!==pid)) return;
+    if(dragging){ finishDrag(); return; }
+    if(downOnLamp){
+      /* Tap sur la lampe ou sa zone tactile élargie (qui recouvre une partie de la pilule) :
+         activer l'onglet le plus proche du point touché, comme un tap normal. */
+      var nr=nav.getBoundingClientRect();
+      var best=nearestTab(e.clientX-nr.left);
+      pid=null; downOnLamp=false;
+      armSuppress();
+      if(best){ sndTap(); show(best.view); }
+      return;
+    }
+    /* Tap simple sur un onglet : ne rien faire, le clic normal du bouton s'en charge. */
+    pid=null; downOnLamp=false;
+  }
+  function cancelDrag(e){
+    if(pid===null || (e && e.pointerId!==pid)) return;
+    if(dragging){ finishDrag(); return; }
+    pid=null; dragging=false; downOnLamp=false;
+  }
+  nav.addEventListener("pointerup", endDrag);
+  nav.addEventListener("pointercancel", cancelDrag);
+  window.addEventListener("pointerup", endDrag);
+  window.addEventListener("pointercancel", cancelDrag);
+  nav.addEventListener("click", function(e){
+    if(suppressClick){ suppressClick=false; e.preventDefault(); e.stopPropagation(); }
+  }, true);
 })();
 /* ================= DONNEES JEUX ================= */
 var GAMES = {
