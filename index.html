@@ -10359,7 +10359,11 @@ function initAuth(){
       $("authRetry").addEventListener("click", function(){ location.reload(); }); }
     return;
   }
-  try{ if(!firebase.apps.length) firebase.initializeApp(firebaseConfig); }catch(e){}
+  try{ if(!firebase.apps.length) firebase.initializeApp(firebaseConfig); }catch(e){
+    show("auth");
+    authShowErr("Pas de connexion : la connexion demande internet. Ta progression est conservée sur cet appareil — reconnecte-toi pour entrer dans le jeu.");
+    return;
+  }
   firebase.auth().onAuthStateChanged(function(user){
     FBUser = user;
     if(user){
@@ -10389,15 +10393,38 @@ $("authForm").addEventListener("submit", function(ev){
   if(!pw){ authShowErr("Entre ton mot de passe."); return; }
   if(typeof firebase==="undefined" || !firebase.auth){ authShowErr("Pas de connexion : la connexion demande internet. Ta progression est conservée sur cet appareil — reconnecte-toi pour entrer dans le jeu."); return; }
   authShowErr(""); authBusy(true);
-  var auth = firebase.auth();
-  var p = authMode==="signup" ? auth.createUserWithEmailAndPassword(email, pw) : auth.signInWithEmailAndPassword(email, pw);
-  p.then(function(cred){
+  var settled = false;
+  var timer = setTimeout(function(){
+    if(settled) return;
+    settled = true;
     authBusy(false);
-    if(authMode==="signup" && cred && cred.user){
-      cred.user.sendEmailVerification().catch(function(){});
-      toast("Compte créé. E-mail de vérification envoyé — tu peux jouer tout de suite.");
-    }
-  }).catch(function(e){ authBusy(false); authShowErr(fbErrMsg(e)); });
+    authShowErr("La connexion ne répond pas. Vérifie ta connexion internet puis réessaie.");
+  }, 15000);
+  try{
+    var auth = firebase.auth();
+    var p = authMode==="signup" ? auth.createUserWithEmailAndPassword(email, pw) : auth.signInWithEmailAndPassword(email, pw);
+    p.then(function(cred){
+      if(settled) return;
+      settled = true;
+      clearTimeout(timer);
+      authBusy(false);
+      if(authMode==="signup" && cred && cred.user){
+        cred.user.sendEmailVerification().catch(function(){});
+        toast("Compte créé. E-mail de vérification envoyé — tu peux jouer tout de suite.");
+      }
+    }).catch(function(e){
+      if(settled) return;
+      settled = true;
+      clearTimeout(timer);
+      authBusy(false); authShowErr(fbErrMsg(e));
+    });
+  }catch(e){
+    if(settled) return;
+    settled = true;
+    clearTimeout(timer);
+    authBusy(false);
+    authShowErr("La connexion n'a pas pu démarrer. Vérifie ta connexion internet puis réessaie.");
+  }
 });
 $("authForgot").addEventListener("click", function(){
   var email = $("authEmail").value.trim();
