@@ -12369,8 +12369,6 @@ function renderDojo(){
   html += '<div class="djgrid">';
   DOJO_CORE.forEach(function(d){ html += dojoMapCard(d.name, d.mc, d.mods, d.note, d.belt, d.beltTxt); });
   html += '</div>';
-  html += '<div class="card"><h3>Et aussi : les cours</h3><p>Neuf cours de l’Arizona State University importent ce même matériel (CSE 365, CSE 466, CSE 598…) : ce sont les versions universitaires, notées, des dojos ci-dessus.</p></div>';
-  html += '<div class="card"><h3>Source et règles du jeu</h3><p>Parcours et effectifs relevés sur pwn.college/dojos le 18 novembre 2026. Leçons originales écrites pour Nexus Guardian : aucun texte du site copié, aucune solution de challenge publiée. Les vrais challenges se jouent là-bas, gratuitement, avec un compte. Détails complets : Menu → Fonctionnement du jeu.</p></div>';
   root.innerHTML = html;
   $("djStart").addEventListener("click", function(){ dojoScreen="start"; sndTap(); renderDojo(); window.scrollTo(0,0); });
   $("djLum").addEventListener("click", function(){ dojoScreen="lum"; sndTap(); renderDojo(); window.scrollTo(0,0); });
