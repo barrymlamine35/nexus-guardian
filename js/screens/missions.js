@@ -16,6 +16,20 @@ function renderMissions(){
   html += '<div class="card"><div class="row between"><span class="tag '+fg.domaine+'">SOC</span>'+(fdg?'<span class="tag ms-daily">Mission du jour</span>':'')+(S.best.forensics>0?'<span class="tag done">Meilleur : '+S.best.forensics+' / 100</span>':'')+'</div>'
     + '<h3 style="margin-top:8px">'+fg.name+'</h3><p>'+fg.lieu+' · XP de base : '+fg.xpBase+(S.plays.forensics>0?' · Jouée '+S.plays.forensics+' fois':'')+'</p>'
     + '<button class="btn primary big" data-act="play" data-game="forensics">'+(S.plays.forensics>0?'Rejouer':'Commencer')+'</button></div>';
+  var NEW_SECTORS = [
+    ["banque","La Banque","Fraude et transactions","Huit opérations à trier avant 10 h, puis trois décisions avec l'équipe fraude — un virement parti ne revient presque jamais."],
+    ["rouge","Tour Rouge","Territoire d'ÉCLIPSE","Huit flux à analyser, une kill chain à remettre en ordre, et la contre-mesure qui coupe ÉCLIPSE."],
+    ["dev","Quartier Dev","Code et applications","Huit extraits de code à examiner, quatre correctifs à choisir, et le principe qui protège sur la durée."],
+    ["conseil","Tour du Conseil","Stratégie et gouvernance","Cinq décisions de direction : notification, rançon, budget, fournisseurs, communication."],
+    ["cloud","Ciel Cloud","Infrastructure cloud","Huit ressources à classer pour l'audit, quatre remédiations à choisir, et la responsabilité partagée."]
+  ];
+  NEW_SECTORS.forEach(function(s){
+    var g = GAMES[s[0]], dg = dailyGame()===s[0];
+    html += '<h2>'+s[1]+'</h2><p class="sub"><span class="tag '+g.domaine+'">'+s[2]+'</span></p><p class="sub">'+s[3]+'</p>';
+    html += '<div class="card"><div class="row between"><span class="tag '+g.domaine+'">'+g.domLabel+'</span>'+(dg?'<span class="tag ms-daily">Mission du jour</span>':'')+(S.best[s[0]]>0?'<span class="tag done">Meilleur : '+S.best[s[0]]+' / 100</span>':'')+'</div>'
+      + '<h3 style="margin-top:8px">'+g.name+'</h3><p>'+g.lieu+' · XP de base : '+g.xpBase+(S.plays[s[0]]>0?' · Jouée '+S.plays[s[0]]+' fois':'')+'</p>'
+      + '<button class="btn primary big" data-act="play" data-game="'+s[0]+'">'+(S.plays[s[0]]>0?'Rejouer':'Commencer')+'</button></div>';
+  });
   html += '<h2>Mission 1 — Alerte à 03h12</h2><p class="sub"><span class="tag soc">Joue une vraie mission</span></p><p class="sub">L\'incident complet d\'Atlas Logistics, en sept temps : tri, corrélation, décision, enquête, éradication, message à la direction, debrief noté sur cinq axes. Trois variantes, trois points d\'entrée différents.</p>';
   [["A","Variante A · Le chef d'équipe","Le faux e-mail de paie et le document piégé de Joël Mbaye. Décision clé : le quai 4."],
    ["B","Variante B · Le faux fournisseur","Nadia Perrin, la comptabilité, et un virement de 48 000 € programmé à 8 h."],
@@ -65,10 +79,6 @@ function renderMissions(){
   html += '<div class="card"><div class="row between"><div><h3>XNU Dojo — le noyau Apple, expert</h3><p>Leçons terminées : '+dojoXNUCount()+' / '+DOJO_XNU_LESSONS.length+'</p></div>'+(dojoXNUCount()>=DOJO_XNU_LESSONS.length?'<span class="tag done">Terminé</span>':'')+'</div><button class="btn primary big" data-act="goxnu">Entrer dans XNU Dojo</button></div>';
   html += '<div class="card"><div class="row between"><div><h3>ARM Architecture — alias de XNU Dojo</h3><p>Doublon exact des modules 1 et 2 de XNU Dojo (Introduction to ARM, 15 défis · ARM64 ROP, 13 défis — 28 sur 28 identiques, vérifiés défi par défi) : mêmes défis, déjà comptés là-bas, aucune leçon en double. Leçons ARM terminées : '+dojoXNUArmCount()+' / '+dojoXNUArmLessons().length+'</p></div><span class="tag soc">Alias</span></div><button class="btn primary big" data-act="goarmarch">Voir les leçons ARM dans XNU Dojo</button></div>';
   html += '<div class="card"><div class="row between"><div><h3>ARM Dojo — alias de XNU Dojo</h3><p>Doublon exact du module 1 de XNU Dojo (Introduction to ARM, 15 défis — 15 sur 15 identiques, vérifiés défi par défi) : mêmes défis, déjà comptés là-bas, aucune leçon en double. Leçons Introduction to ARM terminées : '+dojoXNUIntroCount()+' / '+dojoXNUIntroLessons().length+'</p></div><span class="tag soc">Alias</span></div><button class="btn primary big" data-act="goarmdojo">Voir les leçons Introduction to ARM dans XNU Dojo</button></div>';
-  html += '<h2>Secteurs fermés</h2>';
-  [["La Banque","Fraude et transactions"],["Tour Rouge","Territoire d'ÉCLIPSE"],["Quartier Dev","Code et applications"],["Tour du Conseil","Stratégie et gouvernance"],["Ciel Cloud","Infrastructure cloud"]].forEach(function(l){
-    html += '<div class="card" style="opacity:.55"><div class="row between"><div><h3>'+l[0]+'</h3><p>'+l[1]+'</p></div><span class="tag lock">Bientôt</span></div></div>';
-  });
   $("view-missions").innerHTML = html;
   bindActions($("view-missions"));
   $("view-missions").querySelectorAll("[data-camp]").forEach(function(b){
