@@ -6,7 +6,9 @@ var GAMES = {
   phish:{ name:"Chasse au phishing", lieu:"QG Aegis", domaine:"soc", domLabel:"SOC", xpBase:120,
     briefing:"Six e-mails attendent dans la boîte d'Atlas Logistics. Certains sont propres, d'autres non. Ouvre-les, examine-les, et décide. Et si Kevin de la Compta appelle : dis-lui de ne toucher à rien. — Cdt. Amara Keïta" },
   defense:{ name:"Défense réseau", lieu:"Quartier Réseau", domaine:"reseau", domLabel:"Réseau", xpBase:150,
-    briefing:"Atlas Logistics refait son réseau. Tu as 12 000 € pour placer tes défenses, ensuite le trafic arrive : du vrai, du faux, et une diversion signée ÉCLIPSE. Protège sans bloquer le travail. — Cdt. Amara Keïta" }
+    briefing:"Atlas Logistics refait son réseau. Tu as 12 000 € pour placer tes défenses, ensuite le trafic arrive : du vrai, du faux, et une diversion signée ÉCLIPSE. Protège sans bloquer le travail. — Cdt. Amara Keïta" },
+  forensics:{ name:"Analyse de preuves", lieu:"Labo Forensics", domaine:"soc", domLabel:"SOC", xpBase:150,
+    briefing:"Le poste du chef d'équipe est saisi et son image est sur le banc, bloqueur en écriture en place. Dix artefacts à classer, une nuit à remettre en ordre, et une question qui fait tenir un dossier : qu'est-ce qu'on préserve en premier ? — Cdt. Amara Keïta" }
 };
 var ALERTS = [
   { t:"Sauvegarde nocturne planifiée", host:"srv-backup-01", time:"03:00", det:"Tâche « backup-full » lancée par le compte de service svc-backup. Volume copié habituel, destination interne.", ans:"fp", crit:false,
@@ -30,6 +32,49 @@ var ALERTS = [
   { t:"PowerShell encodé", host:"PC du chef d'équipe", time:"03:40", det:"PowerShell lancé avec le paramètre -EncodedCommand, hors heures de bureau, sans tâche planifiée associée.", ans:"vp", crit:false,
     hint:"Du code encodé, à 03:40, sans raison planifiée…", why:"PowerShell encodé à 03:40, sans tâche planifiée : exécution suspecte, typique d'une attaque." }
 ];
+/* Artefacts du poste saisi (PC du chef d'équipe, compte j.martin) : ans = mal (malveillant) / ben (bénin) / verif (à vérifier). */
+var FORENSICS_ITEMS = [
+  { t:"Rafale d'échecs de connexion", src:"Journal de sécurité — Événement 4625", time:"03:12", det:"312 échecs de connexion en 4 minutes, tous depuis la même adresse : 203.0.113.45.", ans:"mal",
+    hint:"312 fois la même erreur, depuis la même adresse.", why:"312 événements 4625 en 4 minutes depuis une seule IP : une force brute en cours. Le nombre et la répétition font la preuve." },
+  { t:"Connexion réussie", src:"Journal de sécurité — Événement 4624", time:"03:12", det:"Connexion réussie du compte j.martin depuis 203.0.113.45 — la même adresse que la rafale. MFA non activée sur ce compte.", ans:"mal",
+    hint:"Compare l'adresse avec celle de l'artefact précédent.", why:"Un 4624 juste après 312 échecs, depuis la même IP et sans MFA : la force brute a réussi. Le compte est compromis." },
+  { t:"PowerShell encodé", src:"Journal — Événement 4688, création de processus", time:"03:40", det:"powershell.exe lancé avec -EncodedCommand. Processus parent : WINWORD.EXE.", ans:"mal",
+    hint:"Qui a lancé PowerShell ? Un humain, ou un document ?", why:"Un processus lancé par Word, avec du code encodé : la macro du document de paie a exécuté quelque chose à 03:40." },
+  { t:"Tâche planifiée « MajService »", src:"Planificateur de tâches", time:"03:40", det:"Tâche créée à 03:40, qui relance un script au démarrage du poste. Auteur : compte j.martin.", ans:"mal",
+    hint:"Une tâche qui survit au redémarrage, ça sert à quoi ?", why:"Persistance : la tâche relance l'attaque à chaque démarrage. C'est pour ça qu'on ne restaure pas un poste avant de l'avoir supprimée." },
+  { t:"Programme au démarrage", src:"Registre — clé Run", time:"03:40", det:"Entrée Run ajoutée : un programme au nom d'outil système, rangé dans AppData\\Roaming, qui se lance à chaque ouverture de session.", ans:"mal",
+    hint:"Un nom qui ressemble à un outil Windows, mais dans le mauvais dossier.", why:"Persistance par le registre : un programme légitime ne se cache pas dans AppData avec un nom d'emprunt." },
+  { t:"Nouveau service « SvcUpdate »", src:"Journal système — Événement 7045", time:"03:41", det:"Service installé à 03:41. Son binaire est rangé dans un dossier temporaire.", ans:"mal",
+    hint:"Un service tout neuf, dont le programme vit dans un dossier temporaire…", why:"Un service installé à 03:41, avec un binaire dans un dossier temporaire : une persistance déguisée en mise à jour." },
+  { t:"Le document de paie", src:"Empreinte SHA-256 comparée", time:"22:41", det:"Le document reçu par e-mail à 22:41 : son empreinte (SHA-256, extrait 9d4e…f2a8) correspond exactement à un fichier signalé dans la liste des fichiers connus malveillants.", ans:"mal",
+    hint:"L'empreinte ne ment pas : elle dit si ce fichier est celui qu'on croit.", why:"L'empreinte du document de 22:41 correspond à un fichier signalé : c'est le point d'entrée de l'attaque. La macro a fait le reste." },
+  { t:"Clé USB branchée", src:"Historique des périphériques USB", time:"18:42 (la veille)", det:"Clé USB personnelle du chef d'équipe, branchée la veille à 18:42. Aucun fichier lancé depuis elle.", ans:"ben",
+    hint:"Une clé branchée ne veut pas dire une clé qui a infecté.", why:"Branchée la veille, rien lancé depuis : un fait, pas une preuve d'attaque. Tout ce qui est branché n'est pas suspect." },
+  { t:"Téléchargement depuis le portail interne", src:"Historique du navigateur", time:"02:47", det:"Fichier téléchargé depuis atlas-logistics.example/portail — le portail interne de l'entreprise, domaine et certificat vérifiés.", ans:"ben",
+    hint:"Le domaine, c'est celui de l'entreprise. Vérifie-le lettre par lettre.", why:"Domaine interne vérifié, certificat valide : un téléchargement normal sur le portail de l'entreprise." },
+  { t:"Connexion depuis deux pays", src:"Journal de sécurité — Événement 4624", time:"03:11", det:"Connexion du compte j.martin depuis la France, puis 20 minutes plus tard depuis un autre pays. Le trajet est physiquement impossible — mais l'utilisateur n'a pas encore été joint.", ans:"verif",
+    hint:"Impossible physiquement… sauf si quelque chose d'autre explique les deux adresses.", why:"Deux pays en 20 minutes, c'est impossible — sauf via un VPN, ou si le compte est partagé. Sans la parole de l'utilisateur, on ne tranche pas : on vérifie." }
+];
+/* Frise de la nuit, dans l'ordre chronologique (la rafale et la réussite partagent la minute 03:12 : l'ordre se lit dans la cause). */
+var FORENSICS_TIMELINE = [
+  { t:"Sauvegarde nocturne planifiée", time:"03:00", det:"Tâche « backup-full » lancée par le compte de service svc-backup." },
+  { t:"Rafale d'échecs de connexion", time:"03:12", det:"312 événements 4625 depuis 203.0.113.45." },
+  { t:"Connexion réussie", time:"03:12", det:"Événement 4624, même adresse, sans MFA." },
+  { t:"Règle de transfert e-mail créée", time:"03:14", det:"Tous les messages copiés vers une adresse externe inconnue." },
+  { t:"PowerShell encodé lancé", time:"03:40", det:"-EncodedCommand, processus parent WINWORD.EXE." }
+];
+var FORENSICS_TIMELINE_WHY = "03:00, la sauvegarde — du bruit normal, avant tout le reste. 03:12, deux événements à la même minute : d'abord la rafale, puis la réussite — l'ordre se lit dans la cause, pas seulement dans l'heure. 03:14, la règle de transfert : deux minutes après la compromission, l'attaque s'installe. 03:40, PowerShell : presque une demi-heure plus tard, l'attaquant passe à l'exécution. Une frise, c'est ça : pas une liste d'heures, une histoire qui tient.";
+var FORENSICS_QCM = {
+  q:"Le poste est encore allumé quand tu arrives sur place. Par quoi tu commences ?",
+  opts:[
+    "La mémoire vive et les processus en cours, puis l'image du disque — vérifiée par son empreinte.",
+    "Le disque dur : c'est là qu'il y a le plus de preuves.",
+    "Éteindre le poste proprement pour figer la scène.",
+    "L'historique du navigateur et les derniers fichiers ouverts."
+  ],
+  ok:0,
+  why:"Ordre de volatilité : la mémoire vive et les processus en cours disparaissent au premier redémarrage — le disque, lui, attend. Et l'image du disque se vérifie par son empreinte avant toute analyse, derrière un bloqueur en écriture : on ne travaille jamais sur l'original, sinon la preuve ne vaut plus rien."
+};
 var EMAILS = [
   { from:"Service Paie", addr:"paie@atlas-logistics.example", time:"08:02", subj:"Votre bulletin de paie est disponible",
     body:"Bonjour,\n\nVotre bulletin de paie de novembre est disponible sur le portail interne.\n\nLe service Paie",
@@ -99,7 +144,10 @@ var DEXDATA = [
   { id:"c402", name:"Carte C4-02 · Élargir l'enquête", txt:"Carte générée par la Mission 1 : un incident a rarement un seul poste. Chercher qui d'autre a reçu le même message, ouvert le même document, avant de déclarer l'incident clos." },
   { id:"c403", name:"Carte C4-03 · Indicateur ≠ éradication", txt:"Carte générée par la Mission 1 : bloquer un domaine ou une adresse coupe un indicateur, pas l'attaque. Éradiquer, c'est supprimer les moyens de revenir : comptes, sessions, règles, tâches planifiées." },
   { id:"c404", name:"Carte C4-04 · Éradiquer avant de restaurer", txt:"Carte générée par la Mission 1 : on ne restaure un poste qu'après avoir supprimé la persistance. Sinon, la tâche planifiée relance l'attaque sur un système tout propre." },
-  { id:"c507", name:"Carte C5-07 · Coordonnées bancaires", txt:"Carte générée par la Mission 1 : tout changement de RIB fournisseur exige une double validation et un rappel sur un numéro connu. Un virement parti sur un faux RIB ne revient presque jamais." }
+  { id:"c507", name:"Carte C5-07 · Coordonnées bancaires", txt:"Carte générée par la Mission 1 : tout changement de RIB fournisseur exige une double validation et un rappel sur un numéro connu. Un virement parti sur un faux RIB ne revient presque jamais." },
+  { id:"forensics", name:"Analyse forensique", txt:"Reconstruire ce qui s'est passé à partir des traces laissées sur un poste : journaux, processus, tâches planifiées, registre, empreintes de fichiers. Une preuve ne vaut que si on peut dire d'où elle vient et qu'elle n'a pas été modifiée." },
+  { id:"volatilite", name:"Ordre de volatilité", txt:"Collecter les preuves de la plus volatile à la plus stable : mémoire vive et processus en cours d'abord, puis disque. Ce qui disparaît vite se sauve en premier — éteindre un poste efface sa RAM." },
+  { id:"chaine", name:"Chaîne de possession", txt:"Documenter qui a touché une preuve, quand et comment — image du disque derrière un bloqueur en écriture, empreinte vérifiée, copie de travail. Sans chaîne de possession, une preuve ne tient pas." }
 ];
 var DEX_JUST = []; /* ids des fiches débloquées pendant cette session : surbrillance unique, jamais sauvegardée */
 var TRI_VARIANTS = [
@@ -116,5 +164,6 @@ var EXAM_NOTES = {
   finale:"À l'examen (SY0-701), ça tombe comme ça : « Pendant un incident, un scan massif monopolise l'équipe, tandis qu'un journal montre une unique connexion réussie anormale. Que prioriser ? » Réponse attendue : <b>la connexion réussie</b> — le scan peut être une diversion, et la réponse à incident commence par identifier le vecteur d'entrée réel. Le piège : traiter le signal le plus bruyant en premier. En sécurité des opérations, le signal faible est souvent le vrai incident.",
   mission1:"À l'examen (SY0-701), ça tombe comme ça : « À 03h09, un poste lance powershell.exe -enc avec WINWORD.EXE comme processus parent, quelques heures après la réception d'un document de paie par e-mail. Quelle est la première action ? » Réponse attendue : <b>isoler l'hôte et élargir l'enquête aux autres destinataires du document</b>. Le piège : « restaurer le poste depuis une image propre » — restaurer avant d'avoir supprimé la persistance (compte de service, tâche planifiée) laisse l'attaquant revenir. À l'examen comme à Atlas : contenir, éradiquer, puis seulement restaurer.",
   m1b:"À l'examen (SY0-701), ça tombe comme ça : « Un compte de messagerie compromis a servi à créer une règle de transfert automatique vers l'extérieur. L'administrateur réinitialise le mot de passe. Que reste-t-il à faire ? » Réponse attendue : <b>révoquer les sessions ouvertes et supprimer la règle de transfert</b> — elle survit au changement de mot de passe. Le piège : croire qu'un nouveau mot de passe ferme toutes les portes. Une session déjà ouverte et une règle déjà créée ne demandent plus le mot de passe.",
-  m1c:"À l'examen (SY0-701), ça tombe comme ça : « Un employé branche une clé USB trouvée sur un parking et lance un fichier nommé Salaires_2026.pdf.exe. Son poste tente ensuite des connexions SMB vers douze postes de son segment. Quelle réponse est proportionnée ? » Réponse attendue : <b>isoler le segment concerné</b> et traiter les autres postes avant de conclure. Le piège double : isoler le seul poste (la propagation est déjà partie) ou tout le site (on arrête l'activité pour rien). Et blâmer l'employé qui a signalé détruit la culture du signalement — l'examen le compte faux."
+  m1c:"À l'examen (SY0-701), ça tombe comme ça : « Un employé branche une clé USB trouvée sur un parking et lance un fichier nommé Salaires_2026.pdf.exe. Son poste tente ensuite des connexions SMB vers douze postes de son segment. Quelle réponse est proportionnée ? » Réponse attendue : <b>isoler le segment concerné</b> et traiter les autres postes avant de conclure. Le piège double : isoler le seul poste (la propagation est déjà partie) ou tout le site (on arrête l'activité pour rien). Et blâmer l'employé qui a signalé détruit la culture du signalement — l'examen le compte faux.",
+  forensics:"À l'examen (SY0-701), ça tombe comme ça : « Un poste encore allumé doit être analysé après un incident. Dans quel ordre collecte-t-on les preuves ? » Réponse attendue : <b>par ordre de volatilité — la mémoire vive et les processus en cours d'abord, le disque ensuite</b>. Le piège : commencer par le disque parce qu'il contient « plus de preuves » — éteindre le poste efface la RAM, et analyser le disque saisi sans bloqueur en écriture ni vérification d'empreinte abîme la preuve."
 };
