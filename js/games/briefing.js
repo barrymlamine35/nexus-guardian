@@ -20,6 +20,21 @@ function startBriefing(gameId){
   if(gameId==="forensics"){
     html += '<div class="card"><h3>Le banc d\'analyse</h3><p>10 artefacts à classer · une frise à remettre en ordre · une question de préservation.</p></div>';
   }
+  if(gameId==="banque"){
+    html += '<div class="card"><h3>La table des virements</h3><p>8 opérations à classer · 3 décisions à trancher avec l\'équipe fraude.</p></div>';
+  }
+  if(gameId==="rouge"){
+    html += '<div class="card"><h3>Les flux de la Tour Rouge</h3><p>8 flux à classer · une kill chain à remettre en ordre · une contre-mesure à choisir.</p></div>';
+  }
+  if(gameId==="dev"){
+    html += '<div class="card"><h3>La revue de code</h3><p>8 extraits à examiner · 4 correctifs à choisir · un principe à retenir.</p></div>';
+  }
+  if(gameId==="conseil"){
+    html += '<div class="card"><h3>La table du conseil</h3><p>5 décisions, des arbitrages, aucune bonne réponse facile.</p></div>';
+  }
+  if(gameId==="cloud"){
+    html += '<div class="card"><h3>L\'audit cloud</h3><p>8 ressources à classer · 4 remédiations à choisir · un principe à retenir.</p></div>';
+  }
   html += '<button class="btn primary big" id="bfGo">Commencer la mission</button>';
   $("view-briefing").innerHTML = html;
   msTypeEl($("bfTw"), g.briefing);
@@ -33,6 +48,11 @@ function launchGame(gameId){
   if(gameId==="phish") startPhish(null);
   if(gameId==="defense") startDefense(null);
   if(gameId==="forensics") startForensics(null);
+  if(gameId==="banque") startBanque(null);
+  if(gameId==="rouge") startRouge(null);
+  if(gameId==="dev") startDev(null);
+  if(gameId==="conseil") startConseil(null);
+  if(gameId==="cloud") startCloud(null);
 }
 function resumeGame(){
   var p = S.inProgress; if(!p) return;
@@ -40,6 +60,11 @@ function resumeGame(){
   if(p.game==="phish") startPhish(p);
   if(p.game==="defense") startDefense(p);
   if(p.game==="forensics") startForensics(p);
+  if(p.game==="banque") startBanque(p);
+  if(p.game==="rouge") startRouge(p);
+  if(p.game==="dev") startDev(p);
+  if(p.game==="conseil") startConseil(p);
+  if(p.game==="cloud") startCloud(p);
 }
 function quitGame(){
   msClearType();
