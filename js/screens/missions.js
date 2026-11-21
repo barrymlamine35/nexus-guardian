@@ -11,6 +11,11 @@ function renderMissions(){
       + '<button class="btn primary big" data-act="play" data-game="'+id+'">'+(S.plays[id]>0?'Rejouer':'Commencer')+'</button></div>';
   });
   if(campDone>=3) html += '<div class="card"><h3>Campagne SOC terminée</h3><p>L\'incident d\'Atlas Logistics est bouclé : tri, phishing, défense. La maîtrise, elle, se confirmera à l\'épreuve différée. Les autres types de missions et les actes suivants restent la vision à long terme — pas le périmètre de ce prototype.</p></div>';
+  html += '<h2>Labo Forensics</h2><p class="sub"><span class="tag soc">Analyse de preuves</span></p><p class="sub">Le poste saisi est sur le banc : 10 artefacts à classer, une frise à remettre en ordre, et la question qui fait tenir un dossier — quoi préserver en premier.</p>';
+  var fg = GAMES.forensics, fdg = dailyGame()==="forensics";
+  html += '<div class="card"><div class="row between"><span class="tag '+fg.domaine+'">SOC</span>'+(fdg?'<span class="tag ms-daily">Mission du jour</span>':'')+(S.best.forensics>0?'<span class="tag done">Meilleur : '+S.best.forensics+' / 100</span>':'')+'</div>'
+    + '<h3 style="margin-top:8px">'+fg.name+'</h3><p>'+fg.lieu+' · XP de base : '+fg.xpBase+(S.plays.forensics>0?' · Jouée '+S.plays.forensics+' fois':'')+'</p>'
+    + '<button class="btn primary big" data-act="play" data-game="forensics">'+(S.plays.forensics>0?'Rejouer':'Commencer')+'</button></div>';
   html += '<h2>Mission 1 — Alerte à 03h12</h2><p class="sub"><span class="tag soc">Joue une vraie mission</span></p><p class="sub">L\'incident complet d\'Atlas Logistics, en sept temps : tri, corrélation, décision, enquête, éradication, message à la direction, debrief noté sur cinq axes. Trois variantes, trois points d\'entrée différents.</p>';
   [["A","Variante A · Le chef d'équipe","Le faux e-mail de paie et le document piégé de Joël Mbaye. Décision clé : le quai 4."],
    ["B","Variante B · Le faux fournisseur","Nadia Perrin, la comptabilité, et un virement de 48 000 € programmé à 8 h."],
@@ -61,7 +66,7 @@ function renderMissions(){
   html += '<div class="card"><div class="row between"><div><h3>ARM Architecture — alias de XNU Dojo</h3><p>Doublon exact des modules 1 et 2 de XNU Dojo (Introduction to ARM, 15 défis · ARM64 ROP, 13 défis — 28 sur 28 identiques, vérifiés défi par défi) : mêmes défis, déjà comptés là-bas, aucune leçon en double. Leçons ARM terminées : '+dojoXNUArmCount()+' / '+dojoXNUArmLessons().length+'</p></div><span class="tag soc">Alias</span></div><button class="btn primary big" data-act="goarmarch">Voir les leçons ARM dans XNU Dojo</button></div>';
   html += '<div class="card"><div class="row between"><div><h3>ARM Dojo — alias de XNU Dojo</h3><p>Doublon exact du module 1 de XNU Dojo (Introduction to ARM, 15 défis — 15 sur 15 identiques, vérifiés défi par défi) : mêmes défis, déjà comptés là-bas, aucune leçon en double. Leçons Introduction to ARM terminées : '+dojoXNUIntroCount()+' / '+dojoXNUIntroLessons().length+'</p></div><span class="tag soc">Alias</span></div><button class="btn primary big" data-act="goarmdojo">Voir les leçons Introduction to ARM dans XNU Dojo</button></div>';
   html += '<h2>Secteurs fermés</h2>';
-  [["Labo Forensics","Analyse de preuves"],["La Banque","Fraude et transactions"],["Tour Rouge","Territoire d'ÉCLIPSE"],["Quartier Dev","Code et applications"],["Tour du Conseil","Stratégie et gouvernance"],["Ciel Cloud","Infrastructure cloud"]].forEach(function(l){
+  [["La Banque","Fraude et transactions"],["Tour Rouge","Territoire d'ÉCLIPSE"],["Quartier Dev","Code et applications"],["Tour du Conseil","Stratégie et gouvernance"],["Ciel Cloud","Infrastructure cloud"]].forEach(function(l){
     html += '<div class="card" style="opacity:.55"><div class="row between"><div><h3>'+l[0]+'</h3><p>'+l[1]+'</p></div><span class="tag lock">Bientôt</span></div></div>';
   });
   $("view-missions").innerHTML = html;

@@ -31,7 +31,7 @@ function finishMission(gameId, score, breakdown, whyHtml, extra, whyTitle){
   var covBefore = S.coverage[gameId].length;
   (finishMission._covered||[]).forEach(function(o){ if(S.coverage[gameId].indexOf(o)<0) S.coverage[gameId].push(o); });
   var covNew = S.coverage[gameId].length - covBefore;
-  var covTotal = gameId==="tri" ? ALERTS.length : gameId==="phish" ? EMAILS.length : WAVES.length;
+  var covTotal = gameId==="tri" ? ALERTS.length : gameId==="phish" ? EMAILS.length : gameId==="forensics" ? FORENSICS_ITEMS.length : WAVES.length;
   /* Maîtrise : réussir seul, sans indice, dans une situation nouvelle */
   var hintsUsed = finishMission._hintsUsed||0;
   var variant = (finishMission._variant===undefined ? 0 : finishMission._variant);
@@ -69,15 +69,15 @@ function finishMission(gameId, score, breakdown, whyHtml, extra, whyTitle){
     if(d){ if(DEX_JUST.indexOf(id)<0) DEX_JUST.push(id); html += '<div class="unlock gx-pop">Fiche Cyberdex débloquée : <b>'+d.name+'</b></div>'; }
   });
   html += '<div class="card"><h3>'+(whyTitle||'Le pourquoi, alerte par alerte')+'</h3>'+whyHtml+'</div>';
-  if(gameId==="tri") html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta — Mentore</div><div class="txt">« <span class="ms-tw typing" id="dbTw"></span> »</div></div></div></div>';
+  if(gameId==="tri" || gameId==="forensics") html += '<div class="card"><div class="mentor"><div class="ava">AK</div><div><div class="who">Cdt. Amara Keïta — Mentore</div><div class="txt">« <span class="ms-tw typing" id="dbTw"></span> »</div></div></div></div>';
   html += examBoxHtml(gameId);
-  html += '<p class="sub">Lien Security+ : '+ (gameId==="defense" ? "architecture et sécurité réseau — segmentation, DMZ, défense en profondeur." : gameId==="phish" ? "ingénierie sociale et sécurité des communications — phishing, BEC, SPF/DKIM/DMARC." : "opérations de sécurité et réponse à incident — tri, corrélation, escalade.") +'</p>';
+  html += '<p class="sub">Lien Security+ : '+ (gameId==="defense" ? "architecture et sécurité réseau — segmentation, DMZ, défense en profondeur." : gameId==="phish" ? "ingénierie sociale et sécurité des communications — phishing, BEC, SPF/DKIM/DMARC." : gameId==="forensics" ? "réponse à incident et analyse forensique — ordre de volatilité, chaîne de possession, artefacts Windows (4624, 4625, 4688, 7045)." : "opérations de sécurité et réponse à incident — tri, corrélation, escalade.") +'</p>';
   html += '<div class="row" style="gap:9px"><button class="btn" style="flex:1" id="dbHome">Retour</button><button class="btn primary" style="flex:1" id="dbReplay">Rejouer</button></div>';
   $("view-debrief").innerHTML = html;
   $("view-debrief").querySelectorAll(".reward .rv").forEach(function(el){ djCountUp(el); });
   msScoreCount($("view-debrief"));
   msStaggerWhy($("view-debrief"));
-  msTypeEl($("dbTw"), 'Bien joué pour Atlas. Mais écoute-moi bien : le même mode opératoire — mêmes heures, même patience — vient d\'être repéré ailleurs dans la ville. Une clinique, puis une mairie. On dirait qu\'ÉCLIPSE répète sa nuit, organisation après organisation. La suite se joue là-bas : Épisode 2, la Clinique Saint-Roch.');
+  msTypeEl($("dbTw"), gameId==="forensics" ? 'La frise est claire : 03:12, le compte tombe, et tout le reste suit. Tu as les preuves, dans l\'ordre, et tu sais ce qu\'on préserve en premier — c\'est ça qui fait tenir un dossier.' : 'Bien joué pour Atlas. Mais écoute-moi bien : le même mode opératoire — mêmes heures, même patience — vient d\'être repéré ailleurs dans la ville. Une clinique, puis une mairie. On dirait qu\'ÉCLIPSE répète sa nuit, organisation après organisation. La suite se joue là-bas : Épisode 2, la Clinique Saint-Roch.');
   show("debrief");
   $("dbHome").addEventListener("click", function(){ show("hub"); });
   $("dbReplay").addEventListener("click", function(){ startBriefing(gameId); });
