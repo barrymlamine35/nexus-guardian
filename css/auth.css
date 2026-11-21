@@ -1,0 +1,22 @@
+/* ---------- connexion ---------- */
+body.authing #topbar,body.authing #bottomnav{display:none;}
+body.authing main{padding-bottom:24px;}
+.authwrap{max-width:340px;margin:0 auto;padding-top:28px;text-align:center;}
+.authlogo{width:128px;height:128px;border-radius:26px;border:1px solid var(--line);object-fit:cover;}
+.authname{font-size:27px;font-weight:800;margin-top:14px;letter-spacing:.01em;}
+.authtoggle{display:flex;gap:8px;margin:18px 0 6px;}
+.authtoggle button{flex:1;border:1px solid var(--line);background:var(--panel2);border-radius:12px;font-weight:700;font-size:14.5px;padding:10px 6px;min-height:48px;color:var(--mut);}
+.authtoggle button.on{background:rgba(45,212,238,.14);border-color:var(--cyan-d);color:var(--cyan);}
+.field{margin:10px 0;text-align:left;}
+.field label{display:block;font-size:13.5px;font-weight:600;color:var(--mut);margin:0 0 5px 2px;}
+.field input{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--txt);min-height:50px;font-size:16px;}
+.field input:focus{outline:none;border-color:var(--cyan-d);}
+.passwrap{position:relative;}
+.passwrap input{padding-right:54px;}
+.pass-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:44px;height:44px;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;color:var(--mut);}
+.pass-toggle svg{width:22px;height:22px;flex:none;}
+.pass-toggle:hover,.pass-toggle:focus-visible{color:var(--cyan);outline:none;}
+.autherr{color:var(--red);font-size:14px;min-height:20px;margin:8px 0 4px;text-align:left;}
+.authlink{color:var(--cyan);font-weight:600;font-size:14.5px;margin-top:8px;min-height:44px;padding:4px 8px;}
+.authmsg{margin-top:6px;}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
