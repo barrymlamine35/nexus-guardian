@@ -6,7 +6,7 @@
    (404, 500…) ne doit jamais être conservée, sinon elle peut resservir
    à la place du jeu quand le réseau flanche. */
 
-const CACHE = 'nexus-guardian-v2';
+const CACHE = 'nexus-guardian-v3';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
