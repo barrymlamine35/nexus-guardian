@@ -17,6 +17,9 @@ function startBriefing(gameId){
   if(gameId==="phish"){
     html += '<div class="card"><h3>Boîte d\'Atlas Logistics</h3><p>6 e-mails à examiner.</p></div>';
   }
+  if(gameId==="forensics"){
+    html += '<div class="card"><h3>Le banc d\'analyse</h3><p>10 artefacts à classer · une frise à remettre en ordre · une question de préservation.</p></div>';
+  }
   html += '<button class="btn primary big" id="bfGo">Commencer la mission</button>';
   $("view-briefing").innerHTML = html;
   msTypeEl($("bfTw"), g.briefing);
@@ -29,12 +32,14 @@ function launchGame(gameId){
   if(gameId==="tri") startTri(null);
   if(gameId==="phish") startPhish(null);
   if(gameId==="defense") startDefense(null);
+  if(gameId==="forensics") startForensics(null);
 }
 function resumeGame(){
   var p = S.inProgress; if(!p) return;
   if(p.game==="tri") startTri(p);
   if(p.game==="phish") startPhish(p);
   if(p.game==="defense") startDefense(p);
+  if(p.game==="forensics") startForensics(p);
 }
 function quitGame(){
   msClearType();
