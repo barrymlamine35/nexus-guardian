@@ -6,14 +6,14 @@ function ydayStr(){ var d=new Date(); d.setDate(d.getDate()-1); return d.getFull
 function defState(){ return {
   alias:"Recrue", credits:0, xp:{soc:0, reseau:0},
   streak:0, lastDay:"",
-  plays:{tri:0, phish:0, defense:0, forensics:0}, best:{tri:0, phish:0, defense:0, forensics:0},
+  plays:{tri:0, phish:0, defense:0, forensics:0, banque:0, rouge:0, dev:0, conseil:0, cloud:0}, best:{tri:0, phish:0, defense:0, forensics:0, banque:0, rouge:0, dev:0, conseil:0, cloud:0},
   badges:[], dex:[], fpTotal:0,
   dailyDate:"", dailyDone:false, kevinDone:false, kevinFailed:false,
   sound:false, examMode:false, inProgress:null, seenIntro:false,
   coldDone:false, kevinStage:0,
-  coverage:{tri:[], phish:[], defense:[], forensics:[]},
-  mastery:{tri:{clean:0,total:0}, phish:{clean:0,total:0}, defense:{clean:0,total:0}, forensics:{clean:0,total:0}},
-  seenVariants:{tri:[], phish:[], defense:[], forensics:[]},
+  coverage:{tri:[], phish:[], defense:[], forensics:[], banque:[], rouge:[], dev:[], conseil:[], cloud:[]},
+  mastery:{tri:{clean:0,total:0}, phish:{clean:0,total:0}, defense:{clean:0,total:0}, forensics:{clean:0,total:0}, banque:{clean:0,total:0}, rouge:{clean:0,total:0}, dev:{clean:0,total:0}, conseil:{clean:0,total:0}, cloud:{clean:0,total:0}},
+  seenVariants:{tri:[], phish:[], defense:[], forensics:[], banque:[], rouge:[], dev:[], conseil:[], cloud:[]},
   delayedDue:0, delayedDone:false, delayedScore:0,
   m1:{ done:false, best:{A:0, B:0, C:0}, plays:{A:0, B:0, C:0} },
   campaign:{ done:{clinique:false, mairie:false, finale:false}, best:{clinique:0, mairie:0, finale:0}, plays:{clinique:0, mairie:0, finale:0},
@@ -40,6 +40,13 @@ if(S.best.forensics===undefined) S.best.forensics = 0;
 if(!S.coverage.forensics) S.coverage.forensics = [];
 if(!S.mastery.forensics) S.mastery.forensics = {clean:0,total:0};
 if(!S.seenVariants.forensics) S.seenVariants.forensics = [];
+["banque","rouge","dev","conseil","cloud"].forEach(function(id){
+  if(S.plays[id]===undefined) S.plays[id] = 0;
+  if(S.best[id]===undefined) S.best[id] = 0;
+  if(!S.coverage[id]) S.coverage[id] = [];
+  if(!S.mastery[id]) S.mastery[id] = {clean:0,total:0};
+  if(!S.seenVariants[id]) S.seenVariants[id] = [];
+});
 if(S.dailyDate !== todayStr()){ S.dailyDate = todayStr(); S.dailyDone = false; }
 if(S.lastDay !== todayStr()){
   S.streak = (S.lastDay === ydayStr()) ? S.streak + 1 : 1;
@@ -63,4 +70,4 @@ function levelOf(xp){ return Math.min(10, Math.floor(xp/100)+1); }
 function levelPct(xp){ return xp>=1000 ? 100 : (xp%100); }
 function totalXP(){ return S.xp.soc + S.xp.reseau; }
 /* Plus de dégressivité anti-farming : chaque partie rapporte plein pot, ses paramètres changent à la place (variantes). */
-function dailyGame(){ var games=["tri","phish","defense","forensics"]; var d=new Date(); var n = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())/86400000); return games[n%4]; }
+function dailyGame(){ var games=["tri","phish","defense","forensics","banque","rouge","dev","conseil","cloud"]; var d=new Date(); var n = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())/86400000); return games[n%9]; }
