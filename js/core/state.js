@@ -22,39 +22,52 @@ function defState(){ return {
   dojo:{ done:{}, best:{} },
   devops:{ done:{}, best:{} }
 };}
-var S;
-try{ S = JSON.parse(localStorage.getItem(KEY)) || defState(); }catch(e){ S = defState(); }
-["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","examMode","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign","m1","pack","dojo","devops"].forEach(function(k){ if(S[k]===undefined) S[k]=defState()[k]; });
-if(!S.dojo || !S.dojo.done || !S.dojo.best) S.dojo = defState().dojo;
-if(!S.devops || !S.devops.done || !S.devops.best) S.devops = defState().devops;
-if(!S.pack || !S.pack.cards || !S.pack.scen) S.pack = defState().pack;
-if(!S.pack.sims) S.pack.sims = {};
-if(!S.m1 || !S.m1.best || !S.m1.plays) S.m1 = defState().m1;
-if(!S.campaign || !S.campaign.trust || !S.campaign.done) S.campaign = defState().campaign;
-if(!S.campaign.upgrades) S.campaign.upgrades = [];
-if(!S.coverage || !S.coverage.tri) S.coverage = defState().coverage;
-if(!S.mastery || !S.mastery.tri) S.mastery = defState().mastery;
-if(!S.seenVariants || !S.seenVariants.tri) S.seenVariants = defState().seenVariants;
-if(S.plays.forensics===undefined) S.plays.forensics = 0;
-if(S.best.forensics===undefined) S.best.forensics = 0;
-if(!S.coverage.forensics) S.coverage.forensics = [];
-if(!S.mastery.forensics) S.mastery.forensics = {clean:0,total:0};
-if(!S.seenVariants.forensics) S.seenVariants.forensics = [];
-["banque","rouge","dev","conseil","cloud"].forEach(function(id){
-  if(S.plays[id]===undefined) S.plays[id] = 0;
-  if(S.best[id]===undefined) S.best[id] = 0;
-  if(!S.coverage[id]) S.coverage[id] = [];
-  if(!S.mastery[id]) S.mastery[id] = {clean:0,total:0};
-  if(!S.seenVariants[id]) S.seenVariants[id] = [];
-});
-if(S.dailyDate !== todayStr()){ S.dailyDate = todayStr(); S.dailyDone = false; }
-if(S.lastDay !== todayStr()){
-  S.streak = (S.lastDay === ydayStr()) ? S.streak + 1 : 1;
-  S.lastDay = todayStr();
+var DEMO_KEY = "nexus-guardian-demo";
+var guestMode = false;
+function isGuest(){ return guestMode; }
+/* Remplit les clés manquantes d'une sauvegarde (ancienne version, démo,
+   import) et applique la logique du jour et de la série. */
+function normalizeState(s){
+  if(!s || typeof s !== "object" || Array.isArray(s)) s = defState();
+  ["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","examMode","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign","m1","pack","dojo","devops"].forEach(function(k){ if(s[k]===undefined) s[k]=defState()[k]; });
+  if(!s.dojo || !s.dojo.done || !s.dojo.best) s.dojo = defState().dojo;
+  if(!s.devops || !s.devops.done || !s.devops.best) s.devops = defState().devops;
+  if(!s.pack || !s.pack.cards || !s.pack.scen) s.pack = defState().pack;
+  if(!s.pack.sims) s.pack.sims = {};
+  if(!s.m1 || !s.m1.best || !s.m1.plays) s.m1 = defState().m1;
+  if(!s.campaign || !s.campaign.trust || !s.campaign.done) s.campaign = defState().campaign;
+  if(!s.campaign.upgrades) s.campaign.upgrades = [];
+  if(!s.coverage || !s.coverage.tri) s.coverage = defState().coverage;
+  if(!s.mastery || !s.mastery.tri) s.mastery = defState().mastery;
+  if(!s.seenVariants || !s.seenVariants.tri) s.seenVariants = defState().seenVariants;
+  if(s.plays.forensics===undefined) s.plays.forensics = 0;
+  if(s.best.forensics===undefined) s.best.forensics = 0;
+  if(!s.coverage.forensics) s.coverage.forensics = [];
+  if(!s.mastery.forensics) s.mastery.forensics = {clean:0,total:0};
+  if(!s.seenVariants.forensics) s.seenVariants.forensics = [];
+  ["banque","rouge","dev","conseil","cloud"].forEach(function(id){
+    if(s.plays[id]===undefined) s.plays[id] = 0;
+    if(s.best[id]===undefined) s.best[id] = 0;
+    if(!s.coverage[id]) s.coverage[id] = [];
+    if(!s.mastery[id]) s.mastery[id] = {clean:0,total:0};
+    if(!s.seenVariants[id]) s.seenVariants[id] = [];
+  });
+  if(s.dailyDate !== todayStr()){ s.dailyDate = todayStr(); s.dailyDone = false; }
+  if(s.lastDay !== todayStr()){
+    s.streak = (s.lastDay === ydayStr()) ? s.streak + 1 : 1;
+    s.lastDay = todayStr();
+  }
+  return s;
 }
+function loadRealState(){
+  var s = null;
+  try{ s = JSON.parse(localStorage.getItem(KEY)); }catch(e){ s = null; }
+  return normalizeState(s);
+}
+var S = loadRealState();
 var saveFailed = false, offlineNoticed = false;
 function save(){
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); if(saveFailed){ saveFailed = false; } }
+  try{ localStorage.setItem(guestMode ? DEMO_KEY : KEY, JSON.stringify(S)); if(saveFailed){ saveFailed = false; } }
   catch(e){
     /* Stockage plein ou indisponible : le jeu ne plante jamais sur une sauvegarde.
        La progression reste en mémoire pour la session, et le joueur est prévenu. */
@@ -116,6 +129,85 @@ function validateSave(obj){
   ids = Object.keys(obj.best);
   for(i=0;i<ids.length;i++){ if(typeof obj.best[ids[i]] !== "number") return false; }
   return true;
+}
+/* ================= MODE DÉMO (sans compte) =================
+   Un avant-goût : la Mission 1 et la première leçon du Dojo sont jouables
+   sans compte. La progression démo vit dans sa propre clé locale
+   (nexus-guardian-demo) et ne touche jamais la vraie sauvegarde. Aucun
+   appel Firebase : la démo marche même hors ligne. */
+function demoLockSheet(what){
+  sheet('<h3>Crée ton compte pour continuer</h3><p>La démo s\'arrête ici — '+esc(what)+' et tout le reste t\'attendent derrière un compte gratuit. Ta progression démo sera gardée si tu crées ton compte.</p><div class="sbtns"><button class="btn primary big" id="dlGo">Créer mon compte</button><button class="btn big" onclick="closeSheet()">Plus tard</button></div>');
+  $("dlGo").addEventListener("click", function(){ closeSheet(); exitDemoToAuth("signup"); });
+}
+function demoCanPlayDistrict(){ return !guestMode; }
+function demoCanOpenLesson(id){ return !guestMode || id === "SH-01"; }
+function demoCanOpenPackSection(){ return !guestMode; }
+function demoCanOpenDevOpsLesson(){ return !guestMode; }
+function enterDemo(){
+  var raw = null;
+  try{ raw = JSON.parse(localStorage.getItem(DEMO_KEY)); }catch(e){ raw = null; }
+  var snd = S.sound;
+  S = normalizeState(raw);
+  S.sound = snd;
+  guestMode = true;
+  save();
+  gameEntered = true;
+  enterGame();
+  toast("Mode démo — Mission 1 et première leçon du Dojo, sans compte.");
+}
+function exitDemoToAuth(mode){
+  if(guestMode){ try{ localStorage.setItem(DEMO_KEY, JSON.stringify(S)); }catch(e){} }
+  guestMode = false;
+  gameEntered = false;
+  var snd = S.sound;
+  S = loadRealState();
+  S.sound = snd;
+  save();
+  authSetMode(mode || "signup");
+  show("auth");
+}
+function demoSaveExists(){
+  var d = null;
+  try{ d = JSON.parse(localStorage.getItem(DEMO_KEY)); }catch(e){ d = null; }
+  return validateSave(d) ? d : null;
+}
+function hasRealProgress(s){
+  if(!s) return false;
+  if((((s.xp && s.xp.soc)||0) + ((s.xp && s.xp.reseau)||0)) > 0) return true;
+  if(s.credits > 0) return true;
+  if(s.m1 && s.m1.done) return true;
+  if(s.dojo && s.dojo.done && Object.keys(s.dojo.done).length) return true;
+  if(s.devops && s.devops.done && Object.keys(s.devops.done).length) return true;
+  if(s.pack && s.pack.scen && Object.keys(s.pack.scen).length) return true;
+  if(s.campaign && s.campaign.finished) return true;
+  var ids = ["tri","phish","defense","forensics","banque","rouge","dev","conseil","cloud"], i;
+  for(i=0;i<ids.length;i++){ if(s.plays && s.plays[ids[i]]>0) return true; }
+  return false;
+}
+function applyDemoMigration(demo){
+  var snd = S.sound;
+  S = normalizeState(demo);
+  S.sound = snd;
+  guestMode = false;
+  save();
+  try{ localStorage.removeItem(DEMO_KEY); }catch(e){}
+}
+function maybeOfferDemoMigration(){
+  var d = demoSaveExists();
+  if(!d) return;
+  if(hasRealProgress(S)) return; /* un compte avec une progression ne se fait jamais écraser */
+  var xp = (d.xp.soc||0) + (d.xp.reseau||0);
+  sheet('<h3>Garder ma progression démo ?</h3><p>Tu as déjà joué en démo sur cet appareil.</p><p><b>'+esc(d.alias)+'</b> · XP total : <b>'+xp+'</b> · Crédits : <b>'+d.credits+'</b></p><div class="sbtns"><button class="btn primary big" id="dmYes">Oui, garder ma progression</button><button class="btn big" id="dmNo">Non, repartir de zéro</button></div>');
+  $("dmYes").addEventListener("click", function(){
+    applyDemoMigration(d);
+    closeSheet();
+    toast("Progression démo récupérée.");
+    renderHub();
+  });
+  $("dmNo").addEventListener("click", function(){
+    try{ localStorage.removeItem(DEMO_KEY); }catch(e){}
+    closeSheet();
+  });
 }
 function levelOf(xp){ return Math.min(10, Math.floor(xp/100)+1); }
 function levelPct(xp){ return xp>=1000 ? 100 : (xp%100); }
