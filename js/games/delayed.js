@@ -13,6 +13,7 @@ var DELAYED_Q = [
 ];
 var delayed = null;
 function startDelayed(){
+  if(isGuest()){ demoLockSheet("Épreuve différée"); return; }
   delayed = { idx:0, answers:[] };
   show("delayed");
   renderDelayed();

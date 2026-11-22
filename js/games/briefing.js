@@ -2,6 +2,7 @@
 /* ================= BRIEFING ================= */
 var pendingGame = null;
 function startBriefing(gameId){
+  if(!demoCanPlayDistrict()){ demoLockSheet(GAMES[gameId].name); return; }
   pendingGame = gameId;
   var g = GAMES[gameId];
   var html = '<div class="ghead"><button class="quit" id="bfBack" aria-label="Retour">✕</button><div class="ttl">Briefing</div></div>';
@@ -55,6 +56,7 @@ function launchGame(gameId){
   if(gameId==="cloud") startCloud(null);
 }
 function resumeGame(){
+  if(!demoCanPlayDistrict()){ demoLockSheet("Partie en cours"); return; }
   var p = S.inProgress; if(!p) return;
   if(p.game==="tri") startTri(p);
   if(p.game==="phish") startPhish(p);

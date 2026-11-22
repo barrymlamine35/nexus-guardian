@@ -120,6 +120,7 @@ function finaleWeaknessLines(){
 /* ================= MOTEUR MINI-CAMPAGNE ================= */
 var camp = null;
 function startCampChapter(cid){
+  if(isGuest()){ demoLockSheet("La nuit d'ÉCLIPSE"); return; }
   if(cid==="finale" && !finaleUnlocked()){ toast("Finale verrouillée : termine d'abord les épisodes 1 à 3."); sndBad(); return; }
   camp = { id:cid, idx:0, answers:[], intro:true, trustRun:S.campaign.trust.mairie, start:Date.now() };
   show("campaign");
@@ -235,6 +236,7 @@ function finishCampChapter(){
 }
 /* ================= ECRAN DE CAMPAGNE ================= */
 function openCampaign(){
+  if(isGuest()){ demoLockSheet("La nuit d'ÉCLIPSE"); return; }
   camp = null;
   show("campaign");
   renderCampaignScreen();
