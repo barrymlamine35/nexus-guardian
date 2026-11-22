@@ -6,6 +6,12 @@ function renderDojo(){
   /* ---- écran leçon ---- */
   if(dojoScreen==="lesson" && dojoLessonId){
     var course = dojoCourseOf(dojoLessonId), LIST = dojoListOf(course), listScreen = dojoListScreen(course);
+    if(isGuest() && dojoLessonId!=="SH-01"){
+      dojoScreen = listScreen; dojoLessonId = null; dojoAnswer = null; dojoOrder = []; dojoOrderDone = false;
+      renderDojo();
+      demoLockSheet("Cette leçon");
+      return;
+    }
     var li = LIST.map(function(l, i){ return l.id===dojoLessonId ? i : -1; }).filter(function(i){ return i>=0; })[0];
     var L = LIST[li];
     if(L.term){ if(!djTerm || djTerm.id!==L.id) djTerm = djTermNew(L); }
