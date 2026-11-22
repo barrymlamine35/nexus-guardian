@@ -38,6 +38,12 @@ function renderDevOps(){
   if(devopsScreen!=="lesson") dvTerm = null;
   /* ---- écran leçon ---- */
   if(devopsScreen==="lesson" && devopsLessonId){
+    if(isGuest()){
+      devopsScreen = "map"; devopsLessonId = null; devopsAnswer = null; devopsOrder = []; devopsOrderDone = false;
+      renderDevOps();
+      demoLockSheet("DevOps");
+      return;
+    }
     var found = devopsFind(devopsLessonId);
     if(!found){ devopsScreen = "map"; devopsLessonId = null; }
     else {
