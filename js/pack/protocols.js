@@ -226,6 +226,12 @@ function pxSyncControls(){
 function renderPack(){
   var root = $("view-pack");
   var html = "";
+  if(isGuest() && packTab!=="home"){
+    packTab = "home";
+    renderPack();
+    demoLockSheet("Pack Security+");
+    return;
+  }
   if(packTab!=="net") stopNetAnim();
   if(packTab==="home"){
     html += '<div class="ghead"><button class="quit" id="pkBack" aria-label="Retour">‹</button><div class="ttl">Pack Security+</div></div>';
@@ -246,6 +252,7 @@ function renderPack(){
     root.querySelectorAll("[data-pk]").forEach(function(b){
       b.addEventListener("click", function(){
         var k = b.getAttribute("data-pk"); sndTap();
+        if(isGuest()){ demoLockSheet("Pack Security+"); return; }
         if(k==="exam"){ startPackExam(); return; }
         packTab = k; packScenAnswer = null;
         if(k==="sims") packSim = null;
