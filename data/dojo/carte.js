@@ -32,7 +32,7 @@ function dojoLessonTile(l, i){
   return '<button class="ljtile'+(done ? " done" : "")+'" data-djlesson="'+l.id+'">'
     + '<span class="lj-top"><span class="lj-id">'+esc(l.id)+'</span><span class="lj-st">'+(done ? (best>=100 ? "✓ 100 %" : best+" %") : "")+'</span></span>'
     + '<span class="lj-t">'+esc(l.t)+'</span>'
-    + '<span class="lj-rw">+20 XP · +10 crédits</span>'
+    + '<span class="lj-rw">'+(isGuest() && l.id!=="SH-01" ? "🔒 Compte requis" : "+20 XP · +10 crédits")+'</span>'
     + '<span class="lj-b">Leçon '+(i+1)+(done ? (best>=100 ? " · Réussie" : " · Terminée") : "")+'</span></button>';
 }
 function dojoFinishLesson(lesson, pct){
