@@ -66,6 +66,57 @@ function saveStateText(){
   return saveFailed ? "Progression non enregistrée sur cet appareil — stockage indisponible. Elle reste en mémoire pour cette session, mais peut se perdre si tu fermes le jeu."
     : "Progression enregistrée sur cet appareil.";
 }
+/* Export / import de la sauvegarde — local uniquement, jamais de cloud.
+   Export : partage du fichier d'abord (iPhone : feuille de partage, puis
+   « Enregistrer dans Fichiers »), téléchargement sinon. Import : le fichier
+   est validé avant tout, puis remplacé seulement après confirmation. */
+function exportSave(){
+  var data;
+  try{ data = JSON.stringify(S); }
+  catch(e){ toast("Export impossible sur cet appareil."); return; }
+  var fname = "nexus-guardian-sauvegarde-" + todayStr() + ".json";
+  var file = null;
+  try{ file = new File([data], fname, {type:"application/json"}); }catch(e){ file = null; }
+  if(file && navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      var p = navigator.share({files:[file], title:"Sauvegarde Nexus Guardian"});
+      if(p && p.then){
+        p.then(function(){ toast("Sauvegarde partagée — garde le fichier précieusement."); })
+         .catch(function(err){
+           if(err && err.name === "AbortError") return; /* partage annulé : on ne fait rien */
+           downloadSaveFile(data, fname);
+         });
+        return;
+      }
+    }catch(e){ /* partage indisponible : on passe au téléchargement */ }
+  }
+  downloadSaveFile(data, fname);
+}
+function downloadSaveFile(data, fname){
+  try{
+    var blob = new Blob([data], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = fname;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    toast("Sauvegarde exportée — enregistre le fichier dans Fichiers.");
+  }catch(e){ toast("Export impossible sur cet appareil."); }
+}
+function validateSave(obj){
+  if(!obj || typeof obj !== "object" || Array.isArray(obj)) return false;
+  if(typeof obj.alias !== "string" || !obj.alias) return false;
+  if(typeof obj.credits !== "number") return false;
+  if(!obj.xp || typeof obj.xp !== "object" || Array.isArray(obj.xp)) return false;
+  if(typeof obj.xp.soc !== "number" || typeof obj.xp.reseau !== "number") return false;
+  if(!obj.plays || typeof obj.plays !== "object" || Array.isArray(obj.plays)) return false;
+  if(!obj.best || typeof obj.best !== "object" || Array.isArray(obj.best)) return false;
+  var ids = Object.keys(obj.plays), i;
+  for(i=0;i<ids.length;i++){ if(typeof obj.plays[ids[i]] !== "number") return false; }
+  ids = Object.keys(obj.best);
+  for(i=0;i<ids.length;i++){ if(typeof obj.best[ids[i]] !== "number") return false; }
+  return true;
+}
 function levelOf(xp){ return Math.min(10, Math.floor(xp/100)+1); }
 function levelPct(xp){ return xp>=1000 ? 100 : (xp%100); }
 function totalXP(){ return S.xp.soc + S.xp.reseau; }
