@@ -40,7 +40,7 @@
 .mailitem .mf time{color:var(--mut);font-weight:500;font-size:12.5px;flex:none;}
 .mailitem .ms{color:var(--mut);font-size:14px;margin-top:2px;}
 .mailitem.read{opacity:.62;}
-.mailitem .mdone{font-size:11.5px;font-weight:700;color:var(--green);}
+.mailitem .mdone{font-size:12px;font-weight:700;color:var(--green);}
 .mailview .from{font-size:14px;color:var(--mut);}
 .mailview .from b{color:var(--txt);}
 .mailview .subj{font-size:18px;font-weight:800;margin:6px 0 10px;}
@@ -51,7 +51,7 @@
 .attachchip svg{width:16px;height:16px;flex:none;}
 .destbar{display:none;margin-top:10px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px;font-family:ui-monospace,Menlo,monospace;color:var(--txt);word-break:break-all;}
 .destbar.on{display:block;}
-.destbar .dl{font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:2px;}
+.destbar .dl{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:2px;}
 .hdrbtn{margin-top:12px;}
 .hdrs{display:none;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:6px;font-size:14px;}
 .hdrs.on{display:block;}
@@ -64,12 +64,12 @@
 /* defense */
 .netmap{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:10px;position:relative;overflow:hidden;}
 .zoneband{border:1.5px dashed var(--line);border-radius:12px;padding:8px;margin:8px 0;}
-.zoneband .zb-t{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);margin-bottom:6px;}
+.zoneband .zb-t{font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);margin-bottom:6px;}
 .zoneband.dmz{border-color:#713f12;}
 .zoneband.int{border-color:#14532d;}
 .nodes{display:flex;gap:8px;flex-wrap:wrap;}
 .node{flex:1;min-width:86px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:13px;font-weight:700;}
-.node .ns{display:block;font-size:11px;color:var(--mut);font-weight:500;margin-top:1px;}
+.node .ns{display:block;font-size:12px;color:var(--mut);font-weight:500;margin-top:1px;}
 .slot{margin-top:8px;border:1.5px dashed var(--cyan-d);border-radius:10px;min-height:48px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13.5px;color:var(--cyan);font-weight:700;padding:8px;width:100%;background:rgba(45,212,238,.05);}
 .slot.filled{border-style:solid;border-color:var(--line);background:var(--panel2);color:var(--txt);}
 .slot.sel{outline:2px solid var(--cyan);outline-offset:1px;}
@@ -115,7 +115,7 @@
 .reward{display:flex;gap:9px;margin:12px 0;}
 .reward .rw{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;}
 .reward .rw .rv{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums;}
-.reward .rw .rl{font-size:11.5px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.reward .rw .rl{font-size:12px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
 .unlock{background:rgba(244,113,181,.1);border:1px solid #7c2150;border-radius:12px;padding:10px 12px;font-size:14px;margin:10px 0;}
 .unlock b{color:var(--magenta);}
 /* profil */
@@ -184,7 +184,7 @@
 .m1alert .am{color:var(--mut);font-size:13px;margin-top:2px;font-variant-numeric:tabular-nums;}
 .phrase{width:100%;text-align:left;border:1.5px solid var(--line);background:var(--panel2);border-radius:12px;padding:12px 14px;font-weight:600;font-size:14.5px;min-height:52px;margin:6px 0;display:block;}
 .phrase.sel{border-color:var(--cyan);background:rgba(45,212,238,.10);}
-.phrase .pn{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:7px;font-size:11.5px;font-weight:800;padding:1px 7px;margin-right:8px;color:var(--cyan);}
+.phrase .pn{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:7px;font-size:12px;font-weight:800;padding:1px 7px;margin-right:8px;color:var(--cyan);}
 .eradaction{width:100%;text-align:left;border:1.5px solid var(--line);background:var(--panel2);border-radius:12px;padding:12px 14px;font-weight:700;font-size:15px;min-height:52px;margin:6px 0;display:flex;align-items:center;gap:10px;}
 .eradaction .ord{width:26px;height:26px;flex:none;border-radius:50%;background:rgba(45,212,238,.16);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;}
 .eradaction:disabled{opacity:.55;}
