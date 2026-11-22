@@ -31,11 +31,15 @@ function renderProfil(){
   });
   html += '</div><p style="margin-top:10px">Faux positifs bien classés (cumul) : <b style="color:var(--txt)">'+S.fpTotal+' / 50</b></p></div>';
   var dexOn = S.dex.length, dexTot = DEXDATA.length;
+  if(isGuest()){
+    html += '<h2>Cyberdex</h2><div class="card"><h3>Le Cyberdex complet</h3><p>'+dexTot+' fiches — débloque-les en jouant avec un compte.</p><button class="btn primary big" id="dexSignup">Créer mon compte</button></div>';
+  } else {
   html += '<h2>Cyberdex</h2><div class="xpbar" style="margin-top:2px"><div class="xl">Fiches débloquées<span id="dexCount">'+dexOn+' / '+dexTot+'</span></div><div class="xptrack"><i id="dexBar" style="width:0%"></i></div></div>'
     + '<input id="dexSearch" class="dexsearch" type="search" placeholder="Rechercher une fiche…" aria-label="Rechercher dans le Cyberdex">'
     + '<div class="dexfilters"><button class="on" data-dexf="all">Toutes</button><button data-dexf="on">Débloquées</button><button data-dexf="off">À débloquer</button></div>'
     + '<div class="dexgrid" id="dexGrid">';
   html += '</div>';
+  }
   var dexFilter = "all", dexQuery = "";
   function dexRender(){
     var g = $("dexGrid"); if(!g) return;
@@ -74,6 +78,7 @@ function renderProfil(){
     var v = $("aliasInput").value.trim();
     if(v){ S.alias = v; save(); toast("Alias mis à jour."); renderProfil(); }
   });
+  var dx = $("dexSignup"); if(dx) dx.addEventListener("click", function(){ exitDemoToAuth("signup"); });
   var pl = $("pLogout"); if(pl) pl.addEventListener("click", function(){ doSignOut(); });
   var pr = $("pResend"); if(pr) pr.addEventListener("click", function(){
     if(FBUser) FBUser.sendEmailVerification().then(function(){ toast("E-mail de vérification renvoyé."); }).catch(function(e){ toast(fbErrMsg(e)); });

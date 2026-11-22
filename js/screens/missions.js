@@ -3,6 +3,9 @@
 function renderMissions(){
   var campDone = ["tri","phish","defense"].filter(function(g){ return S.best[g]>0; }).length;
   var html = '<h1>Missions</h1><p class="sub">Campagne SOC — Acte 1 · Stagiaire · '+campDone+' / 3 missions terminées</p>';
+  if(isGuest()){
+    html += '<div class="card"><div class="row between"><div><h3 style="margin-top:0">Mode démo</h3><p style="margin:0">Seule la Mission 1 est jouable ici — le reste se débloque avec un compte.</p></div><button class="btn primary" data-act="gotosignup">Créer mon compte</button></div></div>';
+  }
   html += '<div class="campsteps"><i class="'+(S.best.tri>0?"done":"")+'"></i><i class="'+(S.best.phish>0?"done":"")+'"></i><i class="'+(S.best.defense>0?"done":"")+'"></i></div>';
   ["tri","phish","defense"].forEach(function(id, n){
     var g = GAMES[id], dg = dailyGame()===id;

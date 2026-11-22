@@ -14,6 +14,9 @@ var ZONES = [
 function renderHub(){
   var dg = dailyGame(), d = GAMES[dg];
   var html = '<h1>Nexus City</h1>';
+  if(isGuest()){
+    html += '<div class="card"><div class="row between"><div><h3 style="margin-top:0">Mode démo</h3><p style="margin:0">Un avant-goût — Mission 1 et première leçon du Dojo. Le reste se débloque avec un compte.</p></div><button class="btn primary" data-act="gotosignup">Créer mon compte</button></div></div>';
+  }
   html += '<p class="sub">'+esc(S.alias)+' · Stagiaire · XP total : <b style="color:var(--txt)">'+totalXP()+'</b> · SOC N'+levelOf(S.xp.soc)+' · Réseau N'+levelOf(S.xp.reseau)+'</p>';
   html += '<div class="card simcard"><div class="row between"><span class="tag soc">Simulation</span>'+(S.m1.done?'<span class="tag done">Terminée</span>':'')+'</div><h3 style="margin-top:6px">Alerte à 03h12</h3><p>Atlas Logistics · 03h12 — l\'incident complet, 45 minutes en temps accéléré.</p><button class="btn primary big" data-act="simM1">'+(S.m1.done?'Rejouer la simulation':'Lancer la simulation')+'</button></div>';
   if(S.inProgress){
@@ -48,7 +51,7 @@ function renderHub(){
   }
   html += '<div class="city"><svg class="skyline" width="100%" height="70" preserveAspectRatio="none" viewBox="0 0 360 70"><path d="M0 70V38h28V22h22v16h18V10h26v28h20V26h24v12h22V18h26v20h20V30h24v8h22V14h28v24h20V70z" fill="#131f47"/></svg><svg class="citylights" width="100%" height="70" preserveAspectRatio="none" viewBox="0 0 360 70"><rect x="12" y="44" width="3" height="4"/><rect x="37" y="28" width="3" height="4"/><rect x="74" y="16" width="3" height="4"/><rect x="84" y="26" width="3" height="4"/><rect x="124" y="32" width="3" height="4"/><rect x="168" y="24" width="3" height="4"/><rect x="178" y="34" width="3" height="4"/><rect x="216" y="36" width="3" height="4"/><rect x="260" y="20" width="3" height="4"/><rect x="270" y="30" width="3" height="4"/><rect x="288" y="44" width="3" height="4"/></svg><div class="zones">';
   ZONES.forEach(function(z){
-    html += '<button class="zone '+(z.id==="qg"?"hubz":"play")+'" data-act="play" data-game="'+z.game+'">'+z.icon+'<span class="zname">'+z.name+'</span><span class="zamb">'+z.amb+'</span><span class="ztag">'+GAMES[z.game].name+'</span></button>';
+    html += '<button class="zone '+(z.id==="qg"?"hubz":"play")+(isGuest()?" lock":"")+'" data-act="play" data-game="'+z.game+'">'+z.icon+'<span class="zname">'+z.name+'</span><span class="zamb">'+z.amb+'</span><span class="ztag">'+GAMES[z.game].name+'</span></button>';
   });
   html += '</div></div>';
   var pkScen = Object.keys(S.pack.scen).length, pkCards = Object.keys(S.pack.cards).filter(function(k){ return S.pack.cards[k].n>0; }).length;
@@ -65,6 +68,7 @@ function bindActions(root){
   root.querySelectorAll("[data-act]").forEach(function(el){
     el.addEventListener("click", function(){
       var act = el.getAttribute("data-act");
+      if(act==="gotosignup"){ exitDemoToAuth("signup"); return; }
       if(act==="play") startBriefing(el.getAttribute("data-game"));
       if(act==="gomissions") show("missions");
       if(act==="gopack"){ packTab="home"; show("pack"); }
