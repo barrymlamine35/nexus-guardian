@@ -7,7 +7,7 @@ function renderMenu(){
       + (FBUser.emailVerified ? '<p>E-mail vérifié.</p>' : '<p>E-mail pas encore vérifié — tu peux jouer quand même.</p>')
       + '<button class="btn danger" id="mLogout">Se déconnecter</button></div>';
   }
-  html += '<div class="card"><h3>Sauvegarde</h3><p style="margin:0" id="saveStateLine">'+(saveFailed ? "Progression non enregistrée sur cet appareil — stockage indisponible. Elle reste en mémoire pour cette session." : "Progression enregistrée sur cet appareil.")+'</p></div>';
+  html += '<div class="card"><h3>Sauvegarde</h3><p style="margin:0" id="saveStateLine">'+(saveFailed ? "Progression non enregistrée sur cet appareil — stockage indisponible. Elle reste en mémoire pour cette session." : "Progression enregistrée sur cet appareil.")+'</p><p style="margin:8px 0 0">Garde une copie ailleurs, au cas où tu changes de téléphone.</p><div class="row" style="margin-top:10px;flex-wrap:wrap"><button class="btn" id="mExport">Exporter ma sauvegarde</button><button class="btn" id="mImport">Importer une sauvegarde</button></div><input type="file" id="importFile" accept=".json,application/json" hidden></div>';
   html += '<button class="menuitem gx-enter" style="animation-delay:0ms" id="mDojo">'+ICONS.flag+'Le Dojo — parcours pwn.college<span class="chev">›</span></button>';
   html += '<button class="menuitem gx-enter" style="animation-delay:40ms" id="mPack">'+ICONS.medal+'Pack Security+<span class="chev">›</span></button>';
   html += '<button class="menuitem gx-enter" style="animation-delay:80ms" id="mHelp">'+ICONS.shield+'Fonctionnement du jeu<span class="chev">›</span></button>';
@@ -15,6 +15,37 @@ function renderMenu(){
   html += '<button class="menuitem gx-enter" id="mReset" style="animation-delay:160ms;color:var(--red)">'+ICONS.trash+'Réinitialiser la progression<span class="chev">›</span></button>';
   $("view-menu").innerHTML = html;
   var ml = $("mLogout"); if(ml) ml.addEventListener("click", function(){ doSignOut(); });
+  $("mExport").addEventListener("click", function(){ exportSave(); });
+  $("mImport").addEventListener("click", function(){ $("importFile").click(); });
+  $("importFile").addEventListener("change", function(){
+    var f = this.files && this.files[0];
+    if(!f) return;
+    var rd = new FileReader();
+    rd.onload = function(){
+      var obj = null;
+      try{ obj = JSON.parse(rd.result); }catch(e){ obj = null; }
+      if(!validateSave(obj)){
+        toast("Ce fichier n'est pas une sauvegarde Nexus Guardian.");
+        $("importFile").value = "";
+        return;
+      }
+      var xp = (obj.xp.soc||0) + (obj.xp.reseau||0);
+      var dateStr = "";
+      try{ dateStr = new Date(f.lastModified).toLocaleDateString("fr-FR"); }catch(e){}
+      sheet('<h3>Importer cette sauvegarde ?</h3><p>Ta progression actuelle sera remplacée par celle du fichier.</p>'
+        + '<p><b>'+esc(obj.alias)+'</b> · XP total : <b>'+xp+'</b> · Crédits : <b>'+obj.credits+'</b>'
+        + (dateStr ? '<br>Fichier du '+dateStr : '') + '</p>'
+        + '<div class="sbtns"><button class="btn big" style="color:var(--red);border-color:#5b2330" id="impYes">Oui, remplacer ma progression</button><button class="btn primary big" onclick="closeSheet()">Annuler</button></div>');
+      $("impYes").addEventListener("click", function(){
+        var snd = S.sound;
+        S = obj; S.sound = snd;
+        save(); closeSheet(); toast("Sauvegarde importée."); location.reload();
+      });
+      $("importFile").value = "";
+    };
+    rd.onerror = function(){ toast("Impossible de lire ce fichier."); $("importFile").value = ""; };
+    rd.readAsText(f);
+  });
   $("mDojo").addEventListener("click", function(){ dojoScreen="map"; show("dojo"); });
   $("mPack").addEventListener("click", function(){ packTab="home"; show("pack"); });
   $("mHelp").addEventListener("click", function(){ renderHelp(); show("help"); });
