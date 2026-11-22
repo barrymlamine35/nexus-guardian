@@ -72,7 +72,7 @@ function initAuth(){
   firebase.auth().onAuthStateChanged(function(user){
     FBUser = user;
     if(user){
-      if(!gameEntered){ gameEntered = true; enterGame(); }
+      if(!gameEntered){ gameEntered = true; enterGame(); maybeOfferDemoMigration(); }
       else if(curView==="profil") renderProfil();
       else if(curView==="menu") renderMenu();
     } else {
@@ -140,3 +140,16 @@ $("authForgot").addEventListener("click", function(){
     toast("E-mail de réinitialisation envoyé à " + email + ".");
   }).catch(function(e){ authShowErr(fbErrMsg(e)); });
 });
+/* Bouton démo sur l'écran de connexion : créé ici, en JS, pour ne pas
+   toucher au shell — la démo ne demande ni Firebase ni connexion, elle
+   marche même hors ligne. */
+(function(){
+  var msg = $("authMsg");
+  if(!msg) return;
+  var b = document.createElement("button");
+  b.type = "button"; b.id = "authDemo"; b.className = "btn big";
+  b.style.marginTop = "14px";
+  b.textContent = "Essayer la démo — sans compte";
+  msg.after(b);
+  b.addEventListener("click", function(){ sndTap(); enterDemo(); });
+})();
