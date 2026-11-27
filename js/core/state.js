@@ -20,7 +20,8 @@ function defState(){ return {
     trust:{atlas:50, clinique:50, mairie:50}, upgrades:[], finished:false },
   pack:{ scen:{}, scenBest:{}, cards:{}, examBest:0, examPlays:0, fwBest:0, sims:{} },
   dojo:{ done:{}, best:{} },
-  devops:{ done:{}, best:{} }
+  devops:{ done:{}, best:{} },
+  soc:{ done:{}, best:{} }
 };}
 var DEMO_KEY = "nexus-guardian-demo";
 var guestMode = false;
@@ -29,9 +30,10 @@ function isGuest(){ return guestMode; }
    import) et applique la logique du jour et de la série. */
 function normalizeState(s){
   if(!s || typeof s !== "object" || Array.isArray(s)) s = defState();
-  ["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","examMode","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign","m1","pack","dojo","devops"].forEach(function(k){ if(s[k]===undefined) s[k]=defState()[k]; });
+  ["alias","credits","xp","streak","lastDay","plays","best","badges","dex","fpTotal","dailyDate","dailyDone","kevinDone","kevinFailed","sound","examMode","inProgress","coldDone","kevinStage","coverage","mastery","seenVariants","delayedDue","delayedDone","delayedScore","campaign","m1","pack","dojo","devops","soc"].forEach(function(k){ if(s[k]===undefined) s[k]=defState()[k]; });
   if(!s.dojo || !s.dojo.done || !s.dojo.best) s.dojo = defState().dojo;
   if(!s.devops || !s.devops.done || !s.devops.best) s.devops = defState().devops;
+  if(!s.soc || !s.soc.done || !s.soc.best) s.soc = defState().soc;
   if(!s.pack || !s.pack.cards || !s.pack.scen) s.pack = defState().pack;
   if(!s.pack.sims) s.pack.sims = {};
   if(!s.m1 || !s.m1.best || !s.m1.plays) s.m1 = defState().m1;
@@ -142,6 +144,7 @@ function demoLockSheet(what){
 function demoCanPlayDistrict(){ return !guestMode; }
 function demoCanOpenLesson(id){ return !guestMode || id === "SH-01"; }
 function demoCanOpenPackSection(){ return !guestMode; }
+function demoCanOpenSocLesson(){ return !guestMode; }
 function demoCanOpenDevOpsLesson(){ return !guestMode; }
 function enterDemo(){
   var raw = null;
@@ -178,6 +181,7 @@ function hasRealProgress(s){
   if(s.m1 && s.m1.done) return true;
   if(s.dojo && s.dojo.done && Object.keys(s.dojo.done).length) return true;
   if(s.devops && s.devops.done && Object.keys(s.devops.done).length) return true;
+  if(s.soc && s.soc.done && Object.keys(s.soc.done).length) return true;
   if(s.pack && s.pack.scen && Object.keys(s.pack.scen).length) return true;
   if(s.campaign && s.campaign.finished) return true;
   var ids = ["tri","phish","defense","forensics","banque","rouge","dev","conseil","cloud"], i;

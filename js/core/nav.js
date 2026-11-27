@@ -28,6 +28,7 @@ function show(view){
   if(view==="pack") renderPack();
   if(view==="dojo") renderDojo();
   if(view==="devops") renderDevOps();
+  if(view==="soc") renderSoc();
   if(view==="missions") renderMissions();
   if(view==="profil") renderProfil();
   if(view==="menu") renderMenu();
